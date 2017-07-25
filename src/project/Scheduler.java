@@ -2,16 +2,16 @@ package project;
 
 public class Scheduler {
 	
-	Graph graph;
+	Graph inputGraph;
 	int numProcessors;
 
 	public Scheduler(Graph graph, int numProcessors) {
-		this.graph = graph;
+		this.inputGraph = graph;
 		this.numProcessors = numProcessors;
 	}
 
 	private Graph computeSchedule() {
-		return graph;
+		return inputGraph;
 	}
 	
 	public static void main(String[] args) {
