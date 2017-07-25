@@ -1,11 +1,11 @@
 package project;
 
-public class ProjectMain {
+public class Scheduler {
 	
 	Graph graph;
 	int numProcessors;
 
-	public ProjectMain(Graph graph, int numProcessors) {
+	public Scheduler(Graph graph, int numProcessors) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
 	}
@@ -21,7 +21,7 @@ public class ProjectMain {
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 		
-		ProjectMain pm = new ProjectMain(inputGraph, processorNumber);
+		Scheduler pm = new Scheduler(inputGraph, processorNumber);
 		Graph outputGraph = pm.computeSchedule();
 		
 		OutputFormatter of = new OutputFormatter(outputGraph);
