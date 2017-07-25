@@ -2,6 +2,8 @@ package project;
 
 import java.util.List;
 
+import project.Graph.ElementType;
+
 public class InputParser {
 
 	List<String> graphLines;
@@ -19,14 +21,14 @@ public class InputParser {
 				n.name = tokens[1];
 				n.weight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
 				graph.nodes.add(n);
-				graph.order.add('n');
+				graph.order.add(ElementType.NODE);
 			} else {
 				Edge e = new Edge();
 				e.parent = tokens[1];
 				e.child = tokens[3];
 				e.weight = Integer.parseInt(tokens[4].replaceAll("\\D", ""));
 				graph.edges.add(e);
-				graph.order.add('e');
+				graph.order.add(ElementType.EDGE);
 			}
 		}
 		return graph;

@@ -5,10 +5,12 @@ import java.util.List;
 
 public class Graph {
 	
+	public enum ElementType {NODE, EDGE}
+	
 	public List<Node> nodes = new ArrayList<Node>();
 	
 	public List<Edge> edges = new ArrayList<Edge>();
 	
-	public List<Character> order = new ArrayList<Character>();
+	public List<ElementType> order = new ArrayList<ElementType>();
 
 }
