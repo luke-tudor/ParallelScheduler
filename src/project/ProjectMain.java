@@ -1,34 +1,31 @@
 package project;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
 public class ProjectMain {
 	
 	Graph graph;
 	int numProcessors;
 
-	public ProjectMain(List<String> graphLines, int numProcessors) {
-		InputParser ip = new InputParser(graphLines);
-		graph = ip.parse();
+	public ProjectMain(Graph graph, int numProcessors) {
+		this.graph = graph;
 		this.numProcessors = numProcessors;
 	}
 
-	private void computeSchedule() {
-		OutputFormatter of = new OutputFormatter(graph);
-		of.writeGraph();
+	private Graph computeSchedule() {
+		return graph;
 	}
 	
-	public static void main(String[] args) throws IOException {
-		Path graphFile = Paths.get(args[0]);
+	public static void main(String[] args) {
+		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
-		List<String> graphLines = Files.readAllLines(graphFile);
 		
-		ProjectMain pm = new ProjectMain(graphLines, processorNumber);
-		pm.computeSchedule();
+		InputParser ip = new InputParser(inputFileName);		
+		Graph inputGraph = ip.parse();
+		
+		ProjectMain pm = new ProjectMain(inputGraph, processorNumber);
+		Graph outputGraph = pm.computeSchedule();
+		
+		OutputFormatter of = new OutputFormatter(outputGraph);
+		of.writeGraph();
 	}
 
 }

@@ -1,5 +1,9 @@
 package project;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import project.Graph.ElementType;
@@ -8,8 +12,13 @@ public class InputParser {
 
 	List<String> graphLines;
 
-	public InputParser(List<String> graphLines) {
-		this.graphLines = graphLines;
+	public InputParser(String fileName) {
+		Path file = Paths.get(fileName);		
+		try {
+			this.graphLines = Files.readAllLines(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Graph parse() {
