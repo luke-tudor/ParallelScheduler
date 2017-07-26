@@ -5,12 +5,38 @@ import java.util.List;
 
 public class Graph {
 	
-	public enum ElementType {NODE, EDGE}
+	private enum ElementType {NODE, EDGE}
 	
-	public List<Node> nodes = new ArrayList<Node>();
+	private List<Node> nodes = new ArrayList<Node>();
 	
-	public List<Edge> edges = new ArrayList<Edge>();
+	private List<Edge> edges = new ArrayList<Edge>();
 	
-	public List<ElementType> order = new ArrayList<ElementType>();
+	private List<ElementType> order = new ArrayList<ElementType>();
+	
+	public void addNode(Node n) {
+		nodes.add(n);
+		order.add(ElementType.NODE);
+	}
+	
+	public void addEdge(Edge e) {
+		edges.add(e);
+		order.add(ElementType.EDGE);
+	}
+	
+	public Object[] getAllElements() {
+		Object[] elements = new Object[order.size()];
+		int nodeCount = 0;
+		int edgeCount = 0;
+		for (int i = 0; i < elements.length; i++) {
+			if (order.get(i) == ElementType.NODE) {
+				elements[i] = nodes.get(nodeCount);
+				nodeCount++;
+			} else {
+				elements[i] = edges.get(edgeCount);
+				edgeCount++;
+			}
+		}
+		return elements;
+	}
 
 }

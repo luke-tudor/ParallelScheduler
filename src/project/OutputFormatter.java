@@ -8,8 +8,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.Graph.ElementType;
-
 public class OutputFormatter {
 
 	Graph g;
@@ -22,21 +20,18 @@ public class OutputFormatter {
 		Path outputFile = Paths.get("OUTPUT.dot");
 		List<String> lines = new ArrayList<String>();
 		lines.add("digraph output {");
-		int nodeNum = 0;
-		int edgeNum = 0;
-		for (ElementType et : g.order) {
-			if (et == ElementType.NODE) {
-				Node n = g.nodes.get(nodeNum);
+		Object[] elements = g.getAllElements();
+		for (Object e : elements) {
+			if (e.getClass() == Node.class) {
+				Node node = (Node) e;
 				String nodeEntry = String.format("\t%s\t[Weight=%d,Start=%d,Processor=%d];",
-						n.name, n.weight, n.start, n.processor);
+						node.name, node.weight, node.start, node.processor);
 				lines.add(nodeEntry);
-				nodeNum++;
 			} else {
-				Edge e = g.edges.get(edgeNum);
+				Edge edge = (Edge) e;
 				String edgeEntry = String.format("\t%s -> %s\t[Weight=%d]",
-						e.parent, e.child, e.weight);
+						edge.parent, edge.child, edge.weight);
 				lines.add(edgeEntry);
-				edgeNum++;
 			}
 		}
 		lines.add("}");
