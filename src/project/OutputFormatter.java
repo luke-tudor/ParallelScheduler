@@ -30,7 +30,7 @@ public class OutputFormatter {
 			} else {
 				Edge edge = (Edge) e;
 				String edgeEntry = String.format("\t%s -> %s\t[Weight=%d];",
-						edge.parent, edge.child, edge.weight);
+						edge.getParent(), edge.getChild(), edge.getWeight());
 				lines.add(edgeEntry);
 			}
 		}

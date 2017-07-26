@@ -29,10 +29,8 @@ public class InputParser {
 				n.weight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
 				graph.addNode(n);
 			} else {
-				Edge e = new Edge();
-				e.parent = tokens[1];
-				e.child = tokens[3];
-				e.weight = Integer.parseInt(tokens[4].replaceAll("\\D", ""));
+				int edgeWeight = Integer.parseInt(tokens[4].replaceAll("\\D", ""));
+				Edge e = new Edge(tokens[1], tokens[3], edgeWeight);
 				graph.addEdge(e);
 			}
 		}
