@@ -1,11 +1,14 @@
 package project.structures;
 
+/**
+ * This class represents an edge of the graph object.
+ * 
+ * @author Luke Tudor
+ */
 public class Edge {
 	
 	private String parent;
-	
 	private String child;
-	
 	private int weight;
 	
 	public Edge(String parent, String child, int weight) {

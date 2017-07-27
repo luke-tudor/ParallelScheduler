@@ -3,6 +3,11 @@ package project.structures;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class represents a node element of a graph object.
+ * 
+ * @author Luke Tudor
+ */
 public class Node {
 	
 	private String name;	

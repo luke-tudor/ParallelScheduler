@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a graph ADT.
+ * 
+ * @author Luke Tudor
+ */
 public class Graph {
 	
 	private Map<String, Node> nodes = new HashMap<String, Node>();	
