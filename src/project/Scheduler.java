@@ -29,7 +29,7 @@ public class Scheduler {
 		Graph outputGraph = s.computeSchedule();
 		
 		OutputFormatter of = new OutputFormatter(outputGraph);
-		of.writeGraph();
+		of.writeGraph("OUTPUT.dot");
 	}
 
 }

@@ -19,33 +19,32 @@ import project.structures.Node;
  */
 public class OutputFormatter {
 
-	Graph g;
+	List<String> outputLines;
 
 	public OutputFormatter(Graph graph) {
-		g = graph;
-	}
-
-	public void writeGraph() {
-		Path outputFile = Paths.get("OUTPUT.dot");
-		List<String> lines = new ArrayList<String>();
-		lines.add("digraph output {");
-		Object[] elements = g.getAllElements();
+		outputLines = new ArrayList<>();
+		outputLines.add("digraph output {");
+		Object[] elements = graph.getAllElements();
 		for (Object e : elements) {
 			if (e.getClass() == Node.class) {
 				Node node = (Node) e;
 				String nodeEntry = String.format("\t%s\t[Weight=%d,Start=%d,Processor=%d];",
 						node.getName(), node.getWeight(), node.getStart(), node.getProcessor());
-				lines.add(nodeEntry);
+				outputLines.add(nodeEntry);
 			} else {
 				Edge edge = (Edge) e;
 				String edgeEntry = String.format("\t%s -> %s\t[Weight=%d];",
 						edge.getParent(), edge.getChild(), edge.getWeight());
-				lines.add(edgeEntry);
+				outputLines.add(edgeEntry);
 			}
 		}
-		lines.add("}");
+		outputLines.add("}");
+	}
+
+	public void writeGraph(String uri) {
+		Path outputFile = Paths.get(uri);
 		try {
-			Files.write(outputFile, lines,
+			Files.write(outputFile, outputLines,
 					StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
