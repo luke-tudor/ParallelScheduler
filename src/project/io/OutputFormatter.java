@@ -1,4 +1,4 @@
-package project;
+package project.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import project.structures.Edge;
+import project.structures.Graph;
+import project.structures.Node;
 
 public class OutputFormatter {
 

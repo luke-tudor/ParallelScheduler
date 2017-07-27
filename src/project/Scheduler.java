@@ -1,5 +1,9 @@
 package project;
 
+import project.io.InputParser;
+import project.io.OutputFormatter;
+import project.structures.Graph;
+
 public class Scheduler {
 	
 	Graph graph;

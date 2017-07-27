@@ -1,10 +1,14 @@
-package project;
+package project.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import project.structures.Edge;
+import project.structures.Graph;
+import project.structures.Node;
 
 public class InputParser {
 
