@@ -1,7 +1,7 @@
 package project.structures;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Node {
 	
@@ -10,8 +10,8 @@ public class Node {
 	private int start;
 	private int processor;
 	
-	private List<Node> parents;
-	private List<Node> children;
+	private Set<Node> parents;
+	private Set<Node> children;
 	
 	public Node(String name, int weight) {
 		this.name = name;
@@ -19,8 +19,8 @@ public class Node {
 		start = 0;
 		processor = 0;
 		
-		parents = new ArrayList<>();
-		children = new ArrayList<>();
+		parents = new HashSet<>();
+		children = new HashSet<>();
 	}
 	
 	void addParent(Node n) {
