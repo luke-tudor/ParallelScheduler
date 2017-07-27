@@ -10,6 +10,11 @@ import project.structures.Edge;
 import project.structures.Graph;
 import project.structures.Node;
 
+/**
+ * This class converts a *.dot file into a Graph object.
+ * 
+ * @author Luke Tudor
+ */
 public class InputParser {
 
 	List<String> graphLines;

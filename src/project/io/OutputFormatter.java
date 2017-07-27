@@ -12,6 +12,11 @@ import project.structures.Edge;
 import project.structures.Graph;
 import project.structures.Node;
 
+/**
+ * This class takes a graph object and writes it to a *.dot file in the correct format.
+ * 
+ * @author Luke Tudor
+ */
 public class OutputFormatter {
 
 	Graph g;
