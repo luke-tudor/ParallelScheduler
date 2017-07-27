@@ -24,9 +24,8 @@ public class InputParser {
 		for(int i = 1; i < graphLines.size() - 1; i++) {
 			String[] tokens = graphLines.get(i).split("\\s+");
 			if (tokens.length == 3) {
-				Node n = new Node();
-				n.name = tokens[1];
-				n.weight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
+				int nodeWeight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
+				Node n = new Node(tokens[1], nodeWeight);
 				graph.addNode(n);
 			} else {
 				int edgeWeight = Integer.parseInt(tokens[4].replaceAll("\\D", ""));

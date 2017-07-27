@@ -25,7 +25,7 @@ public class OutputFormatter {
 			if (e.getClass() == Node.class) {
 				Node node = (Node) e;
 				String nodeEntry = String.format("\t%s\t[Weight=%d,Start=%d,Processor=%d];",
-						node.name, node.weight, node.start, node.processor);
+						node.getName(), node.getWeight(), node.getStart(), node.getProcessor());
 				lines.add(nodeEntry);
 			} else {
 				Edge edge = (Edge) e;
