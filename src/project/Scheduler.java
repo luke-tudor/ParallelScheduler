@@ -10,7 +10,7 @@ public class Scheduler {
 		this.numProcessors = numProcessors;
 	}
 
-	private Graph computeSchedule() {
+	public Graph computeSchedule() {
 		return graph;
 	}
 	
@@ -21,8 +21,8 @@ public class Scheduler {
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 		
-		Scheduler pm = new Scheduler(inputGraph, processorNumber);
-		Graph outputGraph = pm.computeSchedule();
+		Scheduler s = new Scheduler(inputGraph, processorNumber);
+		Graph outputGraph = s.computeSchedule();
 		
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph();
