@@ -14,10 +14,6 @@ public class Edge {
 		this.weight = weight;
 	}
 	
-	public void changeWeight(int newWeight) {
-		weight = newWeight;
-	}
-	
 	public String getParent() {
 		return parent;
 	}
