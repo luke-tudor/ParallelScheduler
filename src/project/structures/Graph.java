@@ -12,7 +12,8 @@ import java.util.Map;
  */
 public class Graph {
 	
-	private Map<String, Node> nodes = new HashMap<String, Node>();	
+	private Map<String, Node> nodes = new HashMap<String, Node>();
+	private Map<String, Edge> edges = new HashMap<String, Edge>();
 	private List<Object> order = new ArrayList<Object>();
 	
 	public void addNode(Node n) {
@@ -25,6 +26,7 @@ public class Graph {
 		Node child = nodes.get(e.getChild());
 		parent.addChild(child);
 		child.addParent(parent);
+		edges.put(e.getParent() + "->" + e.getChild(), e);
 		order.add(e);
 	}
 	
