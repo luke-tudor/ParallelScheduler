@@ -1,23 +1,25 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Graph {
 	
-	private List<Node> nodes = new ArrayList<Node>();
-	
-	private List<Edge> edges = new ArrayList<Edge>();
-	
+	private Map<String, Node> nodes = new HashMap<String, Node>();	
 	private List<Object> order = new ArrayList<Object>();
 	
 	public void addNode(Node n) {
-		nodes.add(n);
+		nodes.put(n.getName(), n);
 		order.add(n);
 	}
 	
 	public void addEdge(Edge e) {
-		edges.add(e);
+		Node parent = nodes.get(e.getParent());
+		Node child = nodes.get(e.getChild());
+		parent.addChild(child);
+		child.addParent(parent);
 		order.add(e);
 	}
 	
