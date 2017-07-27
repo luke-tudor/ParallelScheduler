@@ -30,7 +30,7 @@ public class InputParser {
 
 	public Graph parse() {
 		Graph graph = new Graph();
-		for(int i = 1; i < graphLines.size() - 1; i++) {
+		for (int i = 1; i < graphLines.size() - 1; i++) {
 			String[] tokens = graphLines.get(i).split("\\s+");
 			if (tokens.length == 3) {
 				int nodeWeight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
