@@ -27,6 +27,8 @@ public class Scheduler {
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 		
+		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
+		
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 		
@@ -34,7 +36,7 @@ public class Scheduler {
 		Graph outputGraph = s.computeSchedule();
 		
 		OutputFormatter of = new OutputFormatter(outputGraph);
-		of.writeGraph("OUTPUT.dot");
+		of.writeGraph(outputFileName);
 	}
 
 }
