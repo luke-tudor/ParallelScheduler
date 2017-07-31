@@ -11,8 +11,8 @@ import project.structures.Graph;
  */
 public class Scheduler {
 	
-	Graph graph;
-	int numProcessors;
+	private Graph graph;
+	private int numProcessors;
 
 	public Scheduler(Graph graph, int numProcessors) {
 		this.graph = graph;
