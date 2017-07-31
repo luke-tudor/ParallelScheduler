@@ -19,7 +19,7 @@ import project.structures.Node;
  */
 public class OutputFormatter {
 
-	List<String> outputLines;
+	private List<String> outputLines;
 
 	public OutputFormatter(Graph graph) {
 		outputLines = new ArrayList<>();

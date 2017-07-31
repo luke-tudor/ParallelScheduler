@@ -17,7 +17,7 @@ import project.structures.Node;
  */
 public class InputParser {
 
-	List<String> graphLines;
+	private List<String> graphLines;
 
 	public InputParser(String path) {
 		Path file = Paths.get(path);		
