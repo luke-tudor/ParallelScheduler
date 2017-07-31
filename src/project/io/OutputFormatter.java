@@ -41,8 +41,8 @@ public class OutputFormatter {
 		outputLines.add("}");
 	}
 
-	public void writeGraph(String uri) {
-		Path outputFile = Paths.get(uri);
+	public void writeGraph(String path) {
+		Path outputFile = Paths.get(path);
 		try {
 			Files.write(outputFile, outputLines,
 					StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);

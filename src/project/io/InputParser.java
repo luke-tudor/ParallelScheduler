@@ -19,8 +19,8 @@ public class InputParser {
 
 	List<String> graphLines;
 
-	public InputParser(String uri) {
-		Path file = Paths.get(uri);		
+	public InputParser(String path) {
+		Path file = Paths.get(path);		
 		try {
 			this.graphLines = Files.readAllLines(file);
 		} catch (IOException e) {
