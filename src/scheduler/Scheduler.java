@@ -1,8 +1,8 @@
-package project;
+package scheduler;
 
-import project.io.InputParser;
-import project.io.OutputFormatter;
-import project.structures.Graph;
+import scheduler.io.InputParser;
+import scheduler.io.OutputFormatter;
+import scheduler.structures.Graph;
 
 /**
  * This class takes a graph and a number of processes and produces a scheduled graph.

@@ -1,4 +1,4 @@
-package project.structures;
+package scheduler.structures;
 
 /**
  * This class represents an edge of the graph object.

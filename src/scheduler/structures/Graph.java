@@ -1,4 +1,4 @@
-package project.structures;
+package scheduler.structures;
 
 import java.util.ArrayList;
 import java.util.HashMap;

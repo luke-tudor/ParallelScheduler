@@ -1,4 +1,4 @@
-package project.io;
+package scheduler.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import project.structures.Edge;
-import project.structures.Graph;
-import project.structures.Node;
+import scheduler.structures.Edge;
+import scheduler.structures.Graph;
+import scheduler.structures.Node;
 
 /**
  * This class converts a *.dot file into a Graph object.

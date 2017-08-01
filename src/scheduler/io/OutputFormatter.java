@@ -1,4 +1,4 @@
-package project.io;
+package scheduler.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,9 +8,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.structures.Edge;
-import project.structures.Graph;
-import project.structures.Node;
+import scheduler.structures.Edge;
+import scheduler.structures.Graph;
+import scheduler.structures.Node;
 
 /**
  * This class takes a graph object and writes it to a *.dot file in the correct format.
