@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Graph {
 	
-	static String EDGE_LINK = "->";
+	final static String EDGE_LINK = "->";
 	
 	// nodes stores all the nodes of a graph by mapping string handles to each node object
 	// edges stores all the edges of a graph by mapping string handles to each edge object
