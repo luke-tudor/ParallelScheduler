@@ -12,6 +12,8 @@ import java.util.Map;
  */
 public class Graph {
 	
+	static String EDGE_LINK = "->";
+	
 	// nodes stores all the nodes of a graph by mapping string handles to each node object
 	// edges stores all the edges of a graph by mapping string handles to each edge object
 	// order stores the each graph element in the order it was received
@@ -29,7 +31,7 @@ public class Graph {
 		Node child = nodes.get(e.getChild());
 		parent.addChild(child);
 		child.addParent(parent);
-		edges.put(e.getParent() + "->" + e.getChild(), e);
+		edges.put(e.getParent() + EDGE_LINK + e.getChild(), e);
 		order.add(e);
 	}
 	
