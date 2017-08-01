@@ -27,6 +27,7 @@ public class Scheduler {
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 		
+		// Use regular expression to construct output file name from input file name
 		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
 		
 		InputParser ip = new InputParser(inputFileName);		
