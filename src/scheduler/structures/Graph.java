@@ -21,6 +21,16 @@ public class Graph {
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
 	private List<Object> order = new ArrayList<Object>();
 	
+	private String graphName;
+	
+	public Graph() {
+		graphName = null;
+	}
+	
+	public Graph(String name) {
+		graphName = name;
+	}
+	
 	public void addNode(Node n) {
 		nodes.put(n.getName(), n);
 		order.add(n);
@@ -37,6 +47,10 @@ public class Graph {
 	
 	public Object[] getAllElements() {
 		return order.toArray();
+	}
+	
+	public String getGraphName() {
+		return graphName;
 	}
 
 }
