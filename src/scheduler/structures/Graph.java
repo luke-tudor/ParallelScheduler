@@ -21,6 +21,7 @@ public class Graph {
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
 	private List<Object> order = new ArrayList<Object>();
 	
+	// optional graph name
 	private String graphName;
 	
 	public Graph() {
