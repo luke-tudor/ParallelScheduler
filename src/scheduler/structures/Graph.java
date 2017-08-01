@@ -25,7 +25,7 @@ public class Graph {
 	private String graphName;
 	
 	public Graph() {
-		graphName = null;
+		this(null);
 	}
 	
 	public Graph(String name) {
