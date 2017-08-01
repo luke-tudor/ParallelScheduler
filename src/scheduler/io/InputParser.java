@@ -37,7 +37,7 @@ public class InputParser {
 	 * @return graph
 	 */
 	public Graph parse() {
-		Graph graph = new Graph();
+		Graph graph = new Graph(null);
 		// Ignore line 1 of the graph
 		// For lines 1 to n -1, split the lines of the graph file by whitespace '\\s+'
 		for (int i = 1; i < graphLines.size() - 1; i++) {

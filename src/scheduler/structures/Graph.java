@@ -24,10 +24,6 @@ public class Graph {
 	// optional graph name
 	private String graphName;
 	
-	public Graph() {
-		this(null);
-	}
-	
 	public Graph(String name) {
 		graphName = name;
 	}
@@ -52,6 +48,10 @@ public class Graph {
 	
 	public String getGraphName() {
 		return graphName;
+	}
+	
+	public void setGraphName(String name) {
+		graphName = name;
 	}
 
 }
