@@ -28,6 +28,7 @@ public class Scheduler {
 		int processorNumber = Integer.parseInt(args[1]);
 		
 		// Use regular expression to construct output file name from input file name
+		// Works by taking the file name without the extension and concatenating with the other half of the new name
 		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
 		
 		InputParser ip = new InputParser(inputFileName);		
