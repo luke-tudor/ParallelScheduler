@@ -36,7 +36,7 @@ public class Scheduler {
 		Scheduler s = new Scheduler(inputGraph, processorNumber);
 		Graph outputGraph = s.computeSchedule();
 		
-		OutputFormatter of = new OutputFormatter(outputGraph);
+		OutputFormatter of = new OutputFormatter(outputGraph, "output");
 		of.writeGraph(outputFileName);
 	}
 

@@ -25,10 +25,10 @@ public class OutputFormatter {
 	 * This constructor takes a graph object and formats it into a *.dot format list of strings
 	 * @param graph
 	 */
-	public OutputFormatter(Graph graph) {
+	public OutputFormatter(Graph graph, String graphName) {
 		outputLines = new ArrayList<>();
-		// Write graph designation and name 'output'
-		outputLines.add("digraph output {");
+		// Write graph designation and name
+		outputLines.add("digraph " + graphName + " {");
 		// Get all elements from the graph object, in the order they were read
 		Object[] elements = graph.getAllElements();
 		for (Object e : elements) {
