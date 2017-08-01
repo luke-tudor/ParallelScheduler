@@ -10,11 +10,18 @@ import java.util.Set;
  */
 public class Node {
 	
+	// name is the string handle for this object
+	// weight is the cost of this node
+	// start is the earliest start time of this node
+	// processor is which processor the node should be run on
 	private String name;	
 	private int weight;
 	private int start;
 	private int processor;
 	
+	
+	// parents stores all nodes that have an edge to this node
+	// children stores all nodes that this node has an edge to
 	private Set<Node> parents;
 	private Set<Node> children;
 	

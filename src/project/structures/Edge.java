@@ -7,6 +7,9 @@ package project.structures;
  */
 public class Edge {
 	
+	// parent represents the start node of an edge
+	// child represents the end node of an edge
+	// weight is the maximum cost of an edge
 	private String parent;
 	private String child;
 	private int weight;

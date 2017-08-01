@@ -21,16 +21,24 @@ public class OutputFormatter {
 
 	private List<String> outputLines;
 
+	/**
+	 * This constructor takes a graph object and formats it into a *.dot format list of strings
+	 * @param graph
+	 */
 	public OutputFormatter(Graph graph) {
 		outputLines = new ArrayList<>();
+		// Write graph designation and name 'output'
 		outputLines.add("digraph output {");
+		// Get all elements from the graph object, in the order they were read
 		Object[] elements = graph.getAllElements();
 		for (Object e : elements) {
+			// For each object, if it is a node, format the output appropriately
 			if (e.getClass() == Node.class) {
 				Node node = (Node) e;
 				String nodeEntry = String.format("\t%s\t[Weight=%d,Start=%d,Processor=%d];",
 						node.getName(), node.getWeight(), node.getStart(), node.getProcessor());
 				outputLines.add(nodeEntry);
+			// Otherwise, it must be an edge, so format appropriately
 			} else {
 				Edge edge = (Edge) e;
 				String edgeEntry = String.format("\t%s -> %s\t[Weight=%d];",
@@ -41,6 +49,11 @@ public class OutputFormatter {
 		outputLines.add("}");
 	}
 
+	/**
+	 * This method writes a formated graph object, creating a file at the specified path name.
+	 * This method creates a file if none exists, deletes all content from a file if one exists, and writes graph info to that file.
+	 * @param path
+	 */
 	public void writeGraph(String path) {
 		Path outputFile = Paths.get(path);
 		try {
