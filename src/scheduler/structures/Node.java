@@ -19,28 +19,27 @@ public class Node {
 	private int start;
 	private int processor;
 	
-	
 	// parents stores all nodes that have an edge to this node
 	// children stores all nodes that this node has an edge to
-	private Set<Node> parents;
-	private Set<Node> children;
-	
+	private Set<Edge> parentEdges;
+	private Set<Edge> childEdges;
+
 	public Node(String name, int weight) {
 		this.name = name;
 		this.weight = weight;
 		start = 0;
 		processor = 0;
 		
-		parents = new HashSet<>();
-		children = new HashSet<>();
+		parentEdges = new HashSet<>();
+		childEdges = new HashSet<>();
 	}
 	
-	void addParent(Node n) {
-		parents.add(n);
+	void addParentEdge(Edge e) {
+		parentEdges.add(e);
 	}
 	
-	void addChild(Node n) {
-		children.add(n);
+	void addChildEdge(Edge e) {
+		childEdges.add(e);
 	}
 	
 	public String getName() {

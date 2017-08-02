@@ -36,8 +36,8 @@ public class Graph {
 	public void addEdge(Edge e) {
 		Node parent = nodes.get(e.getParent());
 		Node child = nodes.get(e.getChild());
-		parent.addChild(child);
-		child.addParent(parent);
+		parent.addChildEdge(e);
+		child.addParentEdge(e);
 		edges.put(e.getParent() + EDGE_LINK + e.getChild(), e);
 		order.add(e);
 	}
