@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class represents a node element of a graph object.
+ * Provides a representation of a node element of a graph object.
  * 
  * @author Luke Tudor
  */
@@ -19,8 +19,8 @@ public class Node {
 	private int start;
 	private int processor;
 	
-	// parents stores all nodes that have an edge to this node
-	// children stores all nodes that this node has an edge to
+	// parentEdges stores all nodes that have an edge to this node
+	// childEdges stores all nodes that this node has an edge to
 	private Set<Edge> parentEdges;
 	private Set<Edge> childEdges;
 
