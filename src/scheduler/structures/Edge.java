@@ -1,15 +1,16 @@
 package scheduler.structures;
 
 /**
- * This class represents an edge of the graph object.
+ * Provides a representation of an edge of the graph.
  * 
  * @author Luke Tudor
  */
 public class Edge {
 	
-	// parent represents the start node of an edge
-	// child represents the end node of an edge
-	// weight is the maximum cost of an edge
+	// parent represents the start node of the edge
+	// child represents the end node of the edge
+	// weight is the weight of the edge
+	//Why not reference the nodes themselves? we know they exist at the time the edge is created
 	private String parent;
 	private String child;
 	private int weight;
