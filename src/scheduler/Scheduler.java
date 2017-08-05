@@ -5,7 +5,7 @@ import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 
 /**
- * This class takes a graph and a number of processes and produces a scheduled graph.
+ * The main class for the parallel scheduler.
  * 
  * @author Luke Tudor
  */
@@ -18,7 +18,12 @@ public class Scheduler {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
 	}
-
+	
+	/**
+	* computes the optimum processing schedule for the graph 
+	* 
+	* TODO: implement scheduling algorithm
+	*/
 	public Graph computeSchedule() {
 		return graph;
 	}
@@ -31,13 +36,16 @@ public class Scheduler {
 		// Works by taking the file name without the extension and concatenating with the other half of the new name
 		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
 		
+		//creates the graph
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 		
+		//finds the optimum schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber);
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 		
+		//writes schedule to output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
 	}
