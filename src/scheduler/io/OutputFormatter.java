@@ -13,17 +13,24 @@ import scheduler.structures.Graph;
 import scheduler.structures.Node;
 
 /**
- * This class takes a graph object and writes it to a *.dot file in the correct format.
+ * Writes a *.dot file in the correct format.
+ * 
+ * Currently the ordering of the *.dot file is reliant on the order of graph objects given by the Graph.getAllElements() 
+ * method
  * 
  * @author Luke Tudor
+ *
+ * TODO: test the output file for correct ordering of the nodes and edges.
  */
 public class OutputFormatter {
 
 	private List<String> outputLines;
 
 	/**
-	 * This constructor takes a graph object and formats it into a *.dot format list of strings
-	 * @param graph
+	 * Takes a graph object and formats it into *.dot format 
+	 * using a list of strings
+	 * 
+	 * @param graph The graph to reformat
 	 */
 	public OutputFormatter(Graph graph) {
 		outputLines = new ArrayList<>();
@@ -50,9 +57,10 @@ public class OutputFormatter {
 	}
 
 	/**
-	 * This method writes a formated graph object, creating a file at the specified path name.
-	 * This method creates a file if none exists, deletes all content from a file if one exists, and writes graph info to that file.
-	 * @param path
+	 * Writes a formated graph object, creating a file at the specified path name.
+	 * If the file already exists it deletes it, and writes graph info to that file.
+	 *
+	 * @param path The path to the file to write to, in String format
 	 */
 	public void writeGraph(String path) {
 		Path outputFile = Paths.get(path);
