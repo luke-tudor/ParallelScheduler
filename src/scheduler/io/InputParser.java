@@ -11,8 +11,16 @@ import scheduler.structures.Graph;
 import scheduler.structures.Node;
 
 /**
- * This class converts a *.dot file into a Graph object.
- * 
+ * Converts a *.dot file into a Graph object.
+ *
+ * The .dot file must be in the form 
+ * digraph "graph_title" {
+ * 	X	|Weight=N|;
+ *	X -> Y 	|Weight=M|;
+ *}
+ * Where X and Y are titles of Nodes, and N and M are their respective weights. 
+ * A node must appear before an edge containing the node.
+ *
  * @author Luke Tudor
  */
 public class InputParser {
@@ -20,8 +28,9 @@ public class InputParser {
 	private List<String> graphLines;
 
 	/**
-	 * This constructor takes a string path and reads all the lines of the file located at that path
-	 * @param path
+	 * Takes a file path and reads all the lines of the file located at that path
+	 * 
+	 * @param path The String representation of the path to the .dot file
 	 */
 	public InputParser(String path) {
 		Path file = Paths.get(path);		
@@ -33,8 +42,9 @@ public class InputParser {
 	}
 
 	/**
-	 * This method parses the input file into a graph data structure using regular expressions and string slicing
-	 * @return graph
+	 * Parses the input file into a graph data structure using regular expressions and string splicing
+	 *
+	 * @return graph The graph representation of the previously read input file.
 	 */
 	public Graph parse() {
 		Graph graph = new Graph(null);
