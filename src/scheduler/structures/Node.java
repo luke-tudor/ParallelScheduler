@@ -65,5 +65,9 @@ public class Node {
 	public int getProcessor() {
 		return processor;
 	}
+	
+	public Edge[] getAllChildren() {
+		return childEdges.toArray(new Edge[0]);
+	}
 
 }

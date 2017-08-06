@@ -70,5 +70,9 @@ public class Graph {
 	public void setGraphName(String name) {
 		graphName = name;
 	}
+	
+	public Node getNode(String s) {
+		return nodes.get(s);
+	}
 
 }
