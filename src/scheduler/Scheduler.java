@@ -42,7 +42,7 @@ public class Scheduler {
 			// if current == goal or complete solution, then we have optimal solution
 			
 			// find neighbouring nodes, to be cleaned up
-			Edge[] childEdges = s.getAllChildren();
+			Edge[] childEdges = new Edge[0];
 			Object[] otherElements = graph.getAllElements();
 			List<Node> otherNodes = new ArrayList<>();
 			for (Object o : otherElements) {

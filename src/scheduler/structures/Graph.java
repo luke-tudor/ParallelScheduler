@@ -48,8 +48,8 @@ public class Graph {
 	public void addEdge(Edge e) {
 		Node parent = nodes.get(e.getParent());
 		Node child = nodes.get(e.getChild());
-		parent.addChildEdge(e);
-		child.addParentEdge(e);
+		parent.addChildEdgeWeight(child, e.getWeight());
+		child.addParentEdgeWeight(parent, e.getWeight());
 		edges.put(e.getParent() + EDGE_LINK + e.getChild(), e);
 		order.add(e);
 	}
