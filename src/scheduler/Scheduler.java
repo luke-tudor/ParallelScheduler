@@ -1,7 +1,10 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -33,22 +36,28 @@ public class Scheduler {
 	 * TODO: implement scheduling algorithm
 	 */
 	public Graph computeSchedule() {
+		// set of nodes we have evaluated
+		Set<TreeNode> closedSet = new HashSet<>();
 		// set of nodes we can reach
 		PriorityQueue<TreeNode> openSet = new PriorityQueue<>();
-		// set of nodes we have evaluated
-		List<TreeNode> closedSet = new ArrayList<>();
-
+		openSet.add(new TreeNode());
+	    // the node that this node came from such that it is the most efficient
+		Map<TreeNode, TreeNode> cameFrom = new HashMap<TreeNode, TreeNode>();
+		
+		// the cost to get to this node from the start
+		Map<TreeNode, Integer> costTo = new HashMap<TreeNode, Integer>();
 		while (!openSet.isEmpty()) {
 			// pop from priority queue
-			TreeNode s = openSet.remove();
+			TreeNode current = openSet.remove();
 			// if current == goal or complete solution, then we have optimal solution
+			closedSet.add(current);
 
 			// find neighbouring nodes, to be cleaned up
 			Edge[] childEdges = new Edge[0];
 			Object[] otherElements = graph.getAllElements();
 			List<Node> otherNodes = new ArrayList<>();
 			for (Object o : otherElements) {
-				if (o.getClass() == Node.class && !o.equals(s)) {
+				if (o.getClass() == Node.class && !o.equals(new Integer[0])) {
 					otherNodes.add((Node) o);
 				}
 			}
