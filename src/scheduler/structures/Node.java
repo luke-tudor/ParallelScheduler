@@ -1,6 +1,7 @@
 package scheduler.structures;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,11 +21,13 @@ public class Node {
 	private int start;
 	private int processor;
 	
+	public int hvalue;
+	
 	// parentEdges stores all nodes that have an edge to this node
 	// childEdges stores all nodes that this node has an edge to
-
-	private Map<Node, Integer> parentEdgeWeights;
-	private Map<Node, Integer> childEdgeWeights;
+	
+	public Map<Node, Integer> parentEdgeWeights;
+	public Map<Node, Integer> childEdgeWeights;
 
 	public Node(String name, int weight) {
 		this.name = name;
@@ -67,5 +70,6 @@ public class Node {
 	public int getProcessor() {
 		return processor;
 	}
+	
 	
 }
