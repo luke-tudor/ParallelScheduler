@@ -1,6 +1,7 @@
 package scheduler.structures;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,10 @@ public class Graph {
 			}
 		}
 		return li;
+	}
+	
+	public Collection<Node> getAllNodes() {
+		return nodes.values();
 	}
 
 }

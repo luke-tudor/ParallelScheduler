@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TreeSet;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
-import scheduler.structures.Edge;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
@@ -37,49 +37,54 @@ public class Scheduler {
 	 */
 	public Graph computeSchedule() {
 		// set of nodes we have evaluated
-		Set<TreeNode> closedSet = new HashSet<>();
 		// set of nodes we can reach
 		PriorityQueue<TreeNode> openSet = new PriorityQueue<>();
 		openSet.add(new TreeNode());
-	    // the node that this node came from such that it is the most efficient
-		Map<TreeNode, TreeNode> cameFrom = new HashMap<TreeNode, TreeNode>();
-		
-		// the cost to get to this node from the start
-		Map<TreeNode, Integer> costTo = new HashMap<TreeNode, Integer>();
 		while (!openSet.isEmpty()) {
 			// pop from priority queue
 			TreeNode current = openSet.remove();
 			// if current == goal or complete solution, then we have optimal solution
-			closedSet.add(current);
-
-			// find neighbouring nodes, to be cleaned up
-			Edge[] childEdges = new Edge[0];
-			Object[] otherElements = graph.getAllElements();
-			List<Node> otherNodes = new ArrayList<>();
-			for (Object o : otherElements) {
-				if (o.getClass() == Node.class && !o.equals(new Integer[0])) {
-					otherNodes.add((Node) o);
+			if (current.height == graph.getAllNodes().size()) {
+				System.out.println("found it");
+				TreeNode tail = current;
+				while (tail.recentNode != null) {
+					System.out.println(tail.recentNode.getName() + tail.recentStartTime);
+					tail = tail.parent;
 				}
-			}
-			for (Edge e : childEdges) {
-				otherNodes.add(graph.getNode(e.getChild()));
+				System.exit(0);
 			}
 
-			// for neighbouring nodes
-			for (Node n : otherNodes) {
-				// if we have done already, don't bother
-				if (closedSet.contains(n)) {
-					continue;
-				}
-				// adding a new neighbouring node
-				if (!openSet.contains(n)) {
-					//openSet.add(n);
-				}
-
-				// if this is not a good path, continue
-
-				// if this is a good path, update estimates
+			// find neighbouring nodes
+			List<Node> neighbour;
+			if (current.recentNode == null) {
+				neighbour = new ArrayList<>(graph.getAllParentless());
+			} else {
+				neighbour = new ArrayList<>(current.recentNode.childEdgeWeights.keySet());
 			}
+			if (current.recentNode != null && current.parent.recentNode != null) {
+				for (Node n : current.parent.recentNode.childEdgeWeights.keySet()) {
+					neighbour.add(n);
+				}
+			}
+			
+			for (Node n : neighbour) {
+				//System.out.println(n.getName());
+			}
+			
+			for (int i = 0; i < numProcessors; i++) {
+				for (Node n : neighbour) {
+					if (current.parent == null) {
+						openSet.add(new TreeNode(current, n, i, 0, 1));
+					} else {
+						int startTime = current.recentNode.getWeight() + current.recentStartTime;
+						if (current.recentProcessor != i) {
+							//startTime += n.parentEdgeWeights.get(current.recentNode);
+						}
+						openSet.add(new TreeNode(current, n, i, startTime, current.height+1));
+					}
+				}
+			}
+
 		}
 		return graph;
 	}
@@ -87,9 +92,6 @@ public class Scheduler {
 	public void makeHeuristic() {
 		for (Node n : graph.nodes.values()) {
 			n.hvalue = getHValue(n);
-		}
-		for (Node n : graph.nodes.values()) {
-			System.out.println(n.hvalue);
 		}
 	}
 
