@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides a representation of a graph ADT.
@@ -98,6 +99,10 @@ public class Graph {
 	
 	public Collection<Node> getAllNodes() {
 		return nodes.values();
+	}
+	
+	public Set<Node> getNeighbours(TreeNode n) {
+		return null;
 	}
 
 }

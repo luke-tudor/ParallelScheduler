@@ -1,13 +1,7 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.TreeSet;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
@@ -36,16 +30,18 @@ public class Scheduler {
 	 * TODO: implement scheduling algorithm
 	 */
 	public Graph computeSchedule() {
-		PriorityQueue<TreeNode> openSet = new PriorityQueue<>();
-		openSet.add(new TreeNode());
-		while (!openSet.isEmpty()) {
+		PriorityQueue<TreeNode> q = new PriorityQueue<>();
+		q.add(new TreeNode());
+		while (!q.isEmpty()) {
 			// pop from priority queue
-			TreeNode current = openSet.remove();
+			TreeNode current = q.remove();
 			// if current == goal or complete solution, then we have optimal solution
 			if (current.height == graph.getAllNodes().size()) {
 				System.out.println("found it");
 				TreeNode tail = current;
 				while (tail.recentNode != null) {
+					tail.recentNode.setProcessor(tail.recentProcessor);
+					tail.recentNode.setStart(tail.recentStartTime);
 					System.out.println(tail.recentNode.getName() + tail.recentStartTime);
 					tail = tail.parent;
 				}
@@ -53,7 +49,8 @@ public class Scheduler {
 			}
 
 			// find neighbouring nodes
-			List<Node> neighbour;
+			Set<Node> neighbours = graph.getNeighbours(current);
+			/*List<Node> neighbour;
 			if (current.recentNode == null) {
 				neighbour = new ArrayList<>(graph.getAllParentless());
 			} else {
@@ -63,27 +60,20 @@ public class Scheduler {
 				for (Node n : current.parent.recentNode.childEdgeWeights.keySet()) {
 					neighbour.add(n);
 				}
-			}
-			
-			for (Node n : neighbour) {
-				//System.out.println(n.getName());
-			}
+			}*/
 			
 			for (int i = 0; i < numProcessors; i++) {
-				for (Node n : neighbour) {
+				for (Node n : neighbours) {
 					if (current.parent == null) {
-						openSet.add(new TreeNode(current, n, i, 0, 1));
+						q.add(new TreeNode(current, n, i, 0, 1));
 					} else {
-						int startTime = current.recentNode.getWeight() + current.recentStartTime;
-						if (current.recentProcessor != i) {
-							//startTime += n.parentEdgeWeights.get(current.recentNode);
-						}
-						openSet.add(new TreeNode(current, n, i, startTime, current.height+1));
+						q.add(new TreeNode(current, n, i));
 					}
 				}
 			}
 
 		}
+		System.exit(1);
 		return graph;
 	}
 

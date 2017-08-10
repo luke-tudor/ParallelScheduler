@@ -7,6 +7,10 @@ public class TreeNode implements Comparable<TreeNode> {
 	public int recentStartTime;
 	public int height;
 	
+	public TreeNode(TreeNode tn, Node recent, int procNum) {
+		
+	}
+	
 	public TreeNode() {
 		this(null, null, -1, -1, 0);
 	}
