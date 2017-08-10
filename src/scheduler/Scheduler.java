@@ -36,8 +36,6 @@ public class Scheduler {
 	 * TODO: implement scheduling algorithm
 	 */
 	public Graph computeSchedule() {
-		// set of nodes we have evaluated
-		// set of nodes we can reach
 		PriorityQueue<TreeNode> openSet = new PriorityQueue<>();
 		openSet.add(new TreeNode());
 		while (!openSet.isEmpty()) {
