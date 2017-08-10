@@ -25,9 +25,9 @@ public class TreeNode implements Comparable<TreeNode> {
 
 	@Override
 	public int compareTo(TreeNode other) {
-		if (recentNode.hvalue + recentStartTime < other.recentNode.hvalue + other.recentStartTime) {
+		if (hashCode() < other.hashCode()) {
 			return -1;
-		} else if (recentNode.hvalue + recentStartTime == other.recentNode.hvalue + recentStartTime) {
+		} else if (hashCode() == other.hashCode()) {
 			return 0;
 		} else {
 			return 1;
