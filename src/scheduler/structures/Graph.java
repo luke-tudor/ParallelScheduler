@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Provides a representation of a graph ADT.
  * 
- * @author Luke Tudor
+ * @author Luke Tudor and Warren Yeu
  */
 public class Graph {
 	
@@ -100,9 +100,22 @@ public class Graph {
 	public Collection<Node> getAllNodes() {
 		return nodes.values();
 	}
-	
-	public Set<Node> getNeighbours(TreeNode n) {
-		return null;
-	}
+
+    public Set<Node> getNeighbours(TreeNode n) {
+        Collection<Node> c = nodes.values();
+        Set<Node> neighbours = new HashSet<>();
+        for (Node n1 : c) {
+            Collection<Node> c1 = n1.childEdgeWeights.keySet();
+            for (Node n2 : c1) {
+                for (Node n3 : n2.parentEdgeWeights.keySet()) {
+                    if (!n3.parentEdgeWeights.keySet().isEmpty()) { //Pseudo-code says if all parents are in collection of nodes??
+                        neighbours.add(n3);
+                    }
+                }
+            }
+        }
+        return neighbours;
+    }
 
 }
+
