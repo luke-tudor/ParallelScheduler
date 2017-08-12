@@ -102,22 +102,30 @@ public class Graph {
 		return nodes.values();
 	}
 
+	/**
+	 * This method finds all the nodes that can currently be reached from the current partial schedule n
+	 */
 	public Set<Node> getNeighbours(TreeNode n) {
+		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
 		while (n != null) {
 			scheduled.add(n.recentNode);
 			n = n.parent;
 		}
+		
+		// For each of those nodes, find their children
 		Set<Node> neighbours = new HashSet<>();
 		for (Node node : scheduled) {
 			Collection<Node> children = node.childEdgeWeights.keySet();
 			ChildLoop:
 				for (Node child : children) {
+					// For each child, if they have a parent not in the partial schedule, that child is not reachable
 					for (Node parent : child.parentEdgeWeights.keySet()) {
 						if (!scheduled.contains(parent)) {
 							continue ChildLoop;
 						}
 					}
+					// If child is reachable, it's a neighbour
 					neighbours.add(child);
 				}
 		}

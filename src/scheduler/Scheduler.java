@@ -50,17 +50,6 @@ public class Scheduler {
 
 			// find neighbouring nodes
 			Set<Node> neighbours = graph.getNeighbours(current);
-			/*List<Node> neighbour;
-			if (current.recentNode == null) {
-				neighbour = new ArrayList<>(graph.getAllParentless());
-			} else {
-				neighbour = new ArrayList<>(current.recentNode.childEdgeWeights.keySet());
-			}
-			if (current.recentNode != null && current.parent.recentNode != null) {
-				for (Node n : current.parent.recentNode.childEdgeWeights.keySet()) {
-					neighbour.add(n);
-				}
-			}*/
 			
 			for (int i = 0; i < numProcessors; i++) {
 				for (Node n : neighbours) {
