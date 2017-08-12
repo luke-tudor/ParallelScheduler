@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
@@ -22,7 +23,10 @@ public class Scheduler {
 	private Graph graph;
 	private int numProcessors;
 	
+	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once may not even
+	// be necessary for multi-threading
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
+	// This executor is going to be executing a "processNode()" task, whatever that ends up being
 	private ExecutorService exe;
 
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
@@ -70,6 +74,12 @@ public class Scheduler {
 
 		}
 		System.exit(1);
+		// Temporarily here to explain how the executor will do tasks
+		try {
+			exe.awaitTermination(1, TimeUnit.DAYS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return graph;
 	}
 
