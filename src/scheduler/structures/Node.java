@@ -10,17 +10,16 @@ import java.util.Set;
  * 
  * @author Luke Tudor
  */
-public class Node {
+public class Node{
 	
 	// name is the string handle for this object
 	// weight is the cost of this node
 	// start is the earliest start time of this node
 	// processor is which processor the node should be run on
-	private String name;	
-	private int weight;
+	private String name;
 	private int start;
 	private int processor;
-	
+	private int weight;
 	public int hvalue;
 	
 	// parentEdges stores all nodes that have an edge to this node
@@ -30,8 +29,8 @@ public class Node {
 	public Map<Node, Integer> childEdgeWeights;
 
 	public Node(String name, int weight) {
-		this.name = name;
 		this.weight = weight;
+		this.name = name;
 		start = 0;
 		processor = 0;
 		
@@ -51,10 +50,6 @@ public class Node {
 		return name;
 	}
 	
-	public int getWeight() {
-		return weight;
-	}
-	
 	public void setStart(int start) {
 		this.start = start;
 	}
@@ -71,5 +66,7 @@ public class Node {
 		return processor;
 	}
 	
-	
+	public int getWeight() {
+		return weight;
+	}
 }

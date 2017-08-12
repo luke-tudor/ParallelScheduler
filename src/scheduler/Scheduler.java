@@ -42,7 +42,7 @@ public class Scheduler {
 	 */
 	public Graph computeSchedule() {
 		PriorityQueue<TreeNode> q = new PriorityQueue<>();
-		q.add(new TreeNode());
+		q.add(new TreeNode(numProcessors));
 		while (!q.isEmpty()) {
 			// pop from priority queue
 			TreeNode current = q.remove();
@@ -65,7 +65,7 @@ public class Scheduler {
 			for (int i = 0; i < numProcessors; i++) {
 				for (Node n : neighbours) {
 					if (current.parent == null) {
-						q.add(new TreeNode(current, n, i, 0, 1));
+						q.add(new TreeNode(current, n, i, 0, 1, new int[numProcessors]));
 					} else {
 						q.add(new TreeNode(current, n, i));
 					}
