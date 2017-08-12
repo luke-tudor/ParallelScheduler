@@ -96,10 +96,10 @@ public class TreeNode implements Comparable<TreeNode> {
 	 */
 	public TreeNode addNode(Node nodeToAdd, int processor) {
 		//find the earliest start time for that node on that processor
-		int startTime = Math.max(calculateDiagram(nodeToAdd, processor), _processorEndTimes[processor-1]);
+		int startTime = Math.max(calculateDiagram(nodeToAdd, processor), _processorEndTimes[processor]);
 		
 		//update the processorEndTimes array
-		_processorEndTimes[processor-1] = startTime + nodeToAdd.getWeight();
+		_processorEndTimes[processor] = startTime + nodeToAdd.getWeight();
 		
 		//create the new TreeNode
 		return new TreeNode(this, nodeToAdd, processor, startTime, height+1, _processorEndTimes);
