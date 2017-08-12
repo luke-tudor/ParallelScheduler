@@ -110,9 +110,6 @@ public class Graph {
 	 * This method finds all the nodes that can currently be reached from the current partial schedule n
 	 */
 	public Set<Node> getNeighbours(TreeNode n) {
-		if (n == null) {
-			return getAllParentless();
-		}
 		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
 		while (n != null) {
