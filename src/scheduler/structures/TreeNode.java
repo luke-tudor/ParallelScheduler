@@ -14,7 +14,11 @@ public class TreeNode implements Comparable<TreeNode> {
 	public int[] _processorEndTimes;
 	
 	public TreeNode(TreeNode tn, Node recent, int procNum) {
-		
+		TreeNode newTN = tn.addNode(recent, procNum);
+		parent = newTN.parent;
+		recentNode = newTN.recentNode;
+		recentProcessor = newTN.recentProcessor;
+		height = newTN.height;
 	}
 	
 	public TreeNode(int numOfProcessors) {
