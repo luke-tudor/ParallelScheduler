@@ -88,8 +88,8 @@ public class Graph {
 		return li;
 	}
 
-	public List<Node> getAllParentless() {
-		List<Node> li = new ArrayList<>();
+	public Set<Node> getAllParentless() {
+		Set<Node> li = new HashSet<>();
 		for (Node n : nodes.values()) {
 			if (n.parentEdgeWeights.isEmpty()) {
 				li.add(n);
@@ -106,6 +106,9 @@ public class Graph {
 	 * This method finds all the nodes that can currently be reached from the current partial schedule n
 	 */
 	public Set<Node> getNeighbours(TreeNode n) {
+		if (n == null) {
+			return getAllParentless();
+		}
 		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
 		while (n != null) {
