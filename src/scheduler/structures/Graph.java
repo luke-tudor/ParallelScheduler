@@ -112,13 +112,19 @@ public class Graph {
 	public Set<Node> getNeighbours(TreeNode n) {
 		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
-		while (n != null) {
+		while (n.parent != null) {
 			scheduled.add(n.recentNode);
 			n = n.parent;
 		}
-		
+		Set<Node> neighbours = new HashSet<>();		
 		// For each of those nodes, find their children
-		Set<Node> neighbours = new HashSet<>();
+		Set<Node> parentless = getAllParentless();
+		for (Node node : parentless) {
+			if (!scheduled.contains(node)) {
+				neighbours.add(node);
+			}
+		}
+
 		for (Node node : scheduled) {
 			Collection<Node> children = node.childEdgeWeights.keySet();
 			ChildLoop:
