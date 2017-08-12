@@ -2,6 +2,9 @@ package scheduler;
 
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
@@ -18,10 +21,14 @@ public class Scheduler {
 
 	private Graph graph;
 	private int numProcessors;
+	
+	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
+	private ExecutorService exe;
 
-	public Scheduler(Graph graph, int numProcessors) {
+	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
+		exe = Executors.newFixedThreadPool(numThreads);
 	}
 
 	/**
@@ -104,7 +111,7 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		//finds the optimum schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
 		s.makeHeuristic();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
