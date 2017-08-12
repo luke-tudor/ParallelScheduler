@@ -49,8 +49,8 @@ public class Graph {
 	 * @param e the edge object to add to the graph
 	 */
 	public void addEdge(Edge e) {
-		Node parent = nodes.get(e.getParent());
-		Node child = nodes.get(e.getChild());
+		Node parent = e.getParent();
+		Node child = e.getChild();
 		parent.addChildEdgeWeight(child, e.getWeight());
 		child.addParentEdgeWeight(parent, e.getWeight());
 		edges.put(e.getParent() + EDGE_LINK + e.getChild(), e);
@@ -101,6 +101,10 @@ public class Graph {
 	public Collection<Node> getAllNodes() {
 		return nodes.values();
 	}
+	
+	public Collection<Edge> getAllEdges() {
+		return edges.values();
+	}
 
 	/**
 	 * This method finds all the nodes that can currently be reached from the current partial schedule n
@@ -134,6 +138,59 @@ public class Graph {
 		}
 		return neighbours;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+    	Graph g = (Graph) obj;
+    	
+    	Collection<Node> c = g.getAllNodes();
+    	
+    	if (c.size() != nodes.size()) {
+    		return false;
+    	}
+    	
+    	for (Node n : nodes.values()) {
+    		
+    		boolean bool = false;
+    		
+    		for (Node n1 : c) {
+    			if (n.equals(n1)) {
+    				bool = true;
+    				break;
+    			}
+    		}
+    		
+    		if (!bool) {
+    			return false;
+    		}
+    		
+    	}
+    	
+    	Collection<Edge> c1 = g.getAllEdges();
+    	
+    	if (c1.size() != edges.size()) {
+    		return false;
+    	}
+    	
+    	for (Edge e : edges.values()) {
+
+    		boolean bool1 = false;
+    		
+    		for (Edge e1 : c1) {
+    			if (e1.equals(e)) {
+    				bool1 = true;
+    				break;
+    			}
+    		}
+    		
+    		if (!bool1) {
+    			return false;
+    		}
+    		
+    	}
+    	
+    	return true;
+    }
 
 }
 

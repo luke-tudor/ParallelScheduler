@@ -69,4 +69,17 @@ public class Node{
 	public int getWeight() {
 		return weight;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Node n = (Node) obj;
+		if (name.equals(n.getName())
+				&& start == n.getStart()
+				&& processor == n.getProcessor()
+				&& weight == n.getWeight()) {
+			return true;
+		}
+		return false;
+	}
+	
 }
