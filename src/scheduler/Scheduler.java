@@ -2,6 +2,10 @@ package scheduler;
 
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
@@ -18,10 +22,17 @@ public class Scheduler {
 
 	private Graph graph;
 	private int numProcessors;
+	
+	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once may not even
+	// be necessary for multi-threading
+	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
+	// This executor is going to be executing a "processNode()" task, whatever that ends up being
+	private ExecutorService exe;
 
-	public Scheduler(Graph graph, int numProcessors) {
+	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
+		exe = Executors.newFixedThreadPool(numThreads);
 	}
 
 	/**
@@ -50,17 +61,6 @@ public class Scheduler {
 
 			// find neighbouring nodes
 			Set<Node> neighbours = graph.getNeighbours(current);
-			/*List<Node> neighbour;
-			if (current.recentNode == null) {
-				neighbour = new ArrayList<>(graph.getAllParentless());
-			} else {
-				neighbour = new ArrayList<>(current.recentNode.childEdgeWeights.keySet());
-			}
-			if (current.recentNode != null && current.parent.recentNode != null) {
-				for (Node n : current.parent.recentNode.childEdgeWeights.keySet()) {
-					neighbour.add(n);
-				}
-			}*/
 			
 			for (int i = 0; i < numProcessors; i++) {
 				for (Node n : neighbours) {
@@ -74,6 +74,12 @@ public class Scheduler {
 
 		}
 		System.exit(1);
+		// Temporarily here to explain how the executor will do tasks
+		try {
+			exe.awaitTermination(1, TimeUnit.DAYS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return graph;
 	}
 
@@ -115,7 +121,7 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		//finds the optimum schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
 		s.makeHeuristic();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
