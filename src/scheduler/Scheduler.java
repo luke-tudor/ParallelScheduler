@@ -64,15 +64,16 @@ public class Scheduler {
 			
 			for (int i = 0; i < numProcessors; i++) {
 				for (Node n : neighbours) {
-					if (current.parent == null) {
-						q.add(new TreeNode(current, n, i, 0, 1, new int[numProcessors]));
-					} else {
+//					if (current.parent == null) {
+//						q.add(new TreeNode(current, n, i, 0, 1, new int[numProcessors]));
+//					} else {
 						q.add(new TreeNode(current, n, i));
-					}
+//					}
 				}
 			}
 
 		}
+		System.out.println("I FAILED");
 		System.exit(1);
 		// Temporarily here to explain how the executor will do tasks
 		try {

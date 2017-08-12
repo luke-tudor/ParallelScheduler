@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import scheduler.Scheduler;
 import scheduler.io.InputParser;
 import scheduler.structures.Edge;
 import scheduler.structures.Graph;
@@ -38,8 +39,8 @@ public class TestScheduler {
 		g.addEdge(new Edge(n3, n4, 1));
 		
 		_graphs.put(g.getGraphName(), g);
-		
-		InputParser in = new InputParser("testfiles/Node_9_SeriesParallel.dot");
+		/*
+		InputParser in = new InputParser("testfiles/Nodes_9_SeriesParallel.dot");
 		_graphs.put("Node_9_SeriesParallel", in.parse());
 		
 		in = new InputParser("testfiles/Nodes_10_Random.dot");
@@ -66,12 +67,13 @@ public class TestScheduler {
 		graph.addEdge(new Edge(node3, node4, 1));
 		
 		_graphs.put(graph.getGraphName(), graph);
-		
+		*/
 	}
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		Scheduler sch = new Scheduler(_graphs.get("simple"), 2, 1);
+		Graph graph = sch.computeSchedule();
 	}
 
 }

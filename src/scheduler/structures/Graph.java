@@ -112,7 +112,7 @@ public class Graph {
 	public Set<Node> getNeighbours(TreeNode n) {
 		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
-		while (n.parent != null) {
+		while (n != null && n.recentNode != null) {
 			scheduled.add(n.recentNode);
 			n = n.parent;
 		}
@@ -129,14 +129,16 @@ public class Graph {
 			Collection<Node> children = node.childEdgeWeights.keySet();
 			ChildLoop:
 				for (Node child : children) {
-					// For each child, if they have a parent not in the partial schedule, that child is not reachable
-					for (Node parent : child.parentEdgeWeights.keySet()) {
-						if (!scheduled.contains(parent)) {
-							continue ChildLoop;
+					if (!scheduled.contains(child)) {
+						// For each child, if they have a parent not in the partial schedule, that child is not reachable
+						for (Node parent : child.parentEdgeWeights.keySet()) {
+							if (!scheduled.contains(parent)) {
+								continue ChildLoop;
+							}
 						}
+						// If child is reachable, it's a neighbour
+						neighbours.add(child);
 					}
-					// If child is reachable, it's a neighbour
-					neighbours.add(child);
 				}
 		}
 		return neighbours;
