@@ -37,12 +37,10 @@ public class Scheduler {
 
 	/**
 	 * computes the optimum processing schedule for the graph 
-	 * 
-	 * TODO: implement scheduling algorithm
 	 */
 	public Graph computeSchedule() {
 		PriorityQueue<TreeNode> q = new PriorityQueue<>();
-		q.add(new TreeNode(numProcessors));
+		q.add(new TreeNode());
 		while (!q.isEmpty()) {
 			// pop from priority queue
 			TreeNode current = q.remove();
@@ -64,11 +62,7 @@ public class Scheduler {
 			
 			for (int i = 0; i < numProcessors; i++) {
 				for (Node n : neighbours) {
-//					if (current.parent == null) {
-//						q.add(new TreeNode(current, n, i, 0, 1, new int[numProcessors]));
-//					} else {
-						q.add(new TreeNode(current, n, i));
-//					}
+					q.add(new TreeNode(current, n, i));
 				}
 			}
 

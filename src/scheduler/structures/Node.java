@@ -1,9 +1,7 @@
 package scheduler.structures;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Provides a representation of a node element of a graph object.
