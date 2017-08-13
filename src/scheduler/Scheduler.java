@@ -51,7 +51,6 @@ public class Scheduler {
 				while (tail.recentNode != null) {
 					tail.recentNode.setProcessor(tail.recentProcessor + 1);
 					tail.recentNode.setStart(tail.recentStartTime);
-					System.out.println("Name:" + tail.recentNode.getName() + " StartTime:" + tail.recentStartTime);
 					tail = tail.parent;
 				}
 				return graph;
