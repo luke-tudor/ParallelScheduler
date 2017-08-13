@@ -51,7 +51,6 @@ public class Scheduler {
 				while (tail.recentNode != null) {
 					tail.recentNode.setProcessor(tail.recentProcessor + 1);
 					tail.recentNode.setStart(tail.recentStartTime);
-					System.out.println("Name:" + tail.recentNode.getName() + " StartTime:" + tail.recentStartTime);
 					tail = tail.parent;
 				}
 				return graph;
@@ -71,6 +70,29 @@ public class Scheduler {
 		System.exit(1);
 		return null;
 	}
+	
+	public void computeHeuristics() {
+		for (Node n : graph.getAllNodes()) {
+			int heuristic = getHeuristic(n);
+			n.setHeuristic(heuristic);
+		}
+	}
+	
+	public int getHeuristic(Node n) {
+		Set<Node> children = n.childEdgeWeights.keySet();
+		if (children.size() == 0) {
+			return n.getWeight();
+		} else {
+			int max = 0;
+			for (Node child : children) {
+				int value = getHeuristic(child);
+				if (value > max) {
+					max = value;
+				}
+			}
+			return max;
+		}
+	}
 
 	public static void main(String[] args) {
 		String inputFileName = args[0];
@@ -86,6 +108,7 @@ public class Scheduler {
 
 		//finds the optimum schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
+		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 

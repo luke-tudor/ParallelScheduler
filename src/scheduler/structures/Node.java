@@ -18,6 +18,7 @@ public class Node{
 	private int start;
 	private int processor;
 	private int weight;
+	private int heuristic;
 	
 	// parentEdges stores all nodes that have an edge to this node
 	// childEdges stores all nodes that this node has an edge to
@@ -65,6 +66,14 @@ public class Node{
 	
 	public int getWeight() {
 		return weight;
+	}
+	
+	public void setHeuristic(int h) {
+		heuristic = h;
+	}
+	
+	public int getHeuristic() {
+		return heuristic;
 	}
 	
 	@Override
