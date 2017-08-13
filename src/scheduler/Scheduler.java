@@ -45,12 +45,12 @@ public class Scheduler {
 			// pop from priority queue
 			TreeNode current = q.remove();
 			// if current == goal or complete solution, then we have optimal solution
-			if (current.height == graph.getAllNodes().size()) {
+			if (current.getHeight() == graph.getAllNodes().size()) {
 				TreeNode tail = current;
-				while (tail.recentNode != null) {
-					tail.recentNode.setProcessor(tail.recentProcessor + 1);
-					tail.recentNode.setStart(tail.recentStartTime);
-					tail = tail.parent;
+				while (tail.getNode() != null) {
+					tail.getNode().setProcessor(tail.getProcessor() + 1);
+					tail.getNode().setStart(tail.getStartTime());
+					tail = tail.getParent();
 				}
 				return graph;
 			}
@@ -80,7 +80,7 @@ public class Scheduler {
 		if (n.getBottomLevel() != 0) {
 			return n.getBottomLevel();
 		} else {
-			Set<Node> children = n.childEdgeWeights.keySet();
+			Set<Node> children = n.getChildEdgeWeights().keySet();
 			if (children.size() == 0) {
 				n.setBottomLevel(n.getWeight());
 				return n.getWeight();

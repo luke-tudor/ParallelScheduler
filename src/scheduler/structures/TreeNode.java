@@ -72,8 +72,8 @@ public class TreeNode implements Comparable<TreeNode> {
 	 */
 	@Override
 	public int compareTo(TreeNode other) {
-		int node1Heuristic = node.getHeuristic() + recentStartTime;
-		int node2Heuristic = other.node.getHeuristic() + other.recentStartTime;
+		int node1Heuristic = node.getBottomLevel() + recentStartTime;
+		int node2Heuristic = other.node.getBottomLevel() + other.recentStartTime;
 		if (node1Heuristic < node2Heuristic) {
 			return -1;
 		} else if (node1Heuristic == node2Heuristic) {
