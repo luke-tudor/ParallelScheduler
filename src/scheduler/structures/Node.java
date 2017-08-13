@@ -68,11 +68,11 @@ public class Node{
 		return weight;
 	}
 	
-	public void setHeuristic(int h) {
+	public void setBottomLevel(int h) {
 		heuristic = h;
 	}
 	
-	public int getHeuristic() {
+	public int getBottomLevel() {
 		return heuristic;
 	}
 	
