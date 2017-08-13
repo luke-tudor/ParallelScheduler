@@ -54,6 +54,9 @@ public class InputParser {
 			String[] tokens = graphLines.get(i).split("\\s+");
 			// If there are only 3 strings left after splitting by whitespace, the line is a node
 			if (tokens.length == 3) {
+				if (tokens[1].length() > 1) {
+					continue;
+				}
 				// Extract weight property by removing non-decimal characters, replace '\\D' with empty strings
 				int nodeWeight = Integer.parseInt(tokens[2].replaceAll("\\D", ""));
 				Node n = new Node(tokens[1], nodeWeight);
