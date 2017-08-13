@@ -49,9 +49,9 @@ public class TreeNode implements Comparable<TreeNode> {
 
 	@Override
 	public int compareTo(TreeNode other) {
-		if (hashCode() < other.hashCode()) {
+		if (recentNode.getHeuristic() < other.recentNode.getHeuristic()) {
 			return -1;
-		} else if (hashCode() == other.hashCode()) {
+		} else if (recentNode.getHeuristic() == other.recentNode.getHeuristic()) {
 			return 0;
 		} else {
 			return 1;
