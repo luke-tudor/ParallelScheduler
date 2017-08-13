@@ -46,15 +46,15 @@ public class Graph {
 	 *
 	 * Adds an edge object to the graph
 	 *
-	 * @param e the edge object to add to the graph
+	 * @param edge the edge object to add to the graph
 	 */
-	public void addEdge(Edge e) {
-		Node parent = e.getParent();
-		Node child = e.getChild();
-		parent.addChildEdgeWeight(child, e.getWeight());
-		child.addParentEdgeWeight(parent, e.getWeight());
-		edges.put(e.getParent() + EDGE_LINK + e.getChild(), e);
-		order.add(e);
+	public void addEdge(Edge edge) {
+		Node parent = edge.getParent();
+		Node child = edge.getChild();
+		parent.addChildEdgeWeight(child, edge.getWeight());
+		child.addParentEdgeWeight(parent, edge.getWeight());
+		edges.put(edge.getParent() + EDGE_LINK + edge.getChild(), edge);
+		order.add(edge);
 	}
 
 	/**
@@ -78,20 +78,30 @@ public class Graph {
 		return nodes.get(s);
 	}
 
+	/**
+	 * Finds all nodes in the graph that don't have any children, aka. the final nodes
+	 * 
+	 * @return List<Node> of all the Node objects without children
+	 */
 	public List<Node> getAllChildless() {
 		List<Node> li = new ArrayList<>();
 		for (Node n : nodes.values()) {
-			if (n.childEdgeWeights.isEmpty()) {
+			if (n.getChildEdgeWeights().isEmpty()) {
 				li.add(n);
 			}
 		}
 		return li;
 	}
 
+	/**
+	 * Finds all nodes in the graph without parents, aka. the root nodes
+	 * 
+	 * @return List<Node> of all the root nodes in the graph
+	 */
 	public Set<Node> getAllParentless() {
 		Set<Node> li = new HashSet<>();
 		for (Node n : nodes.values()) {
-			if (n.parentEdgeWeights.isEmpty()) {
+			if (n.getParentEdgeWeights().isEmpty()) {
 				li.add(n);
 			}
 		}
@@ -107,14 +117,17 @@ public class Graph {
 	}
 
 	/**
-	 * This method finds all the nodes that can currently be reached from the current partial schedule n
+	 * Finds all the nodes that can currently be reached from the partial schedule treeNode. The set of 
+	 * nodes returned by this method are all the nodes that can legally be added to the partial schedule
+	 * 
+	 * @return Set<Node> All the nodes that can be reached from the given partial schedule.
 	 */
-	public Set<Node> getNeighbours(TreeNode n) {
+	public Set<Node> getNeighbours(TreeNode treeNode) {
 		// Get all nodes that are in this partial schedule
 		Set<Node> scheduled = new HashSet<>();
-		while (n != null && n.recentNode != null) {
-			scheduled.add(n.recentNode);
-			n = n.parent;
+		while (treeNode != null && treeNode.getNode() != null) {
+			scheduled.add(treeNode.getNode());
+			treeNode = treeNode.getParent();
 		}
 		Set<Node> neighbours = new HashSet<>();		
 		// For each of those nodes, find their children
@@ -126,12 +139,12 @@ public class Graph {
 		}
 
 		for (Node node : scheduled) {
-			Collection<Node> children = node.childEdgeWeights.keySet();
+			Collection<Node> children = node.getChildEdgeWeights().keySet();
 			ChildLoop:
 				for (Node child : children) {
 					if (!scheduled.contains(child)) {
 						// For each child, if they have a parent not in the partial schedule, that child is not reachable
-						for (Node parent : child.parentEdgeWeights.keySet()) {
+						for (Node parent : child.getParentEdgeWeights().keySet()) {
 							if (!scheduled.contains(parent)) {
 								continue ChildLoop;
 							}

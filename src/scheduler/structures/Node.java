@@ -23,8 +23,8 @@ public class Node{
 	// parentEdges stores all nodes that have an edge to this node
 	// childEdges stores all nodes that this node has an edge to
 	
-	public Map<Node, Integer> parentEdgeWeights;
-	public Map<Node, Integer> childEdgeWeights;
+	private Map<Node, Integer> parentEdgeWeights;
+	private Map<Node, Integer> childEdgeWeights;
 
 	public Node(String name, int weight) {
 		this.weight = weight;
@@ -44,6 +44,7 @@ public class Node{
 		childEdgeWeights.put(child, weight);
 	}
 	
+	//All necessary getters and setters
 	public String getName() {
 		return name;
 	}
@@ -74,6 +75,14 @@ public class Node{
 	
 	public int getHeuristic() {
 		return heuristic;
+	}
+	
+	public Map<Node, Integer> getParentEdgeWeights(){
+		return parentEdgeWeights;
+	}
+	
+	public Map<Node, Integer> getChildEdgeWeights(){
+		return childEdgeWeights;
 	}
 	
 	@Override

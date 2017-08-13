@@ -10,7 +10,6 @@ public class Edge {
 	// parent represents the start node of the edge
 	// child represents the end node of the edge
 	// weight is the weight of the edge
-	//Why not reference the nodes themselves? we know they exist at the time the edge is created
 	private Node parent;
 	private Node child;
 	private int weight;
