@@ -44,7 +44,7 @@ public class TestInput {
 		InputParser in = new InputParser("testfiles/Nodes_7_OutTree.dot");
 		Graph testGraph = in.parse();
 		
-		assertEquals(graph.equals(testGraph), true);
+		assertEquals(true, graph.equals(testGraph));
 		
 	}
 	
@@ -91,7 +91,61 @@ public class TestInput {
 		InputParser in = new InputParser("testfiles/Nodes_11_OutTree.dot");
 		Graph testGraph = in.parse();
 		
-		assertEquals(graph.equals(testGraph), true);
+		assertEquals(true, graph.equals(testGraph));
+		
+	}
+	
+	@Test
+	public void test_10_Random() {
+
+		Graph graph = new Graph(null);
+		
+		Node n0 = new Node("0", 6);
+		Node n3 = new Node("3", 10);
+		Node n4 = new Node("4", 3);
+		Node n9 = new Node("9", 8);
+		Node n1 = new Node("1", 5);
+		Node n2 = new Node("2", 5);
+		Node n5 = new Node("5", 7);
+		Node n6 = new Node("6", 8);
+		Node n8 = new Node("8", 8);
+		Node n7 = new Node("7", 3);
+		
+		graph.addNode(n0);
+		graph.addNode(n1);
+		graph.addNode(n2);
+		graph.addNode(n3);
+		graph.addNode(n4);
+		graph.addNode(n5);
+		graph.addNode(n6);
+		graph.addNode(n7);
+		graph.addNode(n8);
+		graph.addNode(n9);
+		
+		graph.addEdge(new Edge(n0, n3, 34));
+		graph.addEdge(new Edge(n0, n4, 24));
+		graph.addEdge(new Edge(n0, n9, 44));
+		graph.addEdge(new Edge(n1, n2, 48));
+		graph.addEdge(new Edge(n1, n5, 19));
+		graph.addEdge(new Edge(n1, n6, 39));
+		graph.addEdge(new Edge(n2, n3, 10));
+		graph.addEdge(new Edge(n2, n7, 48));
+		graph.addEdge(new Edge(n2, n8, 48));
+		graph.addEdge(new Edge(n4, n6, 10));
+		graph.addEdge(new Edge(n4, n7, 48));
+		graph.addEdge(new Edge(n4, n8, 48));
+		graph.addEdge(new Edge(n4, n9, 39));
+		graph.addEdge(new Edge(n6, n7, 15));
+		graph.addEdge(new Edge(n6, n8, 39));
+		graph.addEdge(new Edge(n6, n9, 29));
+		graph.addEdge(new Edge(n7, n8, 15));
+		graph.addEdge(new Edge(n7, n9, 34));
+		graph.addEdge(new Edge(n8, n9, 39));
+		
+		InputParser in = new InputParser("testfiles/Nodes_10_Random.dot");
+		Graph testGraph = in.parse();
+		
+		assertEquals(true, graph.equals(testGraph));
 		
 	}
 
