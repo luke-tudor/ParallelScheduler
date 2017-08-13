@@ -47,6 +47,7 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.recentNode = recent;
 		this.recentProcessor = procNum;
 		this.recentStartTime = maxStart;
+		this.height = tn.height + 1;
 		
 	}
 	
