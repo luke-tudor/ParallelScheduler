@@ -59,7 +59,7 @@ public class InputParser {
 				Node n = new Node(tokens[1], nodeWeight);
 				graph.addNode(n);
 			// Otherwise, the line is an edge
-			} else {
+			} else if (tokens.length == 5) {
 				// Extract weight property by removing non-decimal characters, replace '\\D' with empty strings
 				int edgeWeight = Integer.parseInt(tokens[4].replaceAll("\\D", ""));
 				Edge e = new Edge(graph.getNode(tokens[1]), graph.getNode(tokens[3]), edgeWeight);
