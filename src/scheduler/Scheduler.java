@@ -73,8 +73,31 @@ public class Scheduler {
 	
 	public void computeHeuristics() {
 		for (Node n : graph.getAllNodes()) {
-			int heuristic = getBottomLevel(n);
-			n.setBottomLevel(heuristic);
+			setBottomLevel(n);
+			//int heuristic = getBottomLevel(n);
+			//n.setBottomLevel(heuristic);
+		}
+	}
+	
+	public int setBottomLevel(Node n) {
+		if (n.getBottomLevel() != 0) {
+			return n.getBottomLevel();
+		} else {
+			Set<Node> children = n.childEdgeWeights.keySet();
+			if (children.size() == 0) {
+				n.setBottomLevel(n.getWeight());
+				return n.getWeight();
+			} else {
+				int max = 0;
+				for (Node child : children) {
+					int value = setBottomLevel(child);
+					if (value > max) {
+						max = value;
+					}
+				}
+				n.setBottomLevel(max);
+				return max;
+			}
 		}
 	}
 	
