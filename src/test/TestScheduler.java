@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,8 +73,40 @@ public class TestScheduler {
 
 	@Test
 	public void test() {
+		
 		Scheduler sch = new Scheduler(_graphs.get("simple"), 2, 1);
 		Graph graph = sch.computeSchedule();
+		
+		Collection<Node> c = graph.getAllNodes();
+		
+		assertEquals(c.size(), 4);
+		int maxEnd = -1;
+		int[] procEndTimes = new int[2];
+		
+		for (Node n : c) {
+			
+			
+			int time = n.getStart() + n.getWeight();
+			if (maxEnd < time) {
+				time = maxEnd;
+			}
+			
+			if (n.getProcessor() != 1 && n.getProcessor() != 2) {
+				fail("Task assigned to non-existing processor. Processor: " + n.getProcessor());
+			}
+			
+			if (n.getStart() < procEndTimes[n.getProcessor() - 1]) {
+				fail("Task started before previous task finished");
+			}
+			
+			if (procEndTimes[n.getProcessor() - 1] < time) {
+				procEndTimes[n.getProcessor() - 1] = time;
+			}
+			
+		}
+		
+		assertEquals(maxEnd, 9);
+		
 	}
 
 }
