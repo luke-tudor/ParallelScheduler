@@ -72,31 +72,6 @@ public class Scheduler {
 		return null;
 	}
 
-	public void makeHeuristic() {
-		for (Node n : graph.nodes.values()) {
-			n.hvalue = getHValue(n);
-		}
-	}
-
-	private int getHValue(Node node) {
-		if (node.childEdgeWeights.isEmpty()) {
-			node.hvalue = node.getWeight();
-			return node.getWeight();
-		} else if (node.hvalue != 0) {
-			return node.hvalue;
-		} else {
-			int maxHValue = 0;
-			for (Node n : node.childEdgeWeights.keySet()) {
-				if (getHValue(n) > maxHValue) {
-					maxHValue = getHValue(n);
-				}
-			}
-			maxHValue += node.getWeight();
-			node.hvalue = maxHValue;
-			return node.hvalue;
-		}
-	}
-
 	public static void main(String[] args) {
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
@@ -111,7 +86,6 @@ public class Scheduler {
 
 		//finds the optimum schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
-		s.makeHeuristic();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 

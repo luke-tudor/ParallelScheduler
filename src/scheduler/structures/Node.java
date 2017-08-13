@@ -18,7 +18,6 @@ public class Node{
 	private int start;
 	private int processor;
 	private int weight;
-	public int hvalue;
 	
 	// parentEdges stores all nodes that have an edge to this node
 	// childEdges stores all nodes that this node has an edge to
