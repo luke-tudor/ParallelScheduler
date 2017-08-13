@@ -24,6 +24,8 @@ public class Graph {
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
 	private List<Object> order = new ArrayList<Object>();
 
+	private Set<Node> parentless = null;
+
 	// optional graph name
 	private String graphName;
 
@@ -99,19 +101,21 @@ public class Graph {
 	 * @return List<Node> of all the root nodes in the graph
 	 */
 	public Set<Node> getAllParentless() {
-		Set<Node> li = new HashSet<>();
-		for (Node n : nodes.values()) {
-			if (n.getParentEdgeWeights().isEmpty()) {
-				li.add(n);
+		if (parentless == null) {
+			parentless = new HashSet<>();
+			for (Node n : nodes.values()) {
+				if (n.getParentEdgeWeights().isEmpty()) {
+					parentless.add(n);
+				}
 			}
 		}
-		return li;
+		return parentless;
 	}
 
 	public Collection<Node> getAllNodes() {
 		return nodes.values();
 	}
-	
+
 	public Collection<Edge> getAllEdges() {
 		return edges.values();
 	}
@@ -156,59 +160,59 @@ public class Graph {
 		}
 		return neighbours;
 	}
-	
-	@Override
-    public boolean equals(Object obj) {
-    	Graph g = (Graph) obj;
-    	
-    	Collection<Node> c = g.getAllNodes();
-    	
-    	if (c.size() != nodes.size()) {
-    		return false;
-    	}
-    	
-    	for (Node n : nodes.values()) {
-    		
-    		boolean bool = false;
-    		
-    		for (Node n1 : c) {
-    			if (n.equals(n1)) {
-    				bool = true;
-    				break;
-    			}
-    		}
-    		
-    		if (!bool) {
-    			return false;
-    		}
-    		
-    	}
-    	
-    	Collection<Edge> c1 = g.getAllEdges();
-    	
-    	if (c1.size() != edges.size()) {
-    		return false;
-    	}
-    	
-    	for (Edge e : edges.values()) {
 
-    		boolean bool1 = false;
-    		
-    		for (Edge e1 : c1) {
-    			if (e1.equals(e)) {
-    				bool1 = true;
-    				break;
-    			}
-    		}
-    		
-    		if (!bool1) {
-    			return false;
-    		}
-    		
-    	}
-    	
-    	return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		Graph g = (Graph) obj;
+
+		Collection<Node> c = g.getAllNodes();
+
+		if (c.size() != nodes.size()) {
+			return false;
+		}
+
+		for (Node n : nodes.values()) {
+
+			boolean bool = false;
+
+			for (Node n1 : c) {
+				if (n.equals(n1)) {
+					bool = true;
+					break;
+				}
+			}
+
+			if (!bool) {
+				return false;
+			}
+
+		}
+
+		Collection<Edge> c1 = g.getAllEdges();
+
+		if (c1.size() != edges.size()) {
+			return false;
+		}
+
+		for (Edge e : edges.values()) {
+
+			boolean bool1 = false;
+
+			for (Edge e1 : c1) {
+				if (e1.equals(e)) {
+					bool1 = true;
+					break;
+				}
+			}
+
+			if (!bool1) {
+				return false;
+			}
+
+		}
+
+		return true;
+	}
 
 }
 
