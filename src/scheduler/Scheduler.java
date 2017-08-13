@@ -1,11 +1,12 @@
 package scheduler;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
@@ -22,7 +23,7 @@ public class Scheduler {
 
 	private Graph graph;
 	private int numProcessors;
-	
+
 	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once may not even
 	// be necessary for multi-threading
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
@@ -57,11 +58,13 @@ public class Scheduler {
 
 			// find neighbouring nodes
 			Set<Node> neighbours = graph.getNeighbours(current);
-			
-			for (int i = 0; i < numProcessors; i++) {
-				for (Node n : neighbours) {
-					q.add(new TreeNode(current, n, i));
+			for (Node n : neighbours) {
+				Map<Integer, TreeNode> uniqueSchedules = new HashMap<Integer, TreeNode>();
+				for (int i = 0; i < numProcessors; i++) {
+					TreeNode candidate = new TreeNode(current, n, i);
+					uniqueSchedules.put(candidate.getStartTime(), candidate);
 				}
+				q.addAll(uniqueSchedules.values());
 			}
 
 		}
@@ -69,13 +72,13 @@ public class Scheduler {
 		System.exit(1);
 		return null;
 	}
-	
+
 	public void computeHeuristics() {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
 		}
 	}
-	
+
 	public int setBottomLevel(Node n) {
 		if (n.getBottomLevel() != 0) {
 			return n.getBottomLevel();
