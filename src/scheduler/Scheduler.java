@@ -46,7 +46,6 @@ public class Scheduler {
 			TreeNode current = q.remove();
 			// if current == goal or complete solution, then we have optimal solution
 			if (current.height == graph.getAllNodes().size()) {
-				System.out.println("found it");
 				TreeNode tail = current;
 				while (tail.recentNode != null) {
 					tail.recentNode.setProcessor(tail.recentProcessor + 1);
