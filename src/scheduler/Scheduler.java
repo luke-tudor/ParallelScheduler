@@ -45,13 +45,12 @@ public class Scheduler {
 			// pop from priority queue
 			TreeNode current = q.remove();
 			// if current == goal or complete solution, then we have optimal solution
-			if (current.getHeight() == graph.getAllNodes().size()) {
-				System.out.println("found it");
+			if (current.height == graph.getAllNodes().size()) {
 				TreeNode tail = current;
-				while (tail.getNode() != null) {
-					tail.getNode().setProcessor(tail.getProcessor() + 1);
-					tail.getNode().setStart(tail.getStartTime());
-					tail = tail.getParent();
+				while (tail.recentNode != null) {
+					tail.recentNode.setProcessor(tail.recentProcessor + 1);
+					tail.recentNode.setStart(tail.recentStartTime);
+					tail = tail.parent;
 				}
 				return graph;
 			}
@@ -73,24 +72,29 @@ public class Scheduler {
 	
 	public void computeHeuristics() {
 		for (Node n : graph.getAllNodes()) {
-			int heuristic = getHeuristic(n);
-			n.setHeuristic(heuristic);
+			setBottomLevel(n);
 		}
 	}
 	
-	public int getHeuristic(Node n) {
-		Set<Node> children = n.getChildEdgeWeights().keySet();
-		if (children.size() == 0) {
-			return n.getWeight();
+	public int setBottomLevel(Node n) {
+		if (n.getBottomLevel() != 0) {
+			return n.getBottomLevel();
 		} else {
-			int max = 0;
-			for (Node child : children) {
-				int value = getHeuristic(child);
-				if (value > max) {
-					max = value;
+			Set<Node> children = n.childEdgeWeights.keySet();
+			if (children.size() == 0) {
+				n.setBottomLevel(n.getWeight());
+				return n.getWeight();
+			} else {
+				int max = 0;
+				for (Node child : children) {
+					int value = setBottomLevel(child);
+					if (value > max) {
+						max = value;
+					}
 				}
+				n.setBottomLevel(max);
+				return max;
 			}
-			return max;
 		}
 	}
 
