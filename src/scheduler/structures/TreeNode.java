@@ -49,9 +49,9 @@ public class TreeNode implements Comparable<TreeNode> {
 
 	@Override
 	public int compareTo(TreeNode other) {
-		if (recentNode.getHeuristic() < other.recentNode.getHeuristic()) {
+		if (recentNode.getHeuristic() + recentStartTime < other.recentNode.getHeuristic() + other.recentStartTime) {
 			return -1;
-		} else if (recentNode.getHeuristic() == other.recentNode.getHeuristic()) {
+		} else if (recentNode.getHeuristic() + recentStartTime == other.recentNode.getHeuristic() + other.recentStartTime) {
 			return 0;
 		} else {
 			return 1;
