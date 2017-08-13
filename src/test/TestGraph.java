@@ -38,7 +38,7 @@ public class TestGraph {
 		graph.addEdge(edge3);
 		graph.addEdge(edge4);
 		
-		TreeNode first = new TreeNode(1);
+		TreeNode first = new TreeNode();
 		TreeNode parent = new TreeNode(first, nodeA, 1);
 		TreeNode tn = new TreeNode(parent, nodeB, 1);
 		
