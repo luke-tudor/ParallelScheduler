@@ -72,7 +72,7 @@ public class TestScheduler {
 	}
 
 	@Test
-	public void test() {
+	public void testSimple() {
 		
 		Scheduler sch = new Scheduler(_graphs.get("simple"), 2, 1);
 		Graph graph = sch.computeSchedule();
@@ -106,6 +106,13 @@ public class TestScheduler {
 		}
 		
 		assertEquals(maxEnd, 9);
+		
+	}
+	
+	@Test
+	public void testNodes10() {
+		
+		
 		
 	}
 
