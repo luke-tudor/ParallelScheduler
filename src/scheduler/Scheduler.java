@@ -51,12 +51,12 @@ public class Scheduler {
 				System.out.println("found it");
 				TreeNode tail = current;
 				while (tail.recentNode != null) {
-					tail.recentNode.setProcessor(tail.recentProcessor);
+					tail.recentNode.setProcessor(tail.recentProcessor + 1);
 					tail.recentNode.setStart(tail.recentStartTime);
 					System.out.println(tail.recentNode.getName() + tail.recentStartTime);
 					tail = tail.parent;
 				}
-				System.exit(0);
+				return graph;
 			}
 
 			// find neighbouring nodes
@@ -75,13 +75,7 @@ public class Scheduler {
 		}
 		System.out.println("I FAILED");
 		System.exit(1);
-		// Temporarily here to explain how the executor will do tasks
-		try {
-			exe.awaitTermination(1, TimeUnit.DAYS);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return graph;
+		return null;
 	}
 
 	public void makeHeuristic() {

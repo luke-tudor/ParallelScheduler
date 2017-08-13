@@ -49,7 +49,7 @@ public class OutputFormatter {
 			} else {
 				Edge edge = (Edge) e;
 				String edgeEntry = String.format("\t%s -> %s\t[Weight=%d];",
-						edge.getParent(), edge.getChild(), edge.getWeight());
+						edge.getParent().getName(), edge.getChild().getName(), edge.getWeight());
 				outputLines.add(edgeEntry);
 			}
 		}
