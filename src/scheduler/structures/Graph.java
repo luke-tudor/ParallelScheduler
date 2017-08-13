@@ -146,6 +146,7 @@ public class Graph {
 			Collection<Node> children = node.getChildEdgeWeights().keySet();
 			ChildLoop:
 				for (Node child : children) {
+					// For each child not in the scheduled set
 					if (!scheduled.contains(child)) {
 						// For each child, if they have a parent not in the partial schedule, that child is not reachable
 						for (Node parent : child.getParentEdgeWeights().keySet()) {
