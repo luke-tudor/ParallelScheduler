@@ -24,7 +24,7 @@ public class Scheduler {
 	private Graph graph;
 	private int numProcessors;
 
-	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once may not even
+	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once and may not even
 	// be necessary for multi-threading
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
 	// This executor is going to be executing a "processNode()" task, whatever that ends up being
