@@ -40,7 +40,7 @@ public class TestScheduler {
 		g.addEdge(new Edge(n3, n4, 1));
 		
 		_graphs.put(g.getGraphName(), g);
-		/*
+		
 		InputParser in = new InputParser("testfiles/Nodes_9_SeriesParallel.dot");
 		_graphs.put("Node_9_SeriesParallel", in.parse());
 		
@@ -68,7 +68,7 @@ public class TestScheduler {
 		graph.addEdge(new Edge(node3, node4, 1));
 		
 		_graphs.put(graph.getGraphName(), graph);
-		*/
+		
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class TestScheduler {
 			
 			int time = n.getStart() + n.getWeight();
 			if (maxEnd < time) {
-				time = maxEnd;
+				maxEnd = time;
 			}
 			
 			if (n.getProcessor() != 1 && n.getProcessor() != 2) {
@@ -105,7 +105,7 @@ public class TestScheduler {
 			
 		}
 		
-		assertEquals(maxEnd, 9);
+		assertEquals(8, maxEnd);
 		
 	}
 	
