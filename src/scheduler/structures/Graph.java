@@ -19,7 +19,7 @@ public class Graph {
 
 	// nodes stores all the nodes of a graph by mapping string handles to each node object
 	// edges stores all the edges of a graph by mapping string handles to each edge object
-	// order stores the each graph element in the order it was received
+	// order stores each graph element in the order it was received
 	private Map<String, Node> nodes = new HashMap<String, Node>();
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
 	private List<Object> order = new ArrayList<Object>();
