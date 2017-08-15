@@ -43,9 +43,10 @@ public class Scheduler {
 		PriorityQueue<TreeNode> q = new PriorityQueue<>();
 		q.add(new TreeNode());
 		while (!q.isEmpty()) {
-			// pop from priority queue
+			// Pop from priority queue
 			TreeNode current = q.remove();
-			// if current == goal or complete solution, then we have optimal solution
+			// If current == goal or complete solution, then we have optimal solution
+			// Uses height to determine if a schedule is complete
 			if (current.getHeight() == graph.getAllNodes().size()) {
 				TreeNode tail = current;
 				while (tail.getNode() != null) {
@@ -56,9 +57,10 @@ public class Scheduler {
 				return graph;
 			}
 
-			// find neighbouring nodes
+			// Find neighbouring nodes
 			Set<Node> neighbours = graph.getNeighbours(current);
 			for (Node n : neighbours) {
+				// Mapping is used to remove duplicate schedules, noticeable effect on inputs with large processor numbers
 				Map<Integer, TreeNode> uniqueSchedules = new HashMap<Integer, TreeNode>();
 				for (int i = 0; i < numProcessors; i++) {
 					TreeNode candidate = new TreeNode(current, n, i);
