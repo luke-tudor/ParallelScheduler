@@ -79,15 +79,24 @@ public class Scheduler {
 		}
 	}
 
+	/**
+	 * Sets the bottom level of a node by recursively finding the bottom level of a node's children.
+	 * Uses memoization to optimize finding the bottom level.
+	 * @param n the node whose bottom level should be set.
+	 * @return the bottom level of Node n.
+	 */
 	public int setBottomLevel(Node n) {
 		if (n.getBottomLevel() != 0) {
+			// If we already know the bottom level, no need to recompute it
 			return n.getBottomLevel();
 		} else {
+			// If this node has no children, bottom level is its weight
 			Set<Node> children = n.getChildEdgeWeights().keySet();
 			if (children.size() == 0) {
 				n.setBottomLevel(n.getWeight());
 				return n.getWeight();
 			} else {
+				// Otherwise, this node's bottom level is the max bottom level of its children + its weight
 				int max = 0;
 				for (Node child : children) {
 					int value = setBottomLevel(child);
