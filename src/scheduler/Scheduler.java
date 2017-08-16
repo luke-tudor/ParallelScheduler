@@ -60,13 +60,10 @@ public class Scheduler {
 			// Find neighbouring nodes
 			Set<Node> neighbours = graph.getNeighbours(current);
 			for (Node n : neighbours) {
-				// Mapping is used to remove duplicate schedules, noticeable effect on inputs with large processor numbers
-				Map<Integer, TreeNode> uniqueSchedules = new HashMap<Integer, TreeNode>();
 				for (int i = 0; i < numProcessors; i++) {
 					TreeNode candidate = new TreeNode(current, n, i);
-					uniqueSchedules.put(candidate.getStartTime(), candidate);
+					q.add(candidate);
 				}
-				q.addAll(uniqueSchedules.values());
 			}
 
 		}
