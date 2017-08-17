@@ -13,6 +13,7 @@ import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
+import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -115,10 +116,28 @@ public class Scheduler {
 	public static void main(String[] args) {
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
-
+		int numCores = 1;
+		
 		// Use regular expression to construct output file name from input file name
 		// Works by taking the file name without the extension and concatenating with the other half of the new name
 		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
+		
+		if (args.length < 2) {
+			System.err.println("Not enough arguments");
+			return;
+		}
+		
+		for (int i = 2; i < args.length; i++) {
+			if (args[i].equals("-p")) {
+				i++;
+				numCores = Integer.parseInt(args[i]);
+			} else if (args[i].equals("-v")) {
+				Window w = new Window();
+			} else if (args[i].equals("-o")) {
+				i++;
+				outputFileName = args[i];
+			}
+		}
 
 		//creates the graph
 		InputParser ip = new InputParser(inputFileName);		
@@ -129,7 +148,7 @@ public class Scheduler {
 		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
-
+		
 		//writes schedule to output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
