@@ -24,12 +24,12 @@ public class Scheduler {
 	private Graph graph;
 	private int numProcessors;
 
-	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once and may not even
-	// be necessary for multi-threading
+	// Queue that all threads are working off, it blocks if multiple threads wish to access it at once
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
-	// This executor is going to be executing a "processNode()" task, whatever that ends up being
+	// Executor executes "processNode()" task
 	private ExecutorService exe;
 
+	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
@@ -37,7 +37,7 @@ public class Scheduler {
 	}
 
 	/**
-	 * computes the optimum processing schedule for the graph 
+	 * Computes the optimum processing schedule for the graph.
 	 */
 	public Graph computeSchedule() {
 		PriorityQueue<TreeNode> q = new PriorityQueue<>();
@@ -45,8 +45,8 @@ public class Scheduler {
 		while (!q.isEmpty()) {
 			// Pop from priority queue
 			TreeNode current = q.remove();
-			// If current == goal or complete solution, then we have optimal solution
-			// Uses height to determine if a schedule is complete
+			// If current equals goal or complete solution, we have the optimal solution
+			// Uses height to determine whether a schedule is complete
 			if (current.getHeight() == graph.getAllNodes().size()) {
 				TreeNode tail = current;
 				while (tail.getNode() != null) {
@@ -65,13 +65,16 @@ public class Scheduler {
 					q.add(candidate);
 				}
 			}
-
 		}
 		System.out.println("I FAILED");
 		System.exit(1);
 		return null;
 	}
 
+    /**
+     * Computes the heuristics for task scheduling which utilises the bottom level.
+     * e.g. longest path to exist task starting with node.
+     */
 	public void computeHeuristics() {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
@@ -86,16 +89,16 @@ public class Scheduler {
 	 */
 	public int setBottomLevel(Node n) {
 		if (n.getBottomLevel() != 0) {
-			// If we already know the bottom level, no need to recompute it
+			// If the bottom level is known, there is no reason to recompute it
 			return n.getBottomLevel();
 		} else {
-			// If this node has no children, bottom level is its weight
+			// If the node has no children, the bottom level is its weight
 			Set<Node> children = n.getChildEdgeWeights().keySet();
 			if (children.size() == 0) {
 				n.setBottomLevel(n.getWeight());
 				return n.getWeight();
 			} else {
-				// Otherwise, this node's bottom level is the max bottom level of its children + its weight
+				// Otherwise, the node's bottom level is the max bottom level of its children plus its weight
 				int max = 0;
 				for (Node child : children) {
 					int value = setBottomLevel(child);
@@ -113,21 +116,21 @@ public class Scheduler {
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 
-		// Use regular expression to construct output file name from input file name
-		// Works by taking the file name without the extension and concatenating with the other half of the new name
+		// Regular expression to construct the output file name from the input file name
+		// Utilises the file name without the extension and concatenating it with the other half of the new file name
 		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
 
-		//creates the graph
+		// Creates the graph
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 
-		//finds the optimum schedule
+		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
 		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 
-		//writes schedule to output file
+		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
 	}
