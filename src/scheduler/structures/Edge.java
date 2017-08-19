@@ -2,6 +2,12 @@ package scheduler.structures;
 
 /**
  * Provides a representation of an edge of the graph.
+ * Contains 
+ * 	- a reference to the starting Node
+ * 	- a reference to the ending Node
+ * 	- an int representing the weight of the Node
+ * 
+ * Once assigned using the constructor, the fields cannot be changed.
  * 
  * @author Luke Tudor
  */
@@ -32,11 +38,15 @@ public class Edge {
 		return weight;
 	}
 	
+	/**
+	 * .equals overridden for efficiency purposes. This assumes that there will only be one edge 
+	 * between two given nodes, therefore the weight of the edge doesn't need to be checked. 
+	 */
+	@Override
 	public boolean equals(Object obj) {
 		Edge e = (Edge) obj;
 		if (parent.equals(e.getParent())
-				&& child.equals(getChild())
-				&& weight == e.getWeight()) {
+				&& child.equals(e.getChild())){
 			return true;
 		}
 		return false;

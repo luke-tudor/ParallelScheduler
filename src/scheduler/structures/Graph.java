@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Provides a representation of a graph ADT.
+ * Provides a representation of a directed graph ADT.
+ * 
+ * It uses Node and Edge objects to hold their respective objects,
+ * their weights and relative positions in the graph. 
  * 
  * @author Luke Tudor and Warren Yeu
  */
@@ -22,7 +25,7 @@ public class Graph {
 	// order stores each graph element in the order it was received
 	private Map<String, Node> nodes = new HashMap<String, Node>();
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
-	private List<Object> order = new ArrayList<Object>();
+	//private List<Object> order = new ArrayList<Object>();
 
 	private Set<Node> parentless = null;
 
@@ -41,7 +44,7 @@ public class Graph {
 	 */
 	public void addNode(Node n) {
 		nodes.put(n.getName(), n);
-		order.add(n);
+		//order.add(n);
 	}
 
 	/**
@@ -56,7 +59,7 @@ public class Graph {
 		parent.addChildEdgeWeight(child, edge.getWeight());
 		child.addParentEdgeWeight(parent, edge.getWeight());
 		edges.put(edge.getParent() + EDGE_LINK + edge.getChild(), edge);
-		order.add(edge);
+	//	order.add(edge);
 	}
 
 	/**
@@ -64,9 +67,9 @@ public class Graph {
 	 *
 	 * @return Object[] containing all nodes and edges of the graph
 	 */
-	public Object[] getAllElements() {
+	/*public Object[] getAllElements() {
 		return order.toArray();
-	}
+	}*/
 
 	public String getGraphName() {
 		return graphName;

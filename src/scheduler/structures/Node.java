@@ -88,10 +88,10 @@ public class Node{
 	@Override
 	public boolean equals(Object obj) {
 		Node n = (Node) obj;
-		if (name.equals(n.getName())
-				&& start == n.getStart()
-				&& processor == n.getProcessor()
-				&& weight == n.getWeight()) {
+		//Since an edge is assigned by the name of the node, the name will be unique. 
+		//checking to see if they are the same is sufficient to know whether they are 
+		//the same
+		if (name.equals(n.getName())){
 			return true;
 		}
 		return false;
