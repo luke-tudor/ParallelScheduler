@@ -146,7 +146,7 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		// Finds the optimum schedule by computing the heuristics and schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
 		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
