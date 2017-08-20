@@ -46,10 +46,12 @@ public class Scheduler {
 	public Graph computeSchedule() {
 		q.add(new TreeNode());
 		for (int i = 0; i < numThreads; i++) {
+			// Submit one task for each thread
 			exe.submit(new Runnable() {
 
 				@Override
 				public void run() {
+					// Busy wait until there are nodes on the queue
 					while (true) {
 						while (!q.isEmpty()) {
 							// Pop from priority queue
@@ -63,7 +65,7 @@ public class Scheduler {
 									tail.getNode().setStart(tail.getStartTime());
 									tail = tail.getParent();
 								}
-								exe.shutdown();
+								exe.shutdownNow();
 								return;
 							}
 
