@@ -51,16 +51,13 @@ public class Scheduler {
 					
 					// Current best schedule
 					private TreeNode schedule;
-					
-					// Determines if a task should terminate
-					private boolean shouldTerminate = false;
 
 					@Override
 					public void run() {
 						// Busy wait until there are nodes on the queue
-						while (!shouldTerminate) {
+						while (!exe.isShutdown()) {
 							while (!q.isEmpty()) {
-								if (shouldTerminate) {
+								if (exe.isShutdown()) {
 									break;
 								}
 								// Pop from priority queue
@@ -100,7 +97,6 @@ public class Scheduler {
 							tail = tail.getParent();
 						}
 						exe.shutdown();
-						shouldTerminate = true;
 					}
 
 				});
