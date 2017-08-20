@@ -25,11 +25,12 @@ public class Scheduler {
 	private Graph graph;
 	private int numProcessors;
 
+	// Number of threads to use
 	private int numThreads;
 
 	// Queue that all threads are working off, it blocks if multiple threads wish to access it at once
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
-	// Executor executes "processNode()" task
+	
 	private ExecutorService exe;
 
 	// Scheduler contains the graph, the number of processors and the number of threads
