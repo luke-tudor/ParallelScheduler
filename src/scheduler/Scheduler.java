@@ -58,10 +58,10 @@ public class Scheduler {
 					@Override
 					public void run() {
 						// Busy wait until there are nodes on the queue
-						while (true) {
+						while (!shouldTerminate) {
 							while (!q.isEmpty()) {
 								if (shouldTerminate) {
-									return;
+									break;
 								}
 								// Pop from priority queue
 								TreeNode current = q.remove();
@@ -85,7 +85,7 @@ public class Scheduler {
 					}
 
 					/**
-					 * Set the schedule as the optimal schedule for this graph.
+					 * Set this schedule as the optimal schedule for this graph.
 					 * Gracefully terminate all tasks.
 					 * @param tn
 					 */
