@@ -27,9 +27,9 @@ public class Scheduler {
 
 	// Queue that all threads are working off, it blocks if multiple threads wish to access it at once
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
-	
-	private ExecutorService exe;
 
+	private ExecutorService exe;
+	
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
@@ -43,43 +43,68 @@ public class Scheduler {
 	 */
 	public Graph computeSchedule() {
 		q.add(new TreeNode());
+		// Submit one task for each thread
 		for (int i = 0; i < numThreads; i++) {
-			// Submit one task for each thread
-			exe.submit(new Runnable() {
+			// Only submit a task if the executor is not shutdown
+			if (!exe.isShutdown()) {
+				exe.submit(new Runnable() {
+					
+					// Current best schedule
+					private TreeNode schedule;
+					
+					// Determines if a task should terminate
+					private boolean shouldTerminate = false;
 
-				@Override
-				public void run() {
-					// Busy wait until there are nodes on the queue
-					while (true) {
-						while (!q.isEmpty()) {
-							// Pop from priority queue
-							TreeNode current = q.remove();
-							// If current equals goal or complete solution, we have the optimal solution
-							// Uses height to determine whether a schedule is complete
-							if (current.getHeight() == graph.getAllNodes().size()) {
-								TreeNode tail = current;
-								while (tail.getNode() != null) {
-									tail.getNode().setProcessor(tail.getProcessor() + 1);
-									tail.getNode().setStart(tail.getStartTime());
-									tail = tail.getParent();
+					@Override
+					public void run() {
+						// Busy wait until there are nodes on the queue
+						while (true) {
+							while (!q.isEmpty()) {
+								if (shouldTerminate) {
+									return;
 								}
-								exe.shutdownNow();
-								return;
-							}
+								// Pop from priority queue
+								TreeNode current = q.remove();
+								// If current equals goal or complete solution, we have the optimal solution
+								// Uses height to determine whether a schedule is complete
+								if (current.getHeight() == graph.getAllNodes().size()) {
+									makeSchedule(current);
+									return;
+								}
 
-							// Find neighbouring nodes
-							Set<Node> neighbours = graph.getNeighbours(current);
-							for (Node n : neighbours) {
-								for (int i = 0; i < numProcessors; i++) {
-									TreeNode candidate = new TreeNode(current, n, i);
-									q.add(candidate);
+								// Find neighbouring nodes
+								Set<Node> neighbours = graph.getNeighbours(current);
+								for (Node n : neighbours) {
+									for (int i = 0; i < numProcessors; i++) {
+										TreeNode candidate = new TreeNode(current, n, i);
+										q.add(candidate);
+									}
 								}
 							}
 						}
 					}
-				}
 
-			});
+					/**
+					 * Set the schedule as the optimal schedule for this graph.
+					 * Gracefully terminate all tasks.
+					 * @param tn
+					 */
+					private synchronized void makeSchedule(TreeNode tn) {
+						if (schedule == null || tn.getStartTime() + tn.getNode().getWeight() < schedule.getStartTime() + tn.getNode().getWeight()) {
+							schedule = tn;
+						}
+						TreeNode tail = schedule;
+						while (tail.getNode() != null) {
+							tail.getNode().setProcessor(tail.getProcessor() + 1);
+							tail.getNode().setStart(tail.getStartTime());
+							tail = tail.getParent();
+						}
+						exe.shutdown();
+						shouldTerminate = true;
+					}
+
+				});
+			}
 		}
 		try {
 			exe.awaitTermination(1, TimeUnit.HOURS);
@@ -89,6 +114,8 @@ public class Scheduler {
 		}
 		return graph;
 	}
+
+
 
 	/**
 	 * Computes the heuristics for task scheduling which utilises the bottom level.
