@@ -69,13 +69,14 @@ public class Scheduler {
 									 * Set this schedule as the optimal schedule for this graph.
 									 * Gracefully terminate all tasks.
 									 */
-									synchronized (q) {
+									synchronized (schedule) {
 										if (schedule == null || current.getStartTime() + current.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
 											System.err.println(current.getStartTime() + current.getNode().getBottomLevel());
 											if (schedule != null)
 												System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
 											schedule = current;
 										}
+										// Need to synchronize the shutting down, otherwise the task shutdown process is non atomic and schedule can enter a last write wins scenario
 										exe.shutdown();
 									}
 									return;
