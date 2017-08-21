@@ -31,7 +31,7 @@ public class Scheduler {
 	private ExecutorService exe;
 	
 	// Current best schedule
-	private static TreeNode schedule;
+	private TreeNode schedule;
 	
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
