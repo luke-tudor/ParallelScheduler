@@ -13,7 +13,6 @@ import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
-import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -132,7 +131,7 @@ public class Scheduler {
 				i++;
 				numCores = Integer.parseInt(args[i]);
 			} else if (args[i].equals("-v")) {
-				Window w = new Window();
+				//START WINDOW HERE
 			} else if (args[i].equals("-o")) {
 				i++;
 				outputFileName = args[i];
@@ -144,7 +143,7 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		//finds the optimum schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 1);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, numCores);
 		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
