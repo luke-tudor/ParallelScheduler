@@ -39,6 +39,7 @@ public class Scheduler {
 		this.numProcessors = numProcessors;
 		exe = Executors.newFixedThreadPool(numThreads);
 		this.numThreads = numThreads;
+		computeHeuristics();
 	}
 
 	/**
@@ -168,7 +169,6 @@ public class Scheduler {
 
 		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
-		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 
