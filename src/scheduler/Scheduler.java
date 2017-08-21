@@ -30,6 +30,9 @@ public class Scheduler {
 
 	private ExecutorService exe;
 	
+	// Current best schedule
+	private static TreeNode schedule;
+	
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
@@ -48,9 +51,6 @@ public class Scheduler {
 			// Only submit a task if the executor is not shutdown
 			if (!exe.isShutdown()) {
 				exe.submit(new Runnable() {
-					
-					// Current best schedule
-					private TreeNode schedule;
 
 					@Override
 					public void run() {
@@ -87,7 +87,10 @@ public class Scheduler {
 					 * @param tn
 					 */
 					private synchronized void makeSchedule(TreeNode tn) {
-						if (schedule == null || tn.getStartTime() + tn.getNode().getWeight() < schedule.getStartTime() + tn.getNode().getWeight()) {
+						if (schedule == null || tn.getStartTime() + tn.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
+							System.err.println(tn.getStartTime() + tn.getNode().getBottomLevel());
+							if (schedule != null)
+								System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
 							schedule = tn;
 						}
 						TreeNode tail = schedule;
