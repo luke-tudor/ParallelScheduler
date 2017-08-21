@@ -65,7 +65,19 @@ public class Scheduler {
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
 								if (current.getHeight() == graph.getAllNodes().size()) {
-									makeSchedule(current);
+									/*
+									 * Set this schedule as the optimal schedule for this graph.
+									 * Gracefully terminate all tasks.
+									 */
+									synchronized (q) {
+										if (schedule == null || current.getStartTime() + current.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
+											System.err.println(current.getStartTime() + current.getNode().getBottomLevel());
+											if (schedule != null)
+												System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
+											schedule = current;
+										}
+										exe.shutdown();
+									}
 									return;
 								}
 
@@ -80,28 +92,6 @@ public class Scheduler {
 							}
 						}
 					}
-
-					/**
-					 * Set this schedule as the optimal schedule for this graph.
-					 * Gracefully terminate all tasks.
-					 * @param tn
-					 */
-					private synchronized void makeSchedule(TreeNode tn) {
-						if (schedule == null || tn.getStartTime() + tn.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
-							System.err.println(tn.getStartTime() + tn.getNode().getBottomLevel());
-							if (schedule != null)
-								System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
-							schedule = tn;
-						}
-						TreeNode tail = schedule;
-						while (tail.getNode() != null) {
-							tail.getNode().setProcessor(tail.getProcessor() + 1);
-							tail.getNode().setStart(tail.getStartTime());
-							tail = tail.getParent();
-						}
-						exe.shutdown();
-					}
-
 				});
 			}
 		}
@@ -110,6 +100,12 @@ public class Scheduler {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		TreeNode tail = schedule;
+		while (tail.getNode() != null) {
+			tail.getNode().setProcessor(tail.getProcessor() + 1);
+			tail.getNode().setStart(tail.getStartTime());
+			tail = tail.getParent();
 		}
 		return graph;
 	}
