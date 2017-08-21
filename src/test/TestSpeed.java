@@ -1,8 +1,5 @@
 package test;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import scheduler.Scheduler;
@@ -13,12 +10,12 @@ public class TestSpeed {
 
 	@Test
 	public void test() {
-		InputParser in = new InputParser("testfiles/Nodes_10_Random.dot");
+		InputParser in = new InputParser("testfiles/Nodes_11_OutTree.dot");
 		Graph g = in.parse();
 		
 		long start = System.currentTimeMillis();
-		Scheduler sch = new Scheduler(g, 2, 1);
-		sch.computeSchedule();
+		//Scheduler sch = new Scheduler(g, 2, 1);
+		//sch.computeSchedule();
 		long end = System.currentTimeMillis();
 		
 		long diff = end - start;

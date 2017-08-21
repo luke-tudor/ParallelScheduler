@@ -108,12 +108,5 @@ public class TestScheduler {
 		assertEquals(8, maxEnd);
 		
 	}
-	
-	@Test
-	public void testNodes10() {
-		
-		
-		
-	}
 
 }
