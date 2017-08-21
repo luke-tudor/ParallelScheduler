@@ -69,7 +69,7 @@ public class Scheduler {
 									 * Set this schedule as the optimal schedule for this graph.
 									 * Gracefully terminate all tasks.
 									 */
-									synchronized (schedule) {
+									synchronized (exe) {
 										if (schedule == null || current.getStartTime() + current.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
 											System.err.println(current.getStartTime() + current.getNode().getBottomLevel());
 											if (schedule != null)
