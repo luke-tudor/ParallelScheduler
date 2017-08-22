@@ -1,6 +1,10 @@
 package scheduler.structures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TreeNode implements Comparable<TreeNode> {	
+	
 	private TreeNode parent;
 	private Node node;
 	private int recentProcessor;
@@ -50,9 +54,8 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.parent = parent;
 		this.node = node;
 		this.recentProcessor = procNum;
-		this.recentStartTime = maxStart;
 		this.height = parent.height + 1;
-		
+		this.recentStartTime = maxStart;
 	}
 	
 	/**
