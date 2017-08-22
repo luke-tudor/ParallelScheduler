@@ -13,7 +13,7 @@ public class TestSpeed {
 
 	@Test
 	public void test() {
-		InputParser in = new InputParser("testfiles/Nodes_10_Random.dot");
+		InputParser in = new InputParser("testfiles/Nodes_7_OutTree.dot");
 		Graph g = in.parse();
 		
 		long start = System.currentTimeMillis();
