@@ -65,7 +65,10 @@ public class Scheduler {
 								TreeNode current = q.remove();
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
-								if (current.getHeight() == graph.getAllNodes().size()) {
+								
+								// Find neighbouring nodes
+								Set<Node> neighbours = graph.getNeighbours(current);
+								if (neighbours.isEmpty()) {
 									/*
 									 * Set this schedule as the optimal schedule for this graph.
 									 * Gracefully terminate all tasks.
@@ -82,8 +85,6 @@ public class Scheduler {
 									return;
 								}
 
-								// Find neighbouring nodes
-								Set<Node> neighbours = graph.getNeighbours(current);
 								for (Node n : neighbours) {
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);

@@ -9,7 +9,6 @@ public class TreeNode implements Comparable<TreeNode> {
 	private Node node;
 	private int recentProcessor;
 	private int recentStartTime;
-	private int height;
 	
 	/**
 	 * All branches of the search tree are intended to be created using this constructor. It takes as input a TreeNode
@@ -54,7 +53,6 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.parent = parent;
 		this.node = node;
 		this.recentProcessor = procNum;
-		this.height = parent.height + 1;
 		this.recentStartTime = maxStart;
 	}
 	
@@ -66,7 +64,6 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.node = null;
 		this.recentProcessor = -1;
 		this.recentStartTime = -1;
-		this.height = 0;
 	}
 
 	/**
@@ -92,10 +89,6 @@ public class TreeNode implements Comparable<TreeNode> {
 	
 	public TreeNode getParent() {
 		return parent;
-	}
-	
-	public int getHeight() {
-		return height;
 	}
 	
 	public int getProcessor() {
