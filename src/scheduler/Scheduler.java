@@ -8,11 +8,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import javafx.application.Application;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
+import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -113,6 +115,7 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
+		/*
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 		int numCores = 1;
@@ -151,6 +154,11 @@ public class Scheduler {
 		//writes schedule to output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
+		*/
+		
+		//Window w = new Window();
+		Application.launch(Window.class, args);
+		
 	}
 
 }
