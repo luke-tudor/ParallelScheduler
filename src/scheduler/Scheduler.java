@@ -1,5 +1,9 @@
 package scheduler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,8 +124,6 @@ public class Scheduler {
 		}
 		return graph;
 	}
-
-
 
 	/**
 	 * Computes the heuristics for task scheduling which utilises the bottom level.
