@@ -107,43 +107,13 @@ public class Scheduler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		findProcessors();
-		/*TreeNode tail = schedule;
+		TreeNode tail = schedule;
 		while (tail.getNode() != null) {
 			tail.getNode().setProcessor(tail.getProcessor() + 1);
 			tail.getNode().setStart(tail.getStartTime());
 			tail = tail.getParent();
-		}*/
+		}
 		return graph;
-	}
-
-	private void findProcessors() {
-		TreeNode tail = schedule;
-		List<Node> nodes = new ArrayList<>();
-		while (tail.getNode() != null) {
-			tail.getNode().setStart(tail.getStartTime());
-			nodes.add(tail.getNode());
-			tail = tail.getParent();
-		}
-		Collections.reverse(nodes);
-		setProcNumber(new TreeNode(), nodes, 0);
-	}
-	
-	private boolean setProcNumber(TreeNode schedule, List<Node> nodeList, int index) {
-		if (index == nodeList.size()) {
-			return true;
-		}
-		Node toAdd = nodeList.get(index);
-		for (int i = 0; i < numProcessors; i++) {
-			TreeNode candidate = new TreeNode(schedule, toAdd, i);
-			if (candidate.getStartTime() == toAdd.getStart()) {
-				if (setProcNumber(candidate, nodeList, index + 1)) {
-					toAdd.setProcessor(candidate.getProcessor() + 1);
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
