@@ -105,7 +105,7 @@ public class TreeNode implements Comparable<TreeNode> {
 	public boolean equals(Object obj) {
 		TreeNode tn = (TreeNode) obj;
 		
-		if (tn.getStartTime() + tn.getNode().getWeight() != this.recentStartTime + this.node.getWeight()) {
+		if (tn.getNode() != this.node) {
 			return false;
 		}
 		
