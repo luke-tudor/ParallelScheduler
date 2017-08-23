@@ -104,15 +104,11 @@ public class TreeNode implements Comparable<TreeNode> {
 	@Override
 	public boolean equals(Object obj) {
 		TreeNode tn = (TreeNode) obj;
-		
-		if (tn.getNode() != this.node) {
-			return false;
-		}
-		
-		List<Node> thisNodes = new ArrayList<Node>();
+
 		List<Node> otherNodes = new ArrayList<Node>();
 		int[] thisFinish = new int[Scheduler.getNumProc()];
 		int[] otherFinish = new int[Scheduler.getNumProc()];
+		int count = 0;
 		
 		TreeNode current = tn;
 		while (current.getNode() != null) {
@@ -126,7 +122,10 @@ public class TreeNode implements Comparable<TreeNode> {
 		
 		current = this;
 		while (current.getNode() != null) {
-			thisNodes.add(current.getNode());
+			if (!otherNodes.contains(current.getNode())) {
+				return false;
+			}
+			count++;
 			int time = current.getStartTime() + current.getNode().getWeight();
 			if (thisFinish[current.getProcessor()] < time) {
 				thisFinish[current.getProcessor()] = time;
@@ -134,7 +133,7 @@ public class TreeNode implements Comparable<TreeNode> {
 			current = current.getParent();
 		}
 		
-		if (thisNodes.size() != otherNodes.size()) {
+		if (count != otherNodes.size()) {
 			return false;
 		}
 		
@@ -146,12 +145,6 @@ public class TreeNode implements Comparable<TreeNode> {
 				}
 			}
 			if (!boo) {
-				return false;
-			}
-		}
-		
-		for (Node n : thisNodes) {
-			if (!otherNodes.contains(n)) {
 				return false;
 			}
 		}
