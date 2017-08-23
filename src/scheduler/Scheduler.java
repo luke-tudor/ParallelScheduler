@@ -1,9 +1,6 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,7 +72,8 @@ public class Scheduler {
 								// Uses height to determine whether a schedule is complete
 								
 								// Pruning TreeNodes
-								while (q.contains(current)) {
+								HashSet<TreeNode> hash = new HashSet<>(q);
+								while (hash.contains(current)) {
 									q.remove(current);
 								}
 								
