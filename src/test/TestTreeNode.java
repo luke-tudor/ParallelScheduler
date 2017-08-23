@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import scheduler.Scheduler;
 import scheduler.structures.Edge;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
@@ -36,6 +37,8 @@ public class TestTreeNode {
 		graph.addEdge(edge2);
 		graph.addEdge(edge3);
 		graph.addEdge(edge4);
+		
+		Scheduler sch = new Scheduler(graph, 2, 2);
 		
 		TreeNode t1 = new TreeNode();
 		TreeNode t2 = new TreeNode(t1, nodeA, 1);
