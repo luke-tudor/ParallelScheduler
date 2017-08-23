@@ -156,7 +156,7 @@ public class Scheduler {
 		of.writeGraph(outputFileName);
 		*/
 		
-		//Window w = new Window();
+		//Window w = new Window(1, "hello.txt");
 		Application.launch(Window.class, args);
 		
 	}

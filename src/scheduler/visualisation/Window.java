@@ -32,11 +32,36 @@ public class Window extends Application {
 	private Scene _scene;
 	private GridPane _grid;
 	
+	private Rectangle _visualisation;
+	private GridPane _visualTreeNode;
+	private Text _sceneTitle;
+	private Label _procText;
+	private Label _outputText;
+	private Label _treeNodeText;
+	private Rectangle _progressBar;
+	private Text _numOfProc;
+	private Text _outputFile;
+	private Text _currentNumOfTreeNodes;
+	
+	private int _numProc = 0;
+	private String _outputName = "null";
+	private int _treeNodeNum = 0;
+	
+	@Override
+	public void init() {
+		/*
+		 * Initialise values for:
+		 * 	- 	_numProc
+		 * 	-	_outputName
+		 * 
+		 * 	by calling new public methods in related classes
+		 */
+	}
+	
 	@Override
 	public void start(Stage primaryStage) {
-		
+
 		_primaryStage = primaryStage;
-		
 		_primaryStage.setTitle("Parallel Scheduler");
 		
 		_grid = new GridPane();
@@ -45,27 +70,25 @@ public class Window extends Application {
 		_grid.setVgap(10);
 		_grid.setPadding(new Insets(25,25,25,25));
 		
+		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
+		_visualisation = new Rectangle(200, 300, Color.RED);
+		_procText = new Label("Num of Processors:");
+		_outputText = new Label("Output Filename:");
+		_treeNodeText = new Label("Schedules considered:");
+		_progressBar = new Rectangle(400, 50, Color.BLUE);
+		_numOfProc = new Text(_numProc + "");
+		_outputFile = new Text(_outputName);
+		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
 		
-		Text sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
-		sceneTitle.setId("scene-title");
-		
-		Rectangle visualisation = new Rectangle(200, 300, Color.RED);
-		
-		Label procText = new Label("Num of Processors:");
-		
-		Label outputText = new Label("Output Filename:");
-		
-		Label treeNodeText = new Label("Schedules considered:");
-		
-		Rectangle progressBar = new Rectangle(400, 50, Color.BLUE);
-		
-		
-		_grid.add(sceneTitle, 0, 0, 3, 1);
-		_grid.add(visualisation, 0, 1, 1, 3);
-		_grid.add(procText, 1, 1);
-		_grid.add(outputText, 1, 2);
-		_grid.add(treeNodeText, 1, 3);
-		_grid.add(progressBar, 0, 4, 3, 1);
+		_grid.add(_sceneTitle, 0, 0, 3, 1);
+		_grid.add(_visualisation, 0, 1, 1, 4);
+		_grid.add(_procText, 1, 1);
+		_grid.add(_numOfProc, 2, 1);
+		_grid.add(_outputFile, 2, 2);
+		_grid.add(_outputText, 1, 2);
+		_grid.add(_treeNodeText, 1, 3);
+		_grid.add(_currentNumOfTreeNodes, 2, 3);
+		_grid.add(_progressBar, 0, 5, 3, 1);
 		
 		_scene = new Scene(_grid);
 		_primaryStage.setScene(_scene);
