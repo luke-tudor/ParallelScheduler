@@ -70,6 +70,11 @@ public class Scheduler {
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
 								
+								// Pruning TreeNodes
+								while (q.contains(current)) {
+									q.remove(current);
+								}
+								
 								// Find neighbouring nodes
 								Set<Node> neighbours = graph.getNeighbours(current);
 								if (neighbours.isEmpty()) {
