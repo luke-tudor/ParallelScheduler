@@ -24,7 +24,7 @@ import scheduler.structures.TreeNode;
 public class Scheduler {
 
 	private Graph graph;
-	private int numProcessors;
+	private static int numProcessors;
 
 	// Number of threads to use
 	private int numThreads;
@@ -38,12 +38,16 @@ public class Scheduler {
 	private TreeNode schedule;
 	
 	// Scheduler contains the graph, the number of processors and the number of threads
-	public Scheduler(Graph graph, int numProcessors, int numThreads) {
+	public Scheduler(Graph graph, int numProc, int numThreads) {
 		this.graph = graph;
-		this.numProcessors = numProcessors;
+		numProcessors = numProc;
 		exe = Executors.newFixedThreadPool(numThreads);
 		this.numThreads = numThreads;
 		computeHeuristics();
+	}
+	
+	public static int getNumProc() {
+		return numProcessors;
 	}
 
 	/**

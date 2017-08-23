@@ -3,6 +3,8 @@ package scheduler.structures;
 import java.util.ArrayList;
 import java.util.List;
 
+import scheduler.Scheduler;
+
 public class TreeNode implements Comparable<TreeNode> {	
 	
 	private TreeNode parent;
@@ -98,4 +100,63 @@ public class TreeNode implements Comparable<TreeNode> {
 	public int getStartTime() {
 		return recentStartTime;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		TreeNode tn = (TreeNode) obj;
+		
+		if (tn.getStartTime() + tn.getNode().getWeight() != this.recentStartTime + this.node.getWeight()) {
+			return false;
+		}
+		
+		List<Node> thisNodes = new ArrayList<Node>();
+		List<Node> otherNodes = new ArrayList<Node>();
+		int[] thisFinish = new int[Scheduler.getNumProc()];
+		int[] otherFinish = new int[Scheduler.getNumProc()];
+		
+		TreeNode current = tn;
+		while (current.getNode() != null) {
+			otherNodes.add(current.getNode());
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (otherFinish[current.getProcessor()] < time) {
+				otherFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		current = this;
+		while (current.getNode() != null) {
+			thisNodes.add(current.getNode());
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (thisFinish[current.getProcessor()] < time) {
+				thisFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		if (thisNodes.size() != otherNodes.size()) {
+			return false;
+		}
+		
+		for (int i = 0; i < thisFinish.length; i++) {
+			boolean boo = false;
+			for (int j = 0; j < otherFinish.length; j++) {
+				if (thisFinish[i] == otherFinish[j]) {
+					boo = true;
+				}
+			}
+			if (!boo) {
+				return false;
+			}
+		}
+		
+		for (Node n : thisNodes) {
+			if (!otherNodes.contains(n)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 }
