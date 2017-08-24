@@ -34,7 +34,7 @@ public class Scheduler {
 	// Current best schedule
 	private TreeNode schedule;
 
-	private static int perfectBalance;
+	private static int total;
 
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
@@ -142,11 +142,11 @@ public class Scheduler {
 		for (Node n : nodes) {
 			total += n.getWeight();
 		}
-		perfectBalance = (int) Math.ceil(total/numProcessors);
+		this.total = total;
 	}
 
-	public static int getPerfectBalance() {
-		return perfectBalance;
+	public static int getTotal() {
+		return total;
 	}
 
 	/**

@@ -53,7 +53,7 @@ public class TreeNode implements Comparable<TreeNode> {
 		}
 		
 		// Perfect load balance stuff start
-		int currentBalance = Scheduler.getPerfectBalance();
+		int currentBalance = Scheduler.getTotal();
 		int[] startTimes = new int[Scheduler.getNumProc()];
 		
 		startTimes[procNum] = maxStart;
@@ -62,7 +62,7 @@ public class TreeNode implements Comparable<TreeNode> {
 		while (!(current == null || current.node == null)) {
 			int proc = current.recentProcessor;
 			if (startTimes[proc] != 0) {
-				currentBalance += current.recentStartTime + current.node.getWeight() - startTimes[proc];
+				currentBalance += startTimes[proc] - current.recentStartTime - current.node.getWeight();
 			}
 			startTimes[proc] = current.recentStartTime;
 			current = current.parent;
@@ -70,7 +70,8 @@ public class TreeNode implements Comparable<TreeNode> {
 		for (int i : startTimes) {
 			currentBalance += i;
 		}
-		heuristic = currentBalance;
+		
+		heuristic = (int) Math.floor(currentBalance/Scheduler.getNumProc());
 		//System.out.println(heuristic);
 		// Perfect load balance stuff end
 		
