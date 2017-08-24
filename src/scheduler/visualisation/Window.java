@@ -2,17 +2,11 @@ package scheduler.visualisation;
 
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -79,7 +73,7 @@ public class Window extends Application {
 		_numOfProc = new Text(_numProc + "");
 		_outputFile = new Text(_outputName);
 		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
-		
+
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
 		_grid.add(_visualisation, 0, 1, 1, 4);
 		_grid.add(_procText, 1, 1);
