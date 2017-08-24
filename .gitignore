@@ -25,3 +25,6 @@ hs_err_pid*
 # .dot output files
 *output.dot
 
+# classpath
+.classpath
+
