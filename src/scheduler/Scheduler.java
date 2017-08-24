@@ -143,7 +143,7 @@ public class Scheduler {
 		for (Node n : nodes) {
 			total += n.getWeight();
 		}
-		perfectBalance = total/numProcessors;
+		perfectBalance = (int) Math.ceil(total/numProcessors);
 	}
 	
 	public static int getPerfectBalance() {

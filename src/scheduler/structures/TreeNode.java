@@ -71,7 +71,7 @@ public class TreeNode implements Comparable<TreeNode> {
 			currentBalance += i;
 		}
 		heuristic = currentBalance;
-		System.out.println(heuristic);
+		//System.out.println(heuristic);
 		// Perfect load balance stuff end
 		
 		//initialise the fields for this object
