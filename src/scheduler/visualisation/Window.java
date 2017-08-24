@@ -19,6 +19,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.Border;
+import scheduler.structures.Edge;
+import scheduler.structures.Graph;
+import scheduler.structures.Node;
+import scheduler.structures.TreeNode;
 
 /**
  * The class representing the root of the application, building the
@@ -65,6 +70,28 @@ public class Window extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
+		Node nodeA = new Node("A", 2);
+		Node nodeB = new Node("B", 3);
+		Node nodeC = new Node("C", 3);
+		Node nodeD = new Node("D", 2);
+		Edge edge1 = new Edge(nodeA, nodeB, 1);
+		Edge edge2 = new Edge(nodeA, nodeC, 1);
+		Edge edge3 = new Edge(nodeB, nodeD, 1);
+		Edge edge4 = new Edge(nodeC, nodeD, 1);	
+		Graph graph = new Graph("simple");
+		graph.addNode(nodeA);
+		graph.addNode(nodeB);
+		graph.addNode(nodeC);
+		graph.addNode(nodeD);
+		graph.addEdge(edge1);
+		graph.addEdge(edge2);
+		graph.addEdge(edge3);
+		graph.addEdge(edge4);
+		TreeNode t1 = new TreeNode();
+		TreeNode t2 = new TreeNode(t1, nodeA, 1);
+		TreeNode t3 = new TreeNode(t2, nodeB, 1);
+		TreeNode t7 = new TreeNode(t3, nodeC, 0);
+		
 		_primaryStage = primaryStage;
 		_primaryStage.setTitle("Parallel Scheduler");
 		
@@ -85,9 +112,10 @@ public class Window extends Application {
 		_numOfProc = new Text(_numProc + "");
 		_outputFile = new Text(_outputName);
 		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
+		_visualTreeNode = drawSchedule(t7);
 		
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
-		_grid.add(_visualisation, 0, 1, 1, 4);
+		//_grid.add(_visualisation, 0, 1, 1, 4);
 		_grid.add(_procText, 1, 1);
 		_grid.add(_numOfProc, 2, 1);
 		_grid.add(_outputFile, 2, 2);
@@ -96,6 +124,10 @@ public class Window extends Application {
 		_grid.add(_currentNumOfTreeNodes, 2, 3);
 		_grid.add(_pb, 0, 6, 3, 1);
 		_grid.add(_progressBarText, 0, 5, 3, 1);
+		_grid.add(_progressBar, 0, 5, 3, 1);
+		_grid.add(_visualTreeNode, 0,1,1,4);
+		
+		//_grid.setGridLinesVisible(true);
 		
 		_scene = new Scene(_grid);
 		_primaryStage.setScene(_scene);
@@ -157,6 +189,56 @@ public class Window extends Application {
 		primaryStage.show();
 		
 		*/
+	}
+	
+	private GridPane drawSchedule(TreeNode schedule) {
+		TreeNode partialSched = schedule;
+		int numProc = 0;
+		//int height = partialSched.getHeight() + partialSched.getNode().getWeight();
+		
+		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 20 ,20 ,20));
+		
+		while (partialSched.getParent() != null) {
+			if (partialSched.getProcessor() > numProc) {
+				numProc = partialSched.getProcessor();
+			}
+			
+			Node node = partialSched.getNode();
+			
+			Label task = new Label(node.getName());
+			task.setMinHeight(50*node.getWeight());
+			task.setMinWidth(100);
+			
+			task.setId("task");
+			
+			grid.add(task, partialSched.getProcessor(), partialSched.getStartTime() + 1 , 1, node.getWeight());
+			
+			partialSched = partialSched.getParent();
+		}
+		
+		for (int i = 0; i <= numProc; i++) {
+			
+			Label x = new Label(i+"");
+			x.setId("title");
+			grid.add(x, i, 0);
+		}
+		
+		grid.setGridLinesVisible(true);
+		return grid;
+		
+	}
+	
+	private Boolean checkGridPaneCellIsEmpty(GridPane grid, int col, int row) {
+		for (javafx.scene.Node n : grid.getChildren()) {
+			if (GridPane.getColumnIndex(n) == col && GridPane.getRowIndex(n) == row) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
