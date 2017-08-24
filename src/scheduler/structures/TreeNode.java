@@ -106,8 +106,8 @@ public class TreeNode implements Comparable<TreeNode> {
 		TreeNode tn = (TreeNode) obj;
 
 		List<Node> otherNodes = new ArrayList<Node>();
-		int[] thisFinish = new int[Scheduler.getNumProc()];
-		int[] otherFinish = new int[Scheduler.getNumProc()];
+		int[] thisFinish = new int[Scheduler.getInstance().getNumProc()];
+		int[] otherFinish = new int[Scheduler.getInstance().getNumProc()];
 		int count = 0;
 		
 		TreeNode current = tn;

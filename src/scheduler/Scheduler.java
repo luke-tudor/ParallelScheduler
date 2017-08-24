@@ -1,8 +1,6 @@
 package scheduler;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,8 +20,10 @@ import scheduler.structures.TreeNode;
  */
 public class Scheduler {
 
+	private static Scheduler instance;
+	
 	private Graph graph;
-	private static int numProcessors;
+	private int numProcessors;
 
 	// Number of threads to use
 	private int numThreads;
@@ -37,7 +37,7 @@ public class Scheduler {
 	private TreeNode schedule;
 	
 	// Scheduler contains the graph, the number of processors and the number of threads
-	public Scheduler(Graph graph, int numProc, int numThreads) {
+	private Scheduler(Graph graph, int numProc, int numThreads) {
 		this.graph = graph;
 		numProcessors = numProc;
 		exe = Executors.newFixedThreadPool(numThreads);
@@ -45,8 +45,16 @@ public class Scheduler {
 		computeHeuristics();
 	}
 	
-	public static int getNumProc() {
+	public static Scheduler getInstance() {
+		return instance;
+	}
+	
+	public int getNumProc() {
 		return numProcessors;
+	}
+	
+	public TreeNode getNext() {
+		return q.peek();
 	}
 
 	/**
@@ -179,8 +187,8 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		// Finds the optimum schedule by computing the heuristics and schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
-		Graph outputGraph = s.computeSchedule();
+		instance = new Scheduler(inputGraph, processorNumber, 4);
+		Graph outputGraph = instance.computeSchedule();
 		outputGraph.setGraphName("output");
 
 		// Writes the optimum schedule to the output file
