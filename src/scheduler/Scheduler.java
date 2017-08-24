@@ -50,6 +50,7 @@ public class Scheduler {
 		exe = Executors.newFixedThreadPool(numThreads);
 		this.numThreads = numThreads;
 		computeHeuristics();
+		instance = this;
 	}
 
 	public int getNumProc() {
@@ -208,9 +209,8 @@ public class Scheduler {
 		Graph inputGraph = ip.parse();
 
 		// Finds the optimum schedule by computing the heuristics and schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 16);
 		Graph outputGraph = s.computeSchedule();
-		instance = s;
 		outputGraph.setGraphName("output");
 
 		// Writes the optimum schedule to the output file
