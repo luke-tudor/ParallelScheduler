@@ -152,4 +152,8 @@ public class TreeNode implements Comparable<TreeNode> {
 		return true;
 	}
 	
+	public int hashCode() {
+		return (int) System.currentTimeMillis();
+	}
+	
 }
