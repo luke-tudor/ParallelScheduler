@@ -54,7 +54,7 @@ public class TreeNode implements Comparable<TreeNode> {
 		
 		// Perfect load balance stuff start
 		int currentBalance = Scheduler.getTotal();
-		int[] startTimes = new int[Scheduler.getNumProc()];
+		int[] startTimes = new int[Scheduler.getInstance().getNumProc()];
 		
 		startTimes[procNum] = maxStart;
 		
@@ -71,7 +71,7 @@ public class TreeNode implements Comparable<TreeNode> {
 			currentBalance += i;
 		}
 		
-		heuristic = (int) Math.floor(currentBalance/Scheduler.getNumProc());
+		heuristic = (int) Math.floor(currentBalance/Scheduler.getInstance().getNumProc());
 		//System.out.println(heuristic);
 		// Perfect load balance stuff end
 		

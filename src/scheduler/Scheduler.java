@@ -19,9 +19,16 @@ import scheduler.structures.TreeNode;
  * @author Luke Tudor
  */
 public class Scheduler {
+	
+	private static Scheduler instance;
+	
+	public static Scheduler getInstance() {
+		return instance;
+	}
 
 	private Graph graph;
-	private static int numProcessors;
+	private int numProcessors;
+	private static String outputFileName;
 
 	// Number of threads to use
 	private int numThreads;
@@ -45,8 +52,16 @@ public class Scheduler {
 		computeHeuristics();
 	}
 
-	public static int getNumProc() {
+	public int getNumProc() {
 		return numProcessors;
+	}
+	
+	public String getOuputName() {
+		return outputFileName;
+	}
+	
+	public int getNumThreads() {
+		return numThreads;
 	}
 
 	/**
@@ -186,7 +201,7 @@ public class Scheduler {
 
 		// Regular expression to construct the output file name from the input file name
 		// Utilises the file name without the extension and concatenating it with the other half of the new file name
-		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
+		outputFileName = args[0].split("\\.")[0] + "-output.dot";
 
 		// Creates the graph
 		InputParser ip = new InputParser(inputFileName);		
@@ -195,6 +210,7 @@ public class Scheduler {
 		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
 		Graph outputGraph = s.computeSchedule();
+		instance = s;
 		outputGraph.setGraphName("output");
 
 		// Writes the optimum schedule to the output file
