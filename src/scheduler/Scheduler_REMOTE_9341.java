@@ -1,6 +1,8 @@
 package scheduler;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,12 +32,10 @@ public class Scheduler {
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
 
 	private ExecutorService exe;
-
+	
 	// Current best schedule
 	private TreeNode schedule;
-
-	private static int total;
-
+	
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
 		this.graph = graph;
@@ -44,7 +44,7 @@ public class Scheduler {
 		this.numThreads = numThreads;
 		computeHeuristics();
 	}
-
+	
 	public static int getNumProc() {
 		return numProcessors;
 	}
@@ -72,13 +72,13 @@ public class Scheduler {
 								TreeNode current = q.remove();
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
-
+								
 								// Pruning TreeNodes
 								//Set<TreeNode> hash = new HashSet<TreeNode>(q);
 								//while (hash.contains(current)) {
-								//q.remove(current);
+									//q.remove(current);
 								//}
-
+								
 								// Find neighbouring nodes
 								Set<Node> neighbours = graph.getNeighbours(current);
 								if (neighbours.isEmpty()) {
@@ -133,20 +133,6 @@ public class Scheduler {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
 		}
-		setPerfectBalance();
-	}
-
-	private void setPerfectBalance() {
-		int total = 0;
-		Collection<Node> nodes = graph.getAllNodes();
-		for (Node n : nodes) {
-			total += n.getWeight();
-		}
-		this.total = total;
-	}
-
-	public static int getTotal() {
-		return total;
 	}
 
 	/**

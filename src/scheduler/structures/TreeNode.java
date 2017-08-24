@@ -11,6 +11,7 @@ public class TreeNode implements Comparable<TreeNode> {
 	private Node node;
 	private int recentProcessor;
 	private int recentStartTime;
+	private int heuristic;
 	
 	/**
 	 * All branches of the search tree are intended to be created using this constructor. It takes as input a TreeNode
@@ -51,11 +52,39 @@ public class TreeNode implements Comparable<TreeNode> {
 			current = current.parent;
 		}
 		
+		// Perfect load balance stuff start
+		int currentBalance = Scheduler.getTotal();
+		int[] startTimes = new int[Scheduler.getNumProc()];
+		
+		startTimes[procNum] = maxStart;
+		
+		current = parent;
+		while (!(current == null || current.node == null)) {
+			int proc = current.recentProcessor;
+			if (startTimes[proc] != 0) {
+				currentBalance += startTimes[proc] - current.recentStartTime - current.node.getWeight();
+			}
+			startTimes[proc] = current.recentStartTime;
+			current = current.parent;
+		}
+		for (int i : startTimes) {
+			currentBalance += i;
+		}
+		
+		heuristic = (int) Math.floor(currentBalance/Scheduler.getNumProc());
+		//System.out.println(heuristic);
+		// Perfect load balance stuff end
+		
 		//initialise the fields for this object
 		this.parent = parent;
 		this.node = node;
 		this.recentProcessor = procNum;
 		this.recentStartTime = maxStart;
+		
+		// Finalise heuristic
+		if (node.getBottomLevel() + recentStartTime > heuristic) {
+			heuristic = node.getBottomLevel() + recentStartTime;
+		}
 	}
 	
 	/**
@@ -74,11 +103,9 @@ public class TreeNode implements Comparable<TreeNode> {
 	 */
 	@Override
 	public int compareTo(TreeNode other) {
-		int node1Heuristic = node.getBottomLevel() + recentStartTime;
-		int node2Heuristic = other.node.getBottomLevel() + other.recentStartTime;
-		if (node1Heuristic < node2Heuristic) {
+		if (heuristic < other.heuristic) {
 			return -1;
-		} else if (node1Heuristic == node2Heuristic) {
+		} else if (heuristic == other.heuristic) {
 			return 0;
 		} else {
 			return 1;
