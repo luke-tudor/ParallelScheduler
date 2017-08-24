@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 
 /**
  * The class representing the root of the application, building the
@@ -42,6 +44,8 @@ public class Window extends Application {
 	private Text _numOfProc;
 	private Text _outputFile;
 	private Text _currentNumOfTreeNodes;
+	private ProgressBar _pb;
+	private Label _progressBarText;
 	
 	private int _numProc = 0;
 	private String _outputName = "null";
@@ -75,6 +79,8 @@ public class Window extends Application {
 		_procText = new Label("Num of Processors:");
 		_outputText = new Label("Output Filename:");
 		_treeNodeText = new Label("Schedules considered:");
+		_progressBarText = new Label("Progress Bar:");
+		_pb = new ProgressBar(0.6);
 		_progressBar = new Rectangle(400, 50, Color.BLUE);
 		_numOfProc = new Text(_numProc + "");
 		_outputFile = new Text(_outputName);
@@ -88,7 +94,8 @@ public class Window extends Application {
 		_grid.add(_outputText, 1, 2);
 		_grid.add(_treeNodeText, 1, 3);
 		_grid.add(_currentNumOfTreeNodes, 2, 3);
-		_grid.add(_progressBar, 0, 5, 3, 1);
+		_grid.add(_pb, 0, 6, 3, 1);
+		_grid.add(_progressBarText, 0, 5, 3, 1);
 		
 		_scene = new Scene(_grid);
 		_primaryStage.setScene(_scene);
