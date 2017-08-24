@@ -67,8 +67,11 @@ public class TreeNode implements Comparable<TreeNode> {
 			startTimes[proc] = current.recentStartTime;
 			current = current.parent;
 		}
+		for (int i : startTimes) {
+			currentBalance += i;
+		}
 		heuristic = currentBalance;
-		//System.out.println(heuristic);
+		System.out.println(heuristic);
 		// Perfect load balance stuff end
 		
 		//initialise the fields for this object
