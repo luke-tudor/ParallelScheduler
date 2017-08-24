@@ -1,8 +1,7 @@
 package scheduler;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,6 +34,8 @@ public class Scheduler {
 	
 	// Current best schedule
 	private TreeNode schedule;
+	
+	private static int perfectBalance;
 	
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
@@ -74,10 +75,10 @@ public class Scheduler {
 								// Uses height to determine whether a schedule is complete
 								
 								// Pruning TreeNodes
-								//Set<TreeNode> hash = new HashSet<TreeNode>(q);
-								//while (hash.contains(current)) {
-									//q.remove(current);
-								//}
+								HashSet<TreeNode> hash = new HashSet<>(q);
+								while (hash.contains(current)) {
+									q.remove(current);
+								}
 								
 								// Find neighbouring nodes
 								Set<Node> neighbours = graph.getNeighbours(current);
@@ -133,6 +134,20 @@ public class Scheduler {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
 		}
+		setPerfectBalance();
+	}
+	
+	private void setPerfectBalance() {
+		int total = 0;
+		Collection<Node> nodes = graph.getAllNodes();
+		for (Node n : nodes) {
+			total += n.getWeight();
+		}
+		perfectBalance = (int) Math.ceil(total/numProcessors);
+	}
+	
+	public static int getPerfectBalance() {
+		return perfectBalance;
 	}
 
 	/**
