@@ -52,10 +52,12 @@ public class Window extends Application {
 	private ToggleButton _settings;
 	private SplitPane _splitPane;
 	private VBox _paneToMove;
+	private ProgressBar _progressBar;
 	
 	private int _numProc = 0;
 	private String _outputName = "null";
 	private int _treeNodeNum = 0;
+	private int _totalNodes = 0;
 	
 	@Override
 	public void init() {
@@ -87,6 +89,7 @@ public class Window extends Application {
 		
 		initialiseElements();
 		_visualTreeNode = drawSchedule(t7);
+		_progressBar = new ProgressBar((double) drawProgressBar(t7) / _totalNodes);
 		
 		setElementIds();
 		
@@ -198,6 +201,16 @@ public class Window extends Application {
 		_infoPane.add(_outputFile, 1, 2);
 		_infoPane.add(_treeNodeText, 0, 3);
 		_infoPane.add(_currentNumOfTreeNodes, 1, 3);
+	}
+
+	private int drawProgressBar(TreeNode schedule) {
+		TreeNode partialSched = schedule;
+		int count = 0;
+		while (partialSched.getParent() != null) {
+			count++;
+			partialSched = partialSched.getParent();
+		}
+		return count;
 	}
 	
 	private GridPane drawSchedule(TreeNode schedule) {
