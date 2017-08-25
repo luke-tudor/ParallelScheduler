@@ -7,11 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import javafx.application.Application;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
+import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -201,25 +203,48 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
-		String inputFileName = args[0];
+		/*String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
-
+		
 		// Regular expression to construct the output file name from the input file name
 		// Utilises the file name without the extension and concatenating it with the other half of the new file name
 		outputFileName = args[0].split("\\.")[0] + "-output.dot";
+		
+		int numThreads = 1;
+		
+		boolean isVisual = false;
+		if (args.length > 2) {
+			for (int i = 2; i < args.length; i++) {
+				if (args[i].equals("-v")) {
+					isVisual = true;
+				} else if (args[i].equals("-o")) {
+					i++;
+					outputFileName = args[i];
+				} else if (args[i].equals("-N")) {
+					i++;
+					numThreads = Integer.parseInt(args[i]);
+				}
+			}
+		}
 
 		// Creates the graph
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 
 		// Finds the optimum schedule by computing the heuristics and schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 16);
+		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
+		
+		if (isVisual) {
+			//Application.launch();
+		}
 
 		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
-		of.writeGraph(outputFileName);
+		of.writeGraph(outputFileName);*/
+		
+		Application.launch(Window.class, args);
 	}
 
 }
