@@ -17,8 +17,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -40,18 +38,20 @@ public class Window extends Application {
 	private Stage _primaryStage;
 	private Scene _scene;
 	private GridPane _grid;
-	private Rectangle _visualisation;
 	private GridPane _visualTreeNode;
+	private GridPane _infoPane;
 	private Text _sceneTitle;
 	private Label _procText;
 	private Label _outputText;
 	private Label _treeNodeText;
-	private Rectangle _progressBar;
 	private Text _numOfProc;
 	private Text _outputFile;
 	private Text _currentNumOfTreeNodes;
 	private ProgressBar _pb;
 	private Label _progressBarText;
+	private ToggleButton _settings;
+	private SplitPane _splitPane;
+	private VBox _paneToMove;
 	
 	private int _numProc = 0;
 	private String _outputName = "null";
@@ -92,15 +92,41 @@ public class Window extends Application {
 		setElementIds();
 		
 		addElementsToGrid();
+	
+		_splitPane = new SplitPane();
+		_splitPane.getItems().addAll(_grid, _paneToMove);
 		
-		//_grid.setGridLinesVisible(true);
+		setUpCollapsablePanel();
 		
-		_scene = new Scene(_grid);
+		_scene = new Scene(_splitPane);
+		
 		_primaryStage.setScene(_scene);
 		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
-		
 		_primaryStage.show();
+	}
+	
+	private void setUpCollapsablePanel() {
 		
+
+		_paneToMove.setMinWidth(0);
+
+        DoubleProperty splitPaneDividerPosition = _splitPane.getDividers().get(0).positionProperty();
+
+        //update toggle button status if user moves divider:
+        splitPaneDividerPosition.addListener((obs, oldPos, newPos) -> 
+            _settings.setSelected(newPos.doubleValue() < 0.95));
+      
+        splitPaneDividerPosition.set((_splitPane.getWidth() - 210)/_splitPane.getWidth());
+
+        _settings.setOnAction(event -> {
+        	KeyValue end;
+            if (_settings.isSelected()) {
+                end = new KeyValue(splitPaneDividerPosition, (_splitPane.getWidth() - 210)/_splitPane.getWidth());
+            } else {
+                end = new KeyValue(splitPaneDividerPosition, 1.0);
+            }
+            new Timeline(new KeyFrame(Duration.seconds(0.5), end)).play();
+        });
 	}
 
 	private TreeNode createTestTreeNode() {
@@ -133,16 +159,17 @@ public class Window extends Application {
 	private void initialiseElements() {
 
 		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
-		_visualisation = new Rectangle(200, 300, Color.RED);
 		_procText = new Label("Num of Processors:");
 		_outputText = new Label("Output Filename:");
 		_treeNodeText = new Label("Schedules considered:");
 		_progressBarText = new Label("Progress Bar:");
 		_pb = new ProgressBar(0.6);
-		//_progressBar = new Rectangle(400, 50, Color.BLUE);
 		_numOfProc = new Text(_numProc + "");
 		_outputFile = new Text(_outputName);
 		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
+		_settings = new ToggleButton("Settings");		
+		_infoPane = new GridPane();		
+		_paneToMove = new VBox(_infoPane);
 	}
 
 	private void setElementIds() {
@@ -161,59 +188,17 @@ public class Window extends Application {
 	private void addElementsToGrid() {
 		
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
-		//_grid.add(_visualisation, 0, 1, 1, 4);
-	//	_grid.add(_procText, 1, 1);
-	//	_grid.add(_numOfProc, 2, 1);
-	//	_grid.add(_outputFile, 2, 2);
-	//	_grid.add(_outputText, 1, 2);
-	//	_grid.add(_treeNodeText, 1, 3);
-	//	_grid.add(_currentNumOfTreeNodes, 2, 3);
 		_grid.add(_pb, 0, 6, 3, 1);
 		_grid.add(_progressBarText, 0, 5, 3, 1);
-	//	_grid.add(_progressBar, 0, 5, 3, 1);
 		_grid.add(_visualTreeNode, 0,1,1,4);
-		
-		GridPane infoPane = new GridPane();
-		infoPane.add(_procText, 0, 1);
-		infoPane.add(_numOfProc, 1, 1);
-		infoPane.add(_outputText, 0, 2);
-		infoPane.add(_outputFile, 1, 2);
-		infoPane.add(_treeNodeText, 0, 3);
-		infoPane.add(_currentNumOfTreeNodes, 1, 3);
-		
-		VBox paneToMove = new VBox(infoPane);
-		paneToMove.setMinWidth(0);
-	
-		
-		//_grid.setGridLinesVisible(true);
-		ToggleButton settings = new ToggleButton("Settings");
-		_grid.add(settings, 0, 7);
-		SplitPane splitPane = new SplitPane();
-		splitPane.getItems().addAll(_grid, paneToMove);
-		
-        DoubleProperty splitPaneDividerPosition = splitPane.getDividers().get(0).positionProperty();
+		_grid.add(_settings, 0, 7);
 
-        //update toggle button status if user moves divider:
-        splitPaneDividerPosition.addListener((obs, oldPos, newPos) -> 
-            settings.setSelected(newPos.doubleValue() < 0.95));
-      
-        splitPaneDividerPosition.set((splitPane.getWidth() - 210)/splitPane.getWidth());
-
-        settings.setOnAction(event -> {
-        	KeyValue end;
-            if (settings.isSelected()) {
-                end = new KeyValue(splitPaneDividerPosition, (splitPane.getWidth() - 210)/splitPane.getWidth());
-            } else {
-                end = new KeyValue(splitPaneDividerPosition, 1.0);
-            }
-            new Timeline(new KeyFrame(Duration.seconds(0.5), end)).play();
-        });
-        
-		_scene = new Scene(splitPane);
-		_primaryStage.setScene(_scene);
-		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
-		
-		_primaryStage.show();
+		_infoPane.add(_procText, 0, 1);
+		_infoPane.add(_numOfProc, 1, 1);
+		_infoPane.add(_outputText, 0, 2);
+		_infoPane.add(_outputFile, 1, 2);
+		_infoPane.add(_treeNodeText, 0, 3);
+		_infoPane.add(_currentNumOfTreeNodes, 1, 3);
 	}
 	
 	private GridPane drawSchedule(TreeNode schedule) {
