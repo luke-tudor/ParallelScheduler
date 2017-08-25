@@ -1,20 +1,16 @@
 package scheduler;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-import javafx.application.Application;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
-import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -26,57 +22,100 @@ public class Scheduler {
 	private Graph graph;
 	private int numProcessors;
 
-	// This is the queue that all the threads will be working off, it blocks if multiple threads wish to access it at once and may not even
-	// be necessary for multi-threading
-	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
-	// This executor is going to be executing a "processNode()" task, whatever that ends up being
-	private ExecutorService exe;
+	// Number of threads to use
+	private int numThreads;
 
+	// Queue that all threads are working off, it blocks if multiple threads wish to access it at once
+	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
+
+	private ExecutorService exe;
+	
+	// Current best schedule
+	private TreeNode schedule;
+	
+	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProcessors, int numThreads) {
 		this.graph = graph;
 		this.numProcessors = numProcessors;
 		exe = Executors.newFixedThreadPool(numThreads);
+		this.numThreads = numThreads;
 	}
 
 	/**
-	 * computes the optimum processing schedule for the graph 
+	 * Computes the optimum processing schedule for the graph.
 	 */
 	public Graph computeSchedule() {
-		PriorityQueue<TreeNode> q = new PriorityQueue<>();
 		q.add(new TreeNode());
-		while (!q.isEmpty()) {
-			// Pop from priority queue
-			TreeNode current = q.remove();
-			// If current == goal or complete solution, then we have optimal solution
-			// Uses height to determine if a schedule is complete
-			if (current.getHeight() == graph.getAllNodes().size()) {
-				TreeNode tail = current;
-				while (tail.getNode() != null) {
-					tail.getNode().setProcessor(tail.getProcessor() + 1);
-					tail.getNode().setStart(tail.getStartTime());
-					tail = tail.getParent();
-				}
-				return graph;
-			}
+		// Submit one task for each thread
+		for (int i = 0; i < numThreads; i++) {
+			// Only submit a task if the executor is not shutdown
+			if (!exe.isShutdown()) {
+				exe.submit(new Runnable() {
 
-			// Find neighbouring nodes
-			Set<Node> neighbours = graph.getNeighbours(current);
-			for (Node n : neighbours) {
-				// Mapping is used to remove duplicate schedules, noticeable effect on inputs with large processor numbers
-				Map<Integer, TreeNode> uniqueSchedules = new HashMap<Integer, TreeNode>();
-				for (int i = 0; i < numProcessors; i++) {
-					TreeNode candidate = new TreeNode(current, n, i);
-					uniqueSchedules.put(candidate.getStartTime(), candidate);
-				}
-				q.addAll(uniqueSchedules.values());
-			}
+					@Override
+					public void run() {
+						// Busy wait until there are nodes on the queue
+						while (!exe.isShutdown()) {
+							while (!q.isEmpty()) {
+								if (exe.isShutdown()) {
+									break;
+								}
+								// Pop from priority queue
+								TreeNode current = q.remove();
+								// If current equals goal or complete solution, we have the optimal solution
+								// Uses height to determine whether a schedule is complete
+								if (current.getHeight() == graph.getAllNodes().size()) {
+									/*
+									 * Set this schedule as the optimal schedule for this graph.
+									 * Gracefully terminate all tasks.
+									 */
+									synchronized (q) {
+										if (schedule == null || current.getStartTime() + current.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
+											System.err.println(current.getStartTime() + current.getNode().getBottomLevel());
+											if (schedule != null)
+												System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
+											schedule = current;
+										}
+										exe.shutdown();
+									}
+									return;
+								}
 
+								// Find neighbouring nodes
+								Set<Node> neighbours = graph.getNeighbours(current);
+								for (Node n : neighbours) {
+									for (int i = 0; i < numProcessors; i++) {
+										TreeNode candidate = new TreeNode(current, n, i);
+										q.add(candidate);
+									}
+								}
+							}
+						}
+					}
+				});
+			}
 		}
-		System.out.println("I FAILED");
-		System.exit(1);
-		return null;
+		try {
+			exe.awaitTermination(1, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TreeNode tail = schedule;
+		while (tail.getNode() != null) {
+			tail.getNode().setProcessor(tail.getProcessor() + 1);
+			tail.getNode().setStart(tail.getStartTime());
+			tail = tail.getParent();
+		}
+		return graph;
 	}
 
+
+
+	/**
+	 * Computes the heuristics for task scheduling which utilises the bottom level.
+	 * e.g. longest path to exist task starting with node.
+	 */
 	public void computeHeuristics() {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
@@ -91,16 +130,16 @@ public class Scheduler {
 	 */
 	public int setBottomLevel(Node n) {
 		if (n.getBottomLevel() != 0) {
-			// If we already know the bottom level, no need to recompute it
+			// If the bottom level is known, there is no reason to recompute it
 			return n.getBottomLevel();
 		} else {
-			// If this node has no children, bottom level is its weight
+			// If the node has no children, the bottom level is its weight
 			Set<Node> children = n.getChildEdgeWeights().keySet();
 			if (children.size() == 0) {
 				n.setBottomLevel(n.getWeight());
 				return n.getWeight();
 			} else {
-				// Otherwise, this node's bottom level is the max bottom level of its children + its weight
+				// Otherwise, the node's bottom level is the max bottom level of its children plus its weight
 				int max = 0;
 				for (Node child : children) {
 					int value = setBottomLevel(child);
@@ -115,50 +154,26 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
-		/*
 		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
-		int numCores = 1;
-		
-		// Use regular expression to construct output file name from input file name
-		// Works by taking the file name without the extension and concatenating with the other half of the new name
-		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
-		
-		if (args.length < 2) {
-			System.err.println("Not enough arguments");
-			return;
-		}
-		
-		for (int i = 2; i < args.length; i++) {
-			if (args[i].equals("-p")) {
-				i++;
-				numCores = Integer.parseInt(args[i]);
-			} else if (args[i].equals("-v")) {
-				//START WINDOW HERE
-			} else if (args[i].equals("-o")) {
-				i++;
-				outputFileName = args[i];
-			}
-		}
 
-		//creates the graph
+		// Regular expression to construct the output file name from the input file name
+		// Utilises the file name without the extension and concatenating it with the other half of the new file name
+		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
+
+		// Creates the graph
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 
-		//finds the optimum schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, numCores);
+		// Finds the optimum schedule by computing the heuristics and schedule
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
 		s.computeHeuristics();
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
-		
-		//writes schedule to output file
+
+		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
-		*/
-		
-		//Window w = new Window(1, "hello.txt");
-		Application.launch(Window.class, args);
-		
 	}
 
 }
