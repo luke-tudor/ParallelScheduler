@@ -103,7 +103,7 @@ public class TestTreeNode {
 		
 		System.out.println(t0.compareTo(t1));
 		System.out.println(t1.compareTo(t2));
-		System.out.println(t2.compareTo(t3));
+		System.out.println(t3.compareTo(t2));
 		
 	}
 	
