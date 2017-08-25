@@ -1,27 +1,27 @@
 package scheduler.visualisation;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import java.util.Timer;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.Border;
+import javafx.util.Duration;
 import scheduler.structures.Edge;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
@@ -40,7 +40,6 @@ public class Window extends Application {
 	private Stage _primaryStage;
 	private Scene _scene;
 	private GridPane _grid;
-	
 	private Rectangle _visualisation;
 	private GridPane _visualTreeNode;
 	private Text _sceneTitle;
@@ -163,16 +162,58 @@ public class Window extends Application {
 		
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
 		//_grid.add(_visualisation, 0, 1, 1, 4);
-		_grid.add(_procText, 1, 1);
-		_grid.add(_numOfProc, 2, 1);
-		_grid.add(_outputFile, 2, 2);
-		_grid.add(_outputText, 1, 2);
-		_grid.add(_treeNodeText, 1, 3);
-		_grid.add(_currentNumOfTreeNodes, 2, 3);
+	//	_grid.add(_procText, 1, 1);
+	//	_grid.add(_numOfProc, 2, 1);
+	//	_grid.add(_outputFile, 2, 2);
+	//	_grid.add(_outputText, 1, 2);
+	//	_grid.add(_treeNodeText, 1, 3);
+	//	_grid.add(_currentNumOfTreeNodes, 2, 3);
 		_grid.add(_pb, 0, 6, 3, 1);
 		_grid.add(_progressBarText, 0, 5, 3, 1);
-		//_grid.add(_progressBar, 0, 5, 3, 1);
+	//	_grid.add(_progressBar, 0, 5, 3, 1);
 		_grid.add(_visualTreeNode, 0,1,1,4);
+		
+		GridPane infoPane = new GridPane();
+		infoPane.add(_procText, 0, 1);
+		infoPane.add(_numOfProc, 1, 1);
+		infoPane.add(_outputText, 0, 2);
+		infoPane.add(_outputFile, 1, 2);
+		infoPane.add(_treeNodeText, 0, 3);
+		infoPane.add(_currentNumOfTreeNodes, 1, 3);
+		
+		VBox paneToMove = new VBox(infoPane);
+		paneToMove.setMinWidth(0);
+	
+		
+		//_grid.setGridLinesVisible(true);
+		ToggleButton settings = new ToggleButton("Settings");
+		_grid.add(settings, 0, 7);
+		SplitPane splitPane = new SplitPane();
+		splitPane.getItems().addAll(_grid, paneToMove);
+		
+        DoubleProperty splitPaneDividerPosition = splitPane.getDividers().get(0).positionProperty();
+
+        //update toggle button status if user moves divider:
+        splitPaneDividerPosition.addListener((obs, oldPos, newPos) -> 
+            settings.setSelected(newPos.doubleValue() < 0.95));
+      
+        splitPaneDividerPosition.set((splitPane.getWidth() - 210)/splitPane.getWidth());
+
+        settings.setOnAction(event -> {
+        	KeyValue end;
+            if (settings.isSelected()) {
+                end = new KeyValue(splitPaneDividerPosition, (splitPane.getWidth() - 210)/splitPane.getWidth());
+            } else {
+                end = new KeyValue(splitPaneDividerPosition, 1.0);
+            }
+            new Timeline(new KeyFrame(Duration.seconds(0.5), end)).play();
+        });
+        
+		_scene = new Scene(splitPane);
+		_primaryStage.setScene(_scene);
+		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
+		
+		_primaryStage.show();
 	}
 	
 	private GridPane drawSchedule(TreeNode schedule) {
@@ -215,6 +256,23 @@ public class Window extends Application {
 		
 	}
 	
+	/**
+	 * For the gridPane we don't want to override already existing contents of a cell. 
+	 * 
+	 * @param grid The gridPane to check
+	 * @param col the column of the cell we want to check
+	 * @param row the row of the cell we want to check
+	 * @return true if the cell is empty, false otherwise
+	 */
+	private Boolean checkGridPaneCellIsEmpty(GridPane grid, int col, int row) {
+		for (javafx.scene.Node n : grid.getChildren()) {
+			if (GridPane.getColumnIndex(n) == col && GridPane.getRowIndex(n) == row) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void setTreeNode(TreeNode node) {
 		_visualTreeNode = drawSchedule(node);
 	}
