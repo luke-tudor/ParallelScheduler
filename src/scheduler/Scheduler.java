@@ -7,14 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.glass.ui.Window;
-
 import javafx.application.Application;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
 import scheduler.structures.TreeNode;
+import scheduler.visualisation.Window;
 
 /**
  * The main class for the parallel scheduler.
@@ -204,7 +203,7 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
-		String inputFileName = args[0];
+		/*String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 		
 		// Regular expression to construct the output file name from the input file name
@@ -243,7 +242,9 @@ public class Scheduler {
 
 		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
-		of.writeGraph(outputFileName);
+		of.writeGraph(outputFileName);*/
+		
+		Application.launch(Window.class, args);
 	}
 
 }

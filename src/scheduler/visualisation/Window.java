@@ -94,41 +94,12 @@ public class Window extends Application {
 		setElementIds();
 		
 		addElementsToGrid();
-	
-		_splitPane = new SplitPane();
-		_splitPane.getItems().addAll(_grid, _paneToMove);
 		
-		setUpCollapsablePanel();
-		
-		_scene = new Scene(_splitPane);
+		_scene = new Scene(_grid);
 		
 		_primaryStage.setScene(_scene);
 		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
 		_primaryStage.show();
-	}
-	
-	private void setUpCollapsablePanel() {
-		
-
-		_paneToMove.setMinWidth(0);
-
-        DoubleProperty splitPaneDividerPosition = _splitPane.getDividers().get(0).positionProperty();
-
-        //update toggle button status if user moves divider:
-        splitPaneDividerPosition.addListener((obs, oldPos, newPos) -> 
-            _settings.setSelected(newPos.doubleValue() < 0.95));
-      
-        splitPaneDividerPosition.set((_splitPane.getWidth() - 210)/_splitPane.getWidth());
-
-        _settings.setOnAction(event -> {
-        	KeyValue end;
-            if (_settings.isSelected()) {
-                end = new KeyValue(splitPaneDividerPosition, (_splitPane.getWidth() - 210)/_splitPane.getWidth());
-            } else {
-                end = new KeyValue(splitPaneDividerPosition, 1.0);
-            }
-            new Timeline(new KeyFrame(Duration.seconds(0.5), end)).play();
-        });
 	}
 
 	private TreeNode createTestTreeNode() {
@@ -195,12 +166,12 @@ public class Window extends Application {
 		_grid.add(_visualTreeNode, 0,1,1,4);
 		_grid.add(_settings, 0, 7);
 
-		_infoPane.add(_procText, 0, 1);
-		_infoPane.add(_numOfProc, 1, 1);
-		_infoPane.add(_outputText, 0, 2);
-		_infoPane.add(_outputFile, 1, 2);
-		_infoPane.add(_treeNodeText, 0, 3);
-		_infoPane.add(_currentNumOfTreeNodes, 1, 3);
+		_grid.add(_procText, 1, 1);
+		_grid.add(_numOfProc, 2, 1);
+		_grid.add(_outputText, 1, 2);
+		_grid.add(_outputFile, 2, 2);
+		_grid.add(_treeNodeText, 1, 3);
+		_grid.add(_currentNumOfTreeNodes, 2, 3);
 	}
 
 	private int drawProgressBar(TreeNode schedule) {
