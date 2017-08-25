@@ -1,6 +1,8 @@
 package scheduler.visualisation;
 
 
+import java.util.Timer;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -65,11 +67,44 @@ public class Window extends Application {
 		 * 
 		 * 	by calling new public methods in related classes
 		 */
+		Timer t = new Timer();
+		WindowTimer w = new WindowTimer(this);
+		//t.schedule(w, 0, 500);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 
+		TreeNode t7 = createTestTreeNode();
+		
+		_primaryStage = primaryStage;
+		_primaryStage.setTitle("Parallel Scheduler");
+		
+		_grid = new GridPane();
+		_grid.setAlignment(Pos.CENTER);
+		_grid.setHgap(10);
+		_grid.setVgap(10);
+		_grid.setPadding(new Insets(25,25,25,25));
+		
+		initialiseElements();
+		_visualTreeNode = drawSchedule(t7);
+		
+		setElementIds();
+		
+		addElementsToGrid();
+		
+		//_grid.setGridLinesVisible(true);
+		
+		_scene = new Scene(_grid);
+		_primaryStage.setScene(_scene);
+		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
+		
+		_primaryStage.show();
+		
+	}
+
+	private TreeNode createTestTreeNode() {
+		
 		Node nodeA = new Node("A", 2);
 		Node nodeB = new Node("B", 3);
 		Node nodeC = new Node("C", 3);
@@ -92,15 +127,11 @@ public class Window extends Application {
 		TreeNode t3 = new TreeNode(t2, nodeB, 1);
 		TreeNode t7 = new TreeNode(t3, nodeC, 0);
 		
-		_primaryStage = primaryStage;
-		_primaryStage.setTitle("Parallel Scheduler");
-		
-		_grid = new GridPane();
-		_grid.setAlignment(Pos.CENTER);
-		_grid.setHgap(10);
-		_grid.setVgap(10);
-		_grid.setPadding(new Insets(25,25,25,25));
-		
+		return t7;
+	}
+	
+	private void initialiseElements() {
+
 		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
 		_visualisation = new Rectangle(200, 300, Color.RED);
 		_procText = new Label("Num of Processors:");
@@ -108,11 +139,26 @@ public class Window extends Application {
 		_treeNodeText = new Label("Schedules considered:");
 		_progressBarText = new Label("Progress Bar:");
 		_pb = new ProgressBar(0.6);
-		_progressBar = new Rectangle(400, 50, Color.BLUE);
+		//_progressBar = new Rectangle(400, 50, Color.BLUE);
 		_numOfProc = new Text(_numProc + "");
 		_outputFile = new Text(_outputName);
 		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
-		_visualTreeNode = drawSchedule(t7);
+	}
+
+	private void setElementIds() {
+		_visualTreeNode.setId("Tree-node");
+		_sceneTitle.setId("title");
+		_procText.setId("proc-text");
+		_outputText.setId("output-text");
+		_treeNodeText.setId("tree-node-text");
+		_progressBarText.setId("progress-bar-text");
+		_pb.setId("pb");
+		_numOfProc.setId("num-of-proc");
+		_outputFile.setId("output-file");
+		_currentNumOfTreeNodes.setId("current-num-of-tree-nodes");
+	}
+	
+	private void addElementsToGrid() {
 		
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
 		//_grid.add(_visualisation, 0, 1, 1, 4);
@@ -124,77 +170,13 @@ public class Window extends Application {
 		_grid.add(_currentNumOfTreeNodes, 2, 3);
 		_grid.add(_pb, 0, 6, 3, 1);
 		_grid.add(_progressBarText, 0, 5, 3, 1);
-		_grid.add(_progressBar, 0, 5, 3, 1);
+		//_grid.add(_progressBar, 0, 5, 3, 1);
 		_grid.add(_visualTreeNode, 0,1,1,4);
-		
-		//_grid.setGridLinesVisible(true);
-		
-		_scene = new Scene(_grid);
-		_primaryStage.setScene(_scene);
-		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
-		
-		_primaryStage.show();
-		
-		/*
-		primaryStage.setTitle("JavaFX Welcome");
-		
-		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(25, 25, 25, 25));
-		
-		Text sceneTitle = new Text("Welcome");
-		sceneTitle.setId("welcome-text");
-		grid.add(sceneTitle, 0, 0, 2 ,1);
-		
-		Label userName = new Label("User Name:");
-		grid.add(userName, 0,1);
-		
-		TextField userTextField = new TextField();
-		grid.add(userTextField, 1,1);
-		
-		Label pw = new Label("Password:");
-		grid.add(pw, 0, 2);
-		
-		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 1, 2);
-			
-		Button btn = new Button("Sign in");
-		HBox hbBtn = new HBox(10);
-		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
-		grid.add(hbBtn, 1, 4);
-		
-		final Text actionTarget = new Text();
-		actionTarget.setId("actionTarget");
-		grid.add(actionTarget, 1,6);
-		
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent e) {
-				actionTarget.setText("Sign in button pressed");
-			}
-		});
-		
-		
-		//grid.setGridLinesVisible(true);
-		
-		Scene scene = new Scene(grid, 300, 275);
-		primaryStage.setScene(scene);
-		
-		scene.getStylesheets().add(Window.class.getResource("style.css").toExternalForm());
-		
-		primaryStage.show();
-		
-		*/
 	}
 	
 	private GridPane drawSchedule(TreeNode schedule) {
 		TreeNode partialSched = schedule;
 		int numProc = 0;
-		//int height = partialSched.getHeight() + partialSched.getNode().getWeight();
 		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
@@ -223,22 +205,20 @@ public class Window extends Application {
 		for (int i = 0; i <= numProc; i++) {
 			
 			Label x = new Label(i+"");
-			x.setId("title");
+			x.setId("tree-node-title");
 			grid.add(x, i, 0);
 		}
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 		return grid;
 		
 	}
 	
-	private Boolean checkGridPaneCellIsEmpty(GridPane grid, int col, int row) {
-		for (javafx.scene.Node n : grid.getChildren()) {
-			if (GridPane.getColumnIndex(n) == col && GridPane.getRowIndex(n) == row) {
-				return false;
-			}
-		}
-		return true;
+	public void setTreeNode(TreeNode node) {
+		_visualTreeNode = drawSchedule(node);
 	}
-
+	
+	public void setNumOfTreeNodes(int num) {
+		_treeNodeNum = num;
+	}
 }
