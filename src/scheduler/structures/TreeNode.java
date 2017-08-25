@@ -1,11 +1,17 @@
 package scheduler.structures;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import scheduler.Scheduler;
+
 public class TreeNode implements Comparable<TreeNode> {	
+	
 	private TreeNode parent;
 	private Node node;
 	private int recentProcessor;
 	private int recentStartTime;
-	private int height;
+	//private int heuristic;
 	
 	/**
 	 * All branches of the search tree are intended to be created using this constructor. It takes as input a TreeNode
@@ -45,14 +51,40 @@ public class TreeNode implements Comparable<TreeNode> {
 			//traverse up the tree
 			current = current.parent;
 		}
+		/*
+		// Perfect load balance stuff start
+		int currentBalance = Scheduler.getTotal();
+		int[] startTimes = new int[Scheduler.getInstance().getNumProc()];
 		
+		startTimes[procNum] = maxStart;
+		
+		current = parent;
+		while (!(current == null || current.node == null)) {
+			int proc = current.recentProcessor;
+			if (startTimes[proc] != 0) {
+				currentBalance += startTimes[proc] - current.recentStartTime - current.node.getWeight();
+			}
+			startTimes[proc] = current.recentStartTime;
+			current = current.parent;
+		}
+		for (int i : startTimes) {
+			currentBalance += i;
+		}
+		
+		heuristic = (int) Math.floor(currentBalance/Scheduler.getInstance().getNumProc());
+		//System.out.println(heuristic);
+		// Perfect load balance stuff end
+		*/
 		//initialise the fields for this object
 		this.parent = parent;
 		this.node = node;
 		this.recentProcessor = procNum;
 		this.recentStartTime = maxStart;
-		this.height = parent.height + 1;
 		
+		// Finalise heuristic
+		//if (node.getBottomLevel() + recentStartTime > heuristic) {
+			//heuristic = node.getBottomLevel() + recentStartTime;
+		//}
 	}
 	
 	/**
@@ -63,7 +95,6 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.node = null;
 		this.recentProcessor = -1;
 		this.recentStartTime = -1;
-		this.height = 0;
 	}
 
 	/**
@@ -72,11 +103,11 @@ public class TreeNode implements Comparable<TreeNode> {
 	 */
 	@Override
 	public int compareTo(TreeNode other) {
-		int node1Heuristic = node.getBottomLevel() + recentStartTime;
-		int node2Heuristic = other.node.getBottomLevel() + other.recentStartTime;
-		if (node1Heuristic < node2Heuristic) {
+		int bot1 = node.getBottomLevel() + recentStartTime;
+		int bot2 = other.node.getBottomLevel() + other.recentStartTime;
+		if (bot1 < bot2) {
 			return -1;
-		} else if (node1Heuristic == node2Heuristic) {
+		} else if (bot1 == bot2) {
 			return 0;
 		} else {
 			return 1;
@@ -91,10 +122,6 @@ public class TreeNode implements Comparable<TreeNode> {
 		return parent;
 	}
 	
-	public int getHeight() {
-		return height;
-	}
-	
 	public int getProcessor() {
 		return recentProcessor;
 	}
@@ -102,4 +129,60 @@ public class TreeNode implements Comparable<TreeNode> {
 	public int getStartTime() {
 		return recentStartTime;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		TreeNode tn = (TreeNode) obj;
+
+		List<Node> otherNodes = new ArrayList<Node>();
+		int[] thisFinish = new int[Scheduler.getInstance().getNumProc()];
+		int[] otherFinish = new int[Scheduler.getInstance().getNumProc()];
+		int count = 0;
+		
+		TreeNode current = tn;
+		while (current.getNode() != null) {
+			otherNodes.add(current.getNode());
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (otherFinish[current.getProcessor()] < time) {
+				otherFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		current = this;
+		while (current.getNode() != null) {
+			if (!otherNodes.contains(current.getNode())) {
+				return false;
+			}
+			count++;
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (thisFinish[current.getProcessor()] < time) {
+				thisFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		if (count != otherNodes.size()) {
+			return false;
+		}
+		
+		for (int i = 0; i < thisFinish.length; i++) {
+			boolean boo = false;
+			for (int j = 0; j < otherFinish.length; j++) {
+				if (thisFinish[i] == otherFinish[j]) {
+					boo = true;
+				}
+			}
+			if (!boo) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public int hashCode() {
+		return (int) System.currentTimeMillis();
+	}
+	
 }
