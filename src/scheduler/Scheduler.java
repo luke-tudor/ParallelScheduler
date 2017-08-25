@@ -1,5 +1,6 @@
 package scheduler;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,9 +19,16 @@ import scheduler.structures.TreeNode;
  * @author Luke Tudor
  */
 public class Scheduler {
+	
+	private static Scheduler instance;
+	
+	public static Scheduler getInstance() {
+		return instance;
+	}
 
 	private Graph graph;
 	private int numProcessors;
+	private static String outputFileName;
 
 	// Number of threads to use
 	private int numThreads;
@@ -29,16 +37,36 @@ public class Scheduler {
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
 
 	private ExecutorService exe;
-	
+
 	// Current best schedule
 	private TreeNode schedule;
-	
+
+	private static int total;
+
 	// Scheduler contains the graph, the number of processors and the number of threads
-	public Scheduler(Graph graph, int numProcessors, int numThreads) {
+	public Scheduler(Graph graph, int numProc, int numThreads) {
 		this.graph = graph;
-		this.numProcessors = numProcessors;
+		numProcessors = numProc;
 		exe = Executors.newFixedThreadPool(numThreads);
 		this.numThreads = numThreads;
+		computeHeuristics();
+		instance = this;
+	}
+
+	public int getNumProc() {
+		return numProcessors;
+	}
+	
+	public String getOuputName() {
+		return outputFileName;
+	}
+	
+	public int getNumThreads() {
+		return numThreads;
+	}
+	
+	public TreeNode getNextTN() {
+		return q.peek();
 	}
 
 	/**
@@ -64,16 +92,25 @@ public class Scheduler {
 								TreeNode current = q.remove();
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
-								if (current.getHeight() == graph.getAllNodes().size()) {
+
+								// Pruning TreeNodes
+								//Set<TreeNode> hash = new HashSet<TreeNode>(q);
+								//while (hash.contains(current)) {
+								//q.remove(current);
+								//}
+
+								// Find neighbouring nodes
+								Set<Node> neighbours = graph.getNeighbours(current);
+								if (neighbours.isEmpty()) {
 									/*
 									 * Set this schedule as the optimal schedule for this graph.
 									 * Gracefully terminate all tasks.
 									 */
-									synchronized (q) {
-										if (schedule == null || current.getStartTime() + current.getNode().getBottomLevel() < schedule.getStartTime() + schedule.getNode().getBottomLevel()) {
-											System.err.println(current.getStartTime() + current.getNode().getBottomLevel());
+									synchronized (exe) {
+										if (schedule == null || current.getStartTime() + current.getNode().getWeight() < schedule.getStartTime() + schedule.getNode().getWeight()) {
+											System.err.println(current.getStartTime() + current.getNode().getWeight());
 											if (schedule != null)
-												System.err.println(schedule.getStartTime() + schedule.getNode().getBottomLevel());
+												System.err.println(schedule.getStartTime() + schedule.getNode().getWeight());
 											schedule = current;
 										}
 										exe.shutdown();
@@ -81,8 +118,6 @@ public class Scheduler {
 									return;
 								}
 
-								// Find neighbouring nodes
-								Set<Node> neighbours = graph.getNeighbours(current);
 								for (Node n : neighbours) {
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
@@ -110,8 +145,6 @@ public class Scheduler {
 		return graph;
 	}
 
-
-
 	/**
 	 * Computes the heuristics for task scheduling which utilises the bottom level.
 	 * e.g. longest path to exist task starting with node.
@@ -120,6 +153,20 @@ public class Scheduler {
 		for (Node n : graph.getAllNodes()) {
 			setBottomLevel(n);
 		}
+		setPerfectBalance();
+	}
+
+	private void setPerfectBalance() {
+		int total = 0;
+		Collection<Node> nodes = graph.getAllNodes();
+		for (Node n : nodes) {
+			total += n.getWeight();
+		}
+		this.total = total;
+	}
+
+	public static int getTotal() {
+		return total;
 	}
 
 	/**
@@ -159,15 +206,14 @@ public class Scheduler {
 
 		// Regular expression to construct the output file name from the input file name
 		// Utilises the file name without the extension and concatenating it with the other half of the new file name
-		String outputFileName = args[0].split("\\.")[0] + "-output.dot";
+		outputFileName = args[0].split("\\.")[0] + "-output.dot";
 
 		// Creates the graph
 		InputParser ip = new InputParser(inputFileName);		
 		Graph inputGraph = ip.parse();
 
 		// Finds the optimum schedule by computing the heuristics and schedule
-		Scheduler s = new Scheduler(inputGraph, processorNumber, 4);
-		s.computeHeuristics();
+		Scheduler s = new Scheduler(inputGraph, processorNumber, 16);
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 

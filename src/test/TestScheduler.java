@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,7 @@ import scheduler.structures.Node;
 public class TestScheduler {
 	
 	private Map<String, Graph> _graphs = new HashMap<String, Graph>();
+	private Constructor<Scheduler> c;
 	
 	@Before
 	public void setup() {
@@ -69,12 +72,34 @@ public class TestScheduler {
 		
 		_graphs.put(graph.getGraphName(), graph);
 		
+		Class[] pt = new Class[3];
+		pt[0] = Graph.class;
+		pt[1] = int.class;
+		pt[2] = int.class;
+		
+		try {
+			c = Scheduler.class.getDeclaredConstructor(pt);
+			c.setAccessible(true);
+		} catch (Exception e) {
+			fail("Failed to get Constructor");
+		}
+		
 	}
 
 	@Test
 	public void testSimple() {
 		
-		Scheduler sch = new Scheduler(_graphs.get("simple"), 2, 1);
+		Object[] obj = new Object[3];
+		obj[0] = _graphs.get("simple");
+		obj[1] = 2;
+		obj[2] = 2;
+		Scheduler sch = null;
+		try {
+			sch = c.newInstance(obj);
+		} catch (Exception e) {
+			fail("Failed to get Constructor");
+		}
+		
 		Graph graph = sch.computeSchedule();
 		
 		Collection<Node> c = graph.getAllNodes();
@@ -106,13 +131,6 @@ public class TestScheduler {
 		}
 		
 		assertEquals(8, maxEnd);
-		
-	}
-	
-	@Test
-	public void testNodes10() {
-		
-		
 		
 	}
 
