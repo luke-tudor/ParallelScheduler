@@ -64,6 +64,10 @@ public class Scheduler {
 	public int getNumThreads() {
 		return numThreads;
 	}
+	
+	public TreeNode getNextTN() {
+		return q.peek();
+	}
 
 	/**
 	 * Computes the optimum processing schedule for the graph.

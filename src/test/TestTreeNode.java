@@ -1,10 +1,6 @@
 package test;
 
 import static org.junit.Assert.*;
-
-import java.lang.reflect.Constructor;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import scheduler.Scheduler;
