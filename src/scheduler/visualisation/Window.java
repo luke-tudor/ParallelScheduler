@@ -64,6 +64,7 @@ public class Window extends Application {
 		 * Initialise values for:
 		 * 	- 	_numProc
 		 * 	-	_outputName
+		 *  -	total num of nodes
 		 * 
 		 * 	by calling new public methods in related classes
 		 */
