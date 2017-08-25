@@ -1,0 +1,14 @@
+
+.root {
+	-fx-background-color: #d6c5c2;
+}
+
+#TreeNode {
+	-fx-stroke: black;
+	-fx-stroke-width: 5px;
+}
+
+#title {
+	-fx-font-size: 20px;
+	-fx-font-weight: bold;
+}
