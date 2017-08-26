@@ -134,7 +134,7 @@ public class Scheduler {
 										TreeNode candidate = new TreeNode(current, n, i);
 										String candidateString = candidate.getString();
 										if (uniqueNodes.get(candidateString) != null) {
-											break;
+											continue;
 										} else {
 											uniqueNodes.put(candidateString, placeholder);
 										}
