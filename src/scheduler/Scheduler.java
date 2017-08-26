@@ -2,6 +2,7 @@ package scheduler;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -75,7 +76,8 @@ public class Scheduler {
 	 * Computes the optimum processing schedule for the graph.
 	 */
 	public Graph computeSchedule() {
-		q.add(new TreeNode());
+		TreeNode topNode = new TreeNode();
+		q.add(topNode);
 		// Submit one task for each thread
 		for (int i = 0; i < numThreads; i++) {
 			// Only submit a task if the executor is not shutdown
@@ -123,10 +125,17 @@ public class Scheduler {
 								List<TreeNode> newSchedules = new ArrayList<>();
 								
 								for (Node n : neighbours) {
+									Set<TreeNode> processorSchedules = new HashSet<>();
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
-										newSchedules.add(candidate);
+										processorSchedules.add(candidate);
 									}
+									TreeNode head = processorSchedules.iterator().next();
+									if (head.getParent() == topNode) {
+										processorSchedules = new HashSet<>();
+										processorSchedules.add(head);
+									}
+									newSchedules.addAll(processorSchedules);
 								}
 								q.addAll(newSchedules);
 							}
