@@ -1,6 +1,8 @@
 package scheduler;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -118,12 +120,15 @@ public class Scheduler {
 									return;
 								}
 
+								List<TreeNode> newSchedules = new ArrayList<>();
+								
 								for (Node n : neighbours) {
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
-										q.add(candidate);
+										newSchedules.add(candidate);
 									}
 								}
+								q.addAll(newSchedules);
 							}
 						}
 					}
