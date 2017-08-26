@@ -131,6 +131,7 @@ public class Scheduler {
 										processorSchedules.add(candidate);
 									}
 									TreeNode head = processorSchedules.iterator().next();
+									// If parent of this tree node is the empty point, only put this node on one processor
 									if (head.getParent() == topNode) {
 										processorSchedules = new HashSet<>();
 										processorSchedules.add(head);
