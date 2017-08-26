@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import scheduler.io.InputParser;
@@ -83,8 +84,7 @@ public class Scheduler {
 		q.add(topNode);
 		// Submit one task for each thread
 		for (int i = 0; i < numThreads; i++) {
-			// Only submit a task if the executor is not shutdown
-			if (!exe.isShutdown()) {
+			try {
 				exe.submit(new Runnable() {
 
 					@Override
@@ -146,6 +146,9 @@ public class Scheduler {
 						}
 					}
 				});
+			} catch (RejectedExecutionException e) {
+				// If task can't be scheduled, it's because executor was shutdown
+				break;
 			}
 		}
 		try {
