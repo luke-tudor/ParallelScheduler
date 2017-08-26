@@ -1,7 +1,11 @@
 package scheduler.structures;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import scheduler.Scheduler;
 
@@ -11,7 +15,7 @@ public class TreeNode implements Comparable<TreeNode> {
 	private Node node;
 	private int recentProcessor;
 	private int recentStartTime;
-	//private int heuristic;
+	private int heuristic;
 	
 	/**
 	 * All branches of the search tree are intended to be created using this constructor. It takes as input a TreeNode
@@ -51,7 +55,7 @@ public class TreeNode implements Comparable<TreeNode> {
 			//traverse up the tree
 			current = current.parent;
 		}
-		/*
+		
 		// Perfect load balance stuff start
 		int currentBalance = Scheduler.getTotal();
 		int[] startTimes = new int[Scheduler.getInstance().getNumProc()];
@@ -74,7 +78,7 @@ public class TreeNode implements Comparable<TreeNode> {
 		heuristic = (int) Math.floor(currentBalance/Scheduler.getInstance().getNumProc());
 		//System.out.println(heuristic);
 		// Perfect load balance stuff end
-		*/
+		
 		//initialise the fields for this object
 		this.parent = parent;
 		this.node = node;
@@ -82,9 +86,9 @@ public class TreeNode implements Comparable<TreeNode> {
 		this.recentStartTime = maxStart;
 		
 		// Finalise heuristic
-		//if (node.getBottomLevel() + recentStartTime > heuristic) {
-			//heuristic = node.getBottomLevel() + recentStartTime;
-		//}
+		if (node.getBottomLevel() + recentStartTime > heuristic) {
+			heuristic = node.getBottomLevel() + recentStartTime;
+		}
 	}
 	
 	/**
@@ -103,11 +107,9 @@ public class TreeNode implements Comparable<TreeNode> {
 	 */
 	@Override
 	public int compareTo(TreeNode other) {
-		int bot1 = node.getBottomLevel() + recentStartTime;
-		int bot2 = other.node.getBottomLevel() + other.recentStartTime;
-		if (bot1 < bot2) {
+		if (heuristic < other.heuristic) {
 			return -1;
-		} else if (bot1 == bot2) {
+		} else if (heuristic == other.heuristic) {
 			return 0;
 		} else {
 			return 1;
@@ -128,6 +130,33 @@ public class TreeNode implements Comparable<TreeNode> {
 	
 	public int getStartTime() {
 		return recentStartTime;
+	}
+	
+	public String getString() {
+		List<TreeNode> treeNodes = new ArrayList<>();
+		TreeNode current = this;
+		while (!(current == null || current.node == null)) {
+			treeNodes.add(current);
+			current = current.parent;
+		}
+		Collections.sort(treeNodes, new Comparator<TreeNode>() {
+
+			@Override
+			public int compare(TreeNode o1, TreeNode o2) {
+				return o1.node.getName().compareTo(o2.node.getName());
+			}
+			
+		});
+		StringBuilder sb = new StringBuilder();
+		Map<Integer, Integer> newProcNums = new HashMap<Integer, Integer>();
+		int newProcNum = 0;
+		for (TreeNode tn : treeNodes) {
+			if (!newProcNums.containsKey(tn.recentProcessor)) {
+				newProcNums.put(tn.recentProcessor, newProcNum++);
+			}
+			sb.append(tn.node.getName() + ":" + tn.recentStartTime + ":" + newProcNums.get(tn.recentProcessor) + ";");
+		}
+		return sb.toString();
 	}
 	
 	@Override

@@ -128,6 +128,8 @@ public class Scheduler {
 									Set<TreeNode> processorSchedules = new HashSet<>();
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
+										String candidateString = candidate.getString();
+										System.out.println(candidateString);
 										processorSchedules.add(candidate);
 									}
 									TreeNode head = processorSchedules.iterator().next();
