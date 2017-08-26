@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -45,6 +46,8 @@ public class Scheduler {
 	private TreeNode schedule;
 
 	private static int total;
+	
+	private ConcurrentHashMap<String, Boolean> uniqueNodes = new ConcurrentHashMap<String, Boolean>();
 
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
@@ -129,15 +132,19 @@ public class Scheduler {
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
 										String candidateString = candidate.getString();
-										System.out.println(candidateString);
+										if (uniqueNodes.get(candidateString) != null) {
+											break;
+										} else {
+											uniqueNodes.put(candidateString, true);
+										}
 										processorSchedules.add(candidate);
 									}
-									TreeNode head = processorSchedules.iterator().next();
+									/*TreeNode head = processorSchedules.iterator().next();
 									// If parent of this tree node is the empty point, only put this node on one processor
 									if (head.getParent() == topNode) {
 										processorSchedules = new HashSet<>();
 										processorSchedules.add(head);
-									}
+									}*/
 									newSchedules.addAll(processorSchedules);
 								}
 								q.addAll(newSchedules);
