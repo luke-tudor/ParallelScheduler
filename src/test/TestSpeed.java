@@ -27,7 +27,7 @@ public class TestSpeed {
 		out.writeGraph("Single Core-output.dot");
 		
 		start = System.currentTimeMillis();
-		Scheduler multiSch = new Scheduler(g, 2, 4);
+		Scheduler multiSch = new Scheduler(g, 4, 4);
 		Graph multiG = multiSch.computeSchedule();
 		end = System.currentTimeMillis();
 		multiG.setGraphName("Multi Core");
@@ -39,21 +39,4 @@ public class TestSpeed {
 		out.writeGraph("Multi Core-output.dot");
 	}	
 	
-	@Test
-	public void test16() {
-		InputParser in = new InputParser("testfiles/Nodes_10_Random.dot");
-		Graph g = in.parse();
-
-		Scheduler sch = new Scheduler (g, 2, 16);
-		
-		long start = System.currentTimeMillis();
-		Graph singleG = sch.computeSchedule();
-		long end = System.currentTimeMillis();
-		singleG.setGraphName("16 Core");
-		
-		long diff = end - start;
-		System.out.println("16 THREAD Time : " + diff); 
-		
-	}
-
 }
