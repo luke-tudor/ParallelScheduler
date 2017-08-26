@@ -48,7 +48,8 @@ public class Scheduler {
 
 	private static int total;
 	
-	private ConcurrentHashMap<String, Boolean> uniqueNodes = new ConcurrentHashMap<String, Boolean>();
+	private ConcurrentHashMap<String, Object> uniqueNodes = new ConcurrentHashMap<String, Object>();
+	private Object placeholder = new Object();
 
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
@@ -135,7 +136,7 @@ public class Scheduler {
 										if (uniqueNodes.get(candidateString) != null) {
 											break;
 										} else {
-											uniqueNodes.put(candidateString, true);
+											uniqueNodes.put(candidateString, placeholder);
 										}
 										processorSchedules.add(candidate);
 									}
