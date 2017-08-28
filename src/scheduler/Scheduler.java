@@ -129,8 +129,6 @@ public class Scheduler {
 									 */
 									synchronized (exe) {
 										if (schedule == null || current.getStartTime() + current.getNode().getWeight() < schedule.getStartTime() + schedule.getNode().getWeight()) {
-											if (schedule != null)
-												System.err.println(schedule.getStartTime() + schedule.getNode().getWeight());
 											schedule = current;
 										}
 										exe.shutdown();
@@ -140,16 +138,21 @@ public class Scheduler {
 
 								List<TreeNode> newSchedules = new ArrayList<>();
 								
+								// For all possible nodes that can be scheduled
 								for (Node n : neighbours) {
 									Set<TreeNode> processorSchedules = new HashSet<>();
+									// For all processors they can be scheduled on
 									for (int i = 0; i < numProcessors; i++) {
+										// Get the best possible schedule
 										TreeNode candidate = new TreeNode(current, n, i);
+										// Get the string representation of the schedule
 										String candidateString = candidate.getString();
+										// If we have already seen it, try the next schedule
 										if (uniqueNodes.get(candidateString) != null) {
 											continue;
-										} else {
-											uniqueNodes.put(candidateString, placeholder);
 										}
+										// Otherwise, store the string representation and add the schedule to the queue
+										uniqueNodes.put(candidateString, placeholder);
 										processorSchedules.add(candidate);
 									}
 									newSchedules.addAll(processorSchedules);
@@ -167,8 +170,7 @@ public class Scheduler {
 		try {
 			exe.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// We aren't interrupting this thread so an exception will never be thrown
 		}
 		TreeNode tail = schedule;
 		while (tail.getNode() != null) {
