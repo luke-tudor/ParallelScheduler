@@ -167,8 +167,7 @@ public class Scheduler {
 		try {
 			exe.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// We aren't interrupting this thread so an exception will never be thrown
 		}
 		TreeNode tail = schedule;
 		while (tail.getNode() != null) {
