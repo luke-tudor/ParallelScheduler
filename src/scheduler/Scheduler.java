@@ -253,12 +253,13 @@ public class Scheduler {
 
 		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
-		Graph outputGraph = s.computeSchedule();
-		outputGraph.setGraphName("output");
 		
 		if (isVisual) {
 			Application.launch(Window.class, args);
 		}
+		
+		Graph outputGraph = s.computeSchedule();
+		outputGraph.setGraphName("output");
 
 		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);

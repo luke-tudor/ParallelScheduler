@@ -9,6 +9,12 @@ import scheduler.structures.Graph;
 
 public class TestSpeed {
 
+	/**
+	 * Test that will always pass.
+	 * This test was only implemented to easily time the algorithm for the file Nodes_11_OutTree.dot
+	 * This test will print the time taken in milliseconds for the algorithm to compute a schedule 
+	 * using one thread and using 4 threads to allow quick comparison between the 2.
+	 */
 	@Test
 	public void test() {
 		InputParser in = new InputParser("testfiles/Nodes_11_OutTree.dot");

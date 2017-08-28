@@ -19,6 +19,9 @@ public class TestGraph {
 	
 	private Graph test;
 	
+	/**
+	 * Setting up test graphs to be accessed throughout the tests
+	 */
 	@Before
 	public void setup() {
 		
@@ -46,6 +49,10 @@ public class TestGraph {
 
 	}
 
+	/**
+	 * Test for checking that getAllNeighbours is correcting 
+	 * identifying the one neighbour on a four node graph.
+	 */
 	@Test
 	public void testGetAllNeighbours() {
 				
@@ -86,6 +93,12 @@ public class TestGraph {
 		
 	}
 	
+	/**
+	 * Test for checking that getAllNeighbours is correcting 
+	 * identifying neighbours on a 12 node graph. With some 
+	 * nodes having half visited parents, a node with no 
+	 * parents or children, etc.
+	 */
 	@Test
 	public void testGetAllNeighbours1() {
 
@@ -166,6 +179,11 @@ public class TestGraph {
 		
 	}
 	
+	/**
+	 * One test to check that both the methods of "getAllParentless()" 
+	 * and "getAllChildless()" are correctly working. They are fairly 
+	 * simple methods so only required one test each.
+	 */
 	@Test
 	public void testGetAllLess() {
 		
@@ -248,6 +266,13 @@ public class TestGraph {
 		
 	}
 	
+	/**
+	 * Test that checks the graph equals method works. The graph equals 
+	 * method also tests that Node.equals() and Edge.equals() methods both 
+	 * are functioning as they are called with the Graph.equals() method.
+	 * Note that the .equals() method can return true even if the references 
+	 * are different, assuming the values are the same.
+	 */
 	@Test
 	public void testEquals() {
 		
@@ -273,7 +298,7 @@ public class TestGraph {
 		graph.addEdge(edge3);
 		graph.addEdge(edge4);
 		
-		graph.equals(test);
+		assertEquals(true, graph.equals(test));
 		
 	}
 

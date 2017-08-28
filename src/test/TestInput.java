@@ -2,8 +2,6 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.util.Collection;
-
 import org.junit.Test;
 
 import scheduler.io.InputParser;
@@ -13,6 +11,10 @@ import scheduler.structures.Node;
 
 public class TestInput {
 
+	/**
+	 * Testing that the InputParser is correctly reading the "Nodes_7_OutTree.dot" file 
+	 * and creating the corresponding graph correctly.
+	 */
 	@Test
 	public void test_7_OutTree() {
 
@@ -48,6 +50,10 @@ public class TestInput {
 		
 	}
 	
+	/**
+	 * Testing that the InputParser is correctly reading the "Nodes_11_OutTree.dot" file 
+	 * and creating the corresponding graph correctly.
+	 */
 	@Test
 	public void test_11_OutTree() {
 
@@ -95,6 +101,12 @@ public class TestInput {
 		
 	}
 	
+	/**
+	 * Testing that the InputParser is correctly reading the "Nodes_10_Random.dot" file 
+	 * and creating the corresponding graph correctly. This file contains additional 
+	 * information at the top of the file which other dot file may not contain, so this 
+	 * test ensures that the InputParser handles this information correctly.
+	 */
 	@Test
 	public void test_10_Random() {
 

@@ -2,8 +2,6 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +18,10 @@ import scheduler.structures.Node;
 public class TestScheduler {
 	
 	private Map<String, Graph> _graphs = new HashMap<String, Graph>();
-	private Constructor<Scheduler> c;
 	
+	/**
+	 * Setting up a bunch of graphs to be used in test
+	 */
 	@Before
 	public void setup() {
 		
@@ -72,34 +72,21 @@ public class TestScheduler {
 		
 		_graphs.put(graph.getGraphName(), graph);
 		
-		Class[] pt = new Class[3];
-		pt[0] = Graph.class;
-		pt[1] = int.class;
-		pt[2] = int.class;
-		
-		try {
-			c = Scheduler.class.getDeclaredConstructor(pt);
-			c.setAccessible(true);
-		} catch (Exception e) {
-			fail("Failed to get Constructor");
-		}
-		
 	}
 
+	/**
+	 * Creating a test case to test if produced schedule is valid on 
+	 * a 4 node, 4 edge graph. THIS TEST CASE DOES NOT CHECK IF THE 
+	 * SCHEDULE IS 100% ACCURATE AS IT DOES NOT CONSIDER EDGE WEIGHTS 
+	 * IN CHECKING SO A SCHEDULE COULD ASSIGN A NODE ON A DIFFERENT 
+	 * PROCESSOR TO ITS PARENT BEFORE THE EDGE WEIGHT TIME ALLOWS. 
+	 * For this reason the output files should also be manually 
+	 * checked for this.
+	 */
 	@Test
 	public void testSimple() {
-		
-		Object[] obj = new Object[3];
-		obj[0] = _graphs.get("simple");
-		obj[1] = 2;
-		obj[2] = 2;
-		Scheduler sch = null;
-		try {
-			sch = c.newInstance(obj);
-		} catch (Exception e) {
-			fail("Failed to get Constructor");
-		}
-		
+
+		Scheduler sch = new Scheduler(_graphs.get("simple"), 2, 2);	
 		Graph graph = sch.computeSchedule();
 		
 		Collection<Node> c = graph.getAllNodes();
