@@ -24,6 +24,7 @@ import scheduler.structures.Node;
  */
 public class OutputFormatter {
 
+	// A list to output data into the desired format
 	private List<String> outputLines;
 
 	/**
