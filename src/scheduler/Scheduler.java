@@ -1,10 +1,15 @@
 package scheduler;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
@@ -44,6 +49,9 @@ public class Scheduler {
 	private TreeNode schedule;
 
 	private static int total;
+	
+	private ConcurrentHashMap<String, Object> uniqueNodes = new ConcurrentHashMap<String, Object>();
+	private Object placeholder = new Object();
 
 	// Scheduler contains the graph, the number of processors and the number of threads
 	public Scheduler(Graph graph, int numProc, int numThreads) {
@@ -75,11 +83,11 @@ public class Scheduler {
 	 * Computes the optimum processing schedule for the graph.
 	 */
 	public Graph computeSchedule() {
-		q.add(new TreeNode());
+		TreeNode topNode = new TreeNode();
+		q.add(topNode);
 		// Submit one task for each thread
 		for (int i = 0; i < numThreads; i++) {
-			// Only submit a task if the executor is not shutdown
-			if (!exe.isShutdown()) {
+			try {
 				exe.submit(new Runnable() {
 
 					@Override
@@ -120,16 +128,30 @@ public class Scheduler {
 									return;
 								}
 
+								List<TreeNode> newSchedules = new ArrayList<>();
+								
 								for (Node n : neighbours) {
+									Set<TreeNode> processorSchedules = new HashSet<>();
 									for (int i = 0; i < numProcessors; i++) {
 										TreeNode candidate = new TreeNode(current, n, i);
-										q.add(candidate);
+										String candidateString = candidate.getString();
+										if (uniqueNodes.get(candidateString) != null) {
+											continue;
+										} else {
+											uniqueNodes.put(candidateString, placeholder);
+										}
+										processorSchedules.add(candidate);
 									}
+									newSchedules.addAll(processorSchedules);
 								}
+								q.addAll(newSchedules);
 							}
 						}
 					}
 				});
+			} catch (RejectedExecutionException e) {
+				// If task can't be scheduled, it's because executor was shutdown
+				break;
 			}
 		}
 		try {
