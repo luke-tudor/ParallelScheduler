@@ -20,20 +20,24 @@ public class Edge {
 	private Node child;
 	private int weight;
 	
+	// Initialises a new instance of the Edge class
 	public Edge(Node parent, Node child, int weight) {
 		this.parent = parent;
 		this.child = child;
 		this.weight = weight;
 	}
 	
+	// Acquires the start node of the edge
 	public Node getParent() {
 		return parent;
 	}
 	
+	// Acquires the end node of the edge
 	public Node getChild() {
 		return child;
 	}
 	
+	// Acquires the weight of the edge
 	public int getWeight() {
 		return weight;
 	}

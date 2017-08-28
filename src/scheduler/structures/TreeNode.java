@@ -9,12 +9,21 @@ import java.util.Map;
 
 import scheduler.Scheduler;
 
+/**
+ * Provides a representation of the search tree.
+ * 
+ */
 public class TreeNode implements Comparable<TreeNode> {	
 	
+	// TreeNode instance that is the parent of this TreeNode
 	private TreeNode parent;
+	// The node element instance of a graph object
 	private Node node;
+	// The most recent processor instance
 	private int recentProcessor;
+	// The most recent start time instance
 	private int recentStartTime;
+	// The heuristic instance of the algorithm
 	private int heuristic;
 	
 	/**
@@ -30,9 +39,9 @@ public class TreeNode implements Comparable<TreeNode> {
 		int maxStart = 0; 
 		TreeNode current = parent;
 		
-		//traverse up through the tree, finding the latest of all the earliest allowable times at which this Node can be added
+		//Traverse up through the tree, finding the latest of all the earliest allowable times at which this Node can be added.
 		//If we have reached the top of the tree, either the contained Node object or the TreeNode object itself will be null.
-		//it depends on the use of a completely empty placeholder TreeNode used for multiple entry points. 
+		//It depends on the use of a completely empty placeholder TreeNode used for multiple entry points. 
 		while (!(current == null || current.node == null)) {
 			
 			int time = 0;
@@ -42,17 +51,17 @@ public class TreeNode implements Comparable<TreeNode> {
 				try {
 					time = current.recentStartTime + current.node.getWeight() + node.getParentEdgeWeights().get(current.node);
 				} catch(NullPointerException e) {
-					//this nullpointer is expected to be thrown whenever a node on a different processor is not a parent
+					//This nullpointer is expected to be thrown whenever a node on a different processor is not a parent
 					//of the node being added - in this case node.parentEdgeWeights.get(current.recentNode) returns a null
 				}
 			}
 			
-			//get the latest allowable start time
+			//Get the latest allowable start time
 			if (time > maxStart) {
 				maxStart = time;
 			}
 			
-			//traverse up the tree
+			//Traverse up the tree
 			current = current.parent;
 		}
 		
@@ -76,10 +85,9 @@ public class TreeNode implements Comparable<TreeNode> {
 		}
 		
 		heuristic = (int) Math.floor(currentBalance/Scheduler.getInstance().getNumProc());
-		//System.out.println(heuristic);
 		// Perfect load balance stuff end
 		
-		//initialise the fields for this object
+		// Initialise the fields for this object
 		this.parent = parent;
 		this.node = node;
 		this.recentProcessor = procNum;
@@ -116,18 +124,22 @@ public class TreeNode implements Comparable<TreeNode> {
 		}
 	}
 	
+	// Acquires the node of the directed graph ADT
 	public Node getNode() {
 		return node;
 	}
 	
+	// Acquires the parent of this TreeNode
 	public TreeNode getParent() {
 		return parent;
 	}
 	
+	// Acquires the most recent processor for this TreeNode
 	public int getProcessor() {
 		return recentProcessor;
 	}
 	
+	// Acquires the most recent start time for this TreeNode
 	public int getStartTime() {
 		return recentStartTime;
 	}
@@ -159,6 +171,61 @@ public class TreeNode implements Comparable<TreeNode> {
 		return sb.toString();
 	}
 	
+	/**
+	 * .equals overridden for efficiency purposes.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		TreeNode tn = (TreeNode) obj;
+
+		List<Node> otherNodes = new ArrayList<Node>();
+		int[] thisFinish = new int[Scheduler.getInstance().getNumProc()];
+		int[] otherFinish = new int[Scheduler.getInstance().getNumProc()];
+		int count = 0;
+		
+		TreeNode current = tn;
+		while (current.getNode() != null) {
+			otherNodes.add(current.getNode());
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (otherFinish[current.getProcessor()] < time) {
+				otherFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		current = this;
+		while (current.getNode() != null) {
+			if (!otherNodes.contains(current.getNode())) {
+				return false;
+			}
+			count++;
+			int time = current.getStartTime() + current.getNode().getWeight();
+			if (thisFinish[current.getProcessor()] < time) {
+				thisFinish[current.getProcessor()] = time;
+			}
+			current = current.getParent();
+		}
+		
+		if (count != otherNodes.size()) {
+			return false;
+		}
+		
+		for (int i = 0; i < thisFinish.length; i++) {
+			boolean boo = false;
+			for (int j = 0; j < otherFinish.length; j++) {
+				if (thisFinish[i] == otherFinish[j]) {
+					boo = true;
+				}
+			}
+			if (!boo) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	// Digests the data stored in an instance of the TreeNode class into a single hash value (a 32-bit signed integer).
 	public int hashCode() {
 		return (int) System.currentTimeMillis();
 	}
