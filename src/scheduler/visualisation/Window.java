@@ -59,6 +59,12 @@ public class Window extends Application {
 	private int _treeNodeNum = 0;
 	private int _totalNodes = 0;
 	
+	
+	/**
+	 *  This method is run first when application.launch() is
+	 *  called, and will initialise the fields of the application.
+	 * 
+	 */
 	@Override
 	public void init() {
 		/*
