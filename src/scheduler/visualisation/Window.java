@@ -122,9 +122,10 @@ public class Window extends Application {
 		
 		_primaryStage = primaryStage;
 		_primaryStage.setTitle("Parallel Scheduler");
+		_primaryStage.setMinWidth(700);
 		
 		_grid = new GridPane();
-		_grid.setAlignment(Pos.CENTER);
+		_grid.setAlignment(Pos.TOP_LEFT);
 		_grid.setHgap(10);
 		_grid.setVgap(10);
 		_grid.setPadding(new Insets(25,25,25,25));
@@ -192,6 +193,8 @@ public class Window extends Application {
 		_settings = new ToggleButton("Settings");		
 		_infoPane = new GridPane();		
 		_paneToMove = new VBox(_infoPane);
+		
+		_pb.prefWidthProperty().bind(_grid.widthProperty().subtract(50));
 	}
 
 	private void setElementIds() {
