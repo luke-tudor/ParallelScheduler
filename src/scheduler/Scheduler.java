@@ -278,10 +278,11 @@ public class Scheduler {
 				}
 			};
 			appThread.start();
+			// Wait for fx to start up, in case the input graph is very small
 			try {
-				Thread.sleep(100L);
+				Thread.sleep(20L);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// Won't ever be interrupted
 			}
 		}
 		
