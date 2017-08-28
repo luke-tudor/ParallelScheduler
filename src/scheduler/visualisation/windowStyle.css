@@ -3,7 +3,7 @@
 	-fx-background-color: #d6c5c2;
 }
 
-#TreeNode {
+#tree-node {
 	-fx-stroke: black;
 	-fx-stroke-width: 5px;
 }
@@ -11,4 +11,40 @@
 #title {
 	-fx-font-size: 20px;
 	-fx-font-weight: bold;
+}
+
+#proc-text {
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+	
+	-fx-text-alignment: center;
+}
+
+#output-text {
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+	
+	-fx-text-alignment: center;
+}
+
+#progress-bar-text {
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+	
+	-fx-text-alignment: center;
+}
+
+#pb {
+	
+}
+
+#num-of-proc {
+	-fx-text-alignment: center;
+}
+
+#output-file {
+	-fx-text-alignment: center;
 }
