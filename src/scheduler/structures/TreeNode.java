@@ -12,6 +12,7 @@ import scheduler.Scheduler;
 /**
  * Provides a representation of the search tree.
  * 
+ * @author Luke Tudor
  */
 public class TreeNode implements Comparable<TreeNode> {	
 	

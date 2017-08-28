@@ -19,8 +19,6 @@ import scheduler.structures.Node;
  * method
  * 
  * @author Luke Tudor
- *
- * TODO: test the output file for correct ordering of the nodes and edges.
  */
 public class OutputFormatter {
 
