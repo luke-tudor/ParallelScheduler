@@ -39,7 +39,8 @@ public class Scheduler {
 
 	// Number of threads to use
 	private int numThreads;
-
+	
+	
 	// Queue that all threads are working off, it blocks if multiple threads wish to access it at once
 	private PriorityBlockingQueue<TreeNode> q = new PriorityBlockingQueue<>();
 
@@ -48,7 +49,7 @@ public class Scheduler {
 	// Current best schedule
 	private TreeNode schedule;
 
-	private static int total;
+	private int total;
 	
 	private ConcurrentHashMap<String, Object> uniqueNodes = new ConcurrentHashMap<String, Object>();
 	private Object placeholder = new Object();
@@ -187,7 +188,7 @@ public class Scheduler {
 		this.total = total;
 	}
 
-	public static int getTotal() {
+	public int getTotal() {
 		return total;
 	}
 
@@ -253,7 +254,6 @@ public class Scheduler {
 
 		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
-		instance = s;
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 		
