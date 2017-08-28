@@ -171,60 +171,6 @@ public class TreeNode implements Comparable<TreeNode> {
 		return sb.toString();
 	}
 	
-	/**
-	 * .equals overridden for efficiency purposes.
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		TreeNode tn = (TreeNode) obj;
-
-		List<Node> otherNodes = new ArrayList<Node>();
-		int[] thisFinish = new int[Scheduler.getInstance().getNumProc()];
-		int[] otherFinish = new int[Scheduler.getInstance().getNumProc()];
-		int count = 0;
-		
-		TreeNode current = tn;
-		while (current.getNode() != null) {
-			otherNodes.add(current.getNode());
-			int time = current.getStartTime() + current.getNode().getWeight();
-			if (otherFinish[current.getProcessor()] < time) {
-				otherFinish[current.getProcessor()] = time;
-			}
-			current = current.getParent();
-		}
-		
-		current = this;
-		while (current.getNode() != null) {
-			if (!otherNodes.contains(current.getNode())) {
-				return false;
-			}
-			count++;
-			int time = current.getStartTime() + current.getNode().getWeight();
-			if (thisFinish[current.getProcessor()] < time) {
-				thisFinish[current.getProcessor()] = time;
-			}
-			current = current.getParent();
-		}
-		
-		if (count != otherNodes.size()) {
-			return false;
-		}
-		
-		for (int i = 0; i < thisFinish.length; i++) {
-			boolean boo = false;
-			for (int j = 0; j < otherFinish.length; j++) {
-				if (thisFinish[i] == otherFinish[j]) {
-					boo = true;
-				}
-			}
-			if (!boo) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
 	// Digests the data stored in an instance of the TreeNode class into a single hash value (a 32-bit signed integer).
 	public int hashCode() {
 		return (int) System.currentTimeMillis();
