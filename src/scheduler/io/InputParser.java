@@ -25,6 +25,7 @@ import scheduler.structures.Node;
  */
 public class InputParser {
 
+	// A list that stores data from the .dot file
 	private List<String> graphLines;
 
 	/**
