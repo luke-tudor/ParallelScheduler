@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -117,7 +118,7 @@ public class Window extends Application {
 		
 		initialiseElements();
 		_visualTreeNode = new GridPane();
-		_visualTreeNode.setAlignment(Pos.CENTER);
+		_visualTreeNode.setAlignment(Pos.TOP_LEFT);
 		_visualTreeNode.setHgap(0);
 		_visualTreeNode.setVgap(0);
 		_visualTreeNode.setPadding(new Insets(0, 0, 0, 0));
@@ -139,34 +140,6 @@ public class Window extends Application {
 			Platform.exit();
 		});
 		_primaryStage.show();
-	}
-
-	// to remove
-	private TreeNode createTestTreeNode() {
-		
-		Node nodeA = new Node("A", 2);
-		Node nodeB = new Node("B", 3);
-		Node nodeC = new Node("C", 3);
-		Node nodeD = new Node("D", 2);
-		Edge edge1 = new Edge(nodeA, nodeB, 1);
-		Edge edge2 = new Edge(nodeA, nodeC, 1);
-		Edge edge3 = new Edge(nodeB, nodeD, 1);
-		Edge edge4 = new Edge(nodeC, nodeD, 1);	
-		Graph graph = new Graph("simple");
-		graph.addNode(nodeA);
-		graph.addNode(nodeB);
-		graph.addNode(nodeC);
-		graph.addNode(nodeD);
-		graph.addEdge(edge1);
-		graph.addEdge(edge2);
-		graph.addEdge(edge3);
-		graph.addEdge(edge4);
-		TreeNode t1 = new TreeNode();
-		TreeNode t2 = new TreeNode(t1, nodeA, 1);
-		TreeNode t3 = new TreeNode(t2, nodeB, 1);
-		TreeNode t7 = new TreeNode(t3, nodeC, 0);
-		
-		return t7;
 	}
 	
 	/**
@@ -190,11 +163,14 @@ public class Window extends Application {
 		_scrollVisual.setMinHeight(400);
 		_scrollVisual.setHbarPolicy(ScrollBarPolicy.NEVER);
 		
-		_sceneTitle.setAlignment(Pos.CENTER);
-		_procText.setAlignment(Pos.CENTER);
-		_outputText.setAlignment(Pos.CENTER);
-		_progressBarText.setAlignment(Pos.CENTER);
+		_grid.setHalignment(_sceneTitle, HPos.CENTER);
+		_grid.setHalignment(_procText, HPos.CENTER);
+		_grid.setHalignment(_outputText, HPos.CENTER);
+		_grid.setHalignment(_progressBarText, HPos.CENTER);
 		
+		
+		_grid.setHalignment(_numOfProc, HPos.CENTER);
+		_grid.setHalignment(_outputFile, HPos.CENTER);
 		
 		_pb.prefWidthProperty().bind(_grid.widthProperty().subtract(50));
 	}
@@ -263,24 +239,24 @@ public class Window extends Application {
 	 * @return schedule
 	 */
 	private GridPane drawDefaultSchedule() {
-		GridPane grid = new GridPane();
 		
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 20 ,20 ,20));
+		_visualTreeNode.setAlignment(Pos.TOP_LEFT);
+		_visualTreeNode.setHgap(10);
+		//_visualTreeNode.setVgap(1);
+		_visualTreeNode.setPadding(new Insets(20, 20 ,20 ,20));
 		
 		for (int i = 0; i <= _numOfProcessors; i++) {
 			
 			Label x = new Label("p"+i);
-			x.setMaxWidth(100);
+			//x.setMaxWidth(100);
 			x.setId("tree-node-title");
-			grid.add(x, i, 0);
+			_visualTreeNode.add(x, i, 0);
+			x.setMaxHeight(70);
 		}
 		
-		grid.setMinHeight(300);
+		//_visualTreeNode.setMinHeight(300);
 		
-		return grid;
+		return _visualTreeNode;
 		
 	}
 	
@@ -293,7 +269,7 @@ public class Window extends Application {
 	 */
 	private GridPane drawSchedule(TreeNode schedule) {
 		TreeNode partialSched = schedule;
-		if (_visualTreeNode.getChildren() != null) {
+		if (_visualTreeNode != null && !_visualTreeNode.getChildren().isEmpty()) {
 			_visualTreeNode.getChildren().clear();
 		}
 		
@@ -303,15 +279,15 @@ public class Window extends Application {
 			Node node = partialSched.getNode();
 			
 			Label task = new Label(node.getName());
-			task.setMinHeight(1);
+			task.setMinHeight(5*node.getWeight());
 			task.setMinWidth(60);
 			
 			task.setId("task");
 			
 			_visualTreeNode.add(task, partialSched.getProcessor(), partialSched.getStartTime() + 1 , 1, node.getWeight());
-			//_visualTreeNode.add(task, partialSched.getProcessor(), partialSched.getStartTime() + 1);
-			task.setMaxHeight(Double.MAX_VALUE);
 			_visualTreeNode.setFillHeight(task, true);
+			
+			_visualTreeNode.setHalignment(task, HPos.CENTER);
 			
 			partialSched = partialSched.getParent();
 		}
@@ -321,6 +297,8 @@ public class Window extends Application {
 			Label x = new Label("p"+i);
 			x.setId("tree-node-title");
 			_visualTreeNode.add(x, i, 0);
+			x.setMaxHeight(70);
+			_visualTreeNode.setHalignment(x, HPos.CENTER);
 		}
 		
 		

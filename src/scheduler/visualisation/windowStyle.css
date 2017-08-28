@@ -66,4 +66,12 @@
 	-fx-border-color: red;
 }
 
+#tree-node-title {
+	-fx-font-size: 15px;
+	-fx-font-weight: bold;
+	-fx-font-family: 'Bookman Old Style';
+	
+	-fx-text-alignment: center;
+}
+
 
