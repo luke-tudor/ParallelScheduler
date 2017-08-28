@@ -18,20 +18,20 @@ import java.util.Set;
  */
 public class Graph {
 
+	// Graphical representation of the link of the edges
 	final static String EDGE_LINK = "->";
 
 	// nodes stores all the nodes of a graph by mapping string handles to each node object
 	// edges stores all the edges of a graph by mapping string handles to each edge object
-	// order stores each graph element in the order it was received
 	private Map<String, Node> nodes = new HashMap<String, Node>();
 	private Map<String, Edge> edges = new HashMap<String, Edge>();
-	//private List<Object> order = new ArrayList<Object>();
 
 	private Set<Node> parentless = null;
 
-	// optional graph name
+	// Optional graph name
 	private String graphName;
-
+	
+	// Initialises a new instance of the Graph class
 	public Graph(String name) {
 		graphName = name;
 	}
@@ -44,7 +44,6 @@ public class Graph {
 	 */
 	public void addNode(Node n) {
 		nodes.put(n.getName(), n);
-		//order.add(n);
 	}
 
 	/**
@@ -59,7 +58,6 @@ public class Graph {
 		parent.addChildEdgeWeight(child, edge.getWeight());
 		child.addParentEdgeWeight(parent, edge.getWeight());
 		edges.put(edge.getParent() + EDGE_LINK + edge.getChild(), edge);
-	//	order.add(edge);
 	}
 
 	/**
@@ -67,18 +65,22 @@ public class Graph {
 	 *
 	 * @return Object[] containing all nodes and edges of the graph
 	 */
-	/*public Object[] getAllElements() {
-		return order.toArray();
-	}*/
 
+	// Acquires the name of the representation of the directed graph ADT
 	public String getGraphName() {
 		return graphName;
 	}
 
+	// Set the name of the representation of the directed graph ADT
 	public void setGraphName(String name) {
 		graphName = name;
 	}
 
+	/** 
+	 * Acquires the node of the directed graph ADT
+	 *
+	 * @param String of the name of the graph
+	 */
 	public Node getNode(String s) {
 		return nodes.get(s);
 	}
@@ -115,10 +117,12 @@ public class Graph {
 		return parentless;
 	}
 
+	// Acquires all the nodes in the directed graph ADT
 	public Collection<Node> getAllNodes() {
 		return nodes.values();
 	}
 
+	// Acquires all the node edges in the directed graph ADT
 	public Collection<Edge> getAllEdges() {
 		return edges.values();
 	}
@@ -165,6 +169,9 @@ public class Graph {
 		return neighbours;
 	}
 
+	/**
+	 * .equals overridden for efficiency purposes.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		Graph g = (Graph) obj;
