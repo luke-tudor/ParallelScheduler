@@ -135,10 +135,12 @@ public class TreeNode implements Comparable<TreeNode> {
 	public String getString() {
 		List<TreeNode> treeNodes = new ArrayList<>();
 		TreeNode current = this;
+		// Collect all the tree nodes in a list
 		while (!(current == null || current.node == null)) {
 			treeNodes.add(current);
 			current = current.parent;
 		}
+		// Put the tree nodes in alphanumeric order of the nodes in their schedule
 		Collections.sort(treeNodes, new Comparator<TreeNode>() {
 
 			@Override
@@ -148,12 +150,15 @@ public class TreeNode implements Comparable<TreeNode> {
 			
 		});
 		StringBuilder sb = new StringBuilder();
+		// Store cache for processor number normalisation
 		Map<Integer, Integer> newProcNums = new HashMap<Integer, Integer>();
 		int newProcNum = 0;
 		for (TreeNode tn : treeNodes) {
+			// If we haven't seen it before, it must be a different processor
 			if (!newProcNums.containsKey(tn.recentProcessor)) {
 				newProcNums.put(tn.recentProcessor, newProcNum++);
 			}
+			// Identify a schedule by all the nodes such that each node has name:startTime:normalisedProcessorNumber;
 			sb.append(tn.node.getName() + ":" + tn.recentStartTime + ":" + newProcNums.get(tn.recentProcessor) + ";");
 		}
 		return sb.toString();
