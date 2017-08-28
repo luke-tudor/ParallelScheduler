@@ -150,10 +150,9 @@ public class Scheduler {
 										// If we have already seen it, try the next schedule
 										if (uniqueNodes.get(candidateString) != null) {
 											continue;
-										// Otherwise, store the string representation and add the schedule to the queue
-										} else {
-											uniqueNodes.put(candidateString, placeholder);
 										}
+										// Otherwise, store the string representation and add the schedule to the queue
+										uniqueNodes.put(candidateString, placeholder);
 										processorSchedules.add(candidate);
 									}
 									newSchedules.addAll(processorSchedules);
