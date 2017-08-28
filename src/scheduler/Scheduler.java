@@ -129,8 +129,6 @@ public class Scheduler {
 									 */
 									synchronized (exe) {
 										if (schedule == null || current.getStartTime() + current.getNode().getWeight() < schedule.getStartTime() + schedule.getNode().getWeight()) {
-											if (schedule != null)
-												System.err.println(schedule.getStartTime() + schedule.getNode().getWeight());
 											schedule = current;
 										}
 										exe.shutdown();
