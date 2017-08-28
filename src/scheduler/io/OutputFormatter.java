@@ -38,18 +38,18 @@ public class OutputFormatter {
 	public OutputFormatter(Graph graph) {
 		outputLines = new ArrayList<>();
 		// Write graph designation and name
-		outputLines.add("digraph " + graph.getGraphName() + " {");
+		outputLines.add("digraph \"" + graph.getGraphName() + "\" {");
 		
 		//for every Node format the output appropriately
 		for (Node node : graph.getAllNodes()) {
-			String nodeEntry = String.format("\t%s\t[Weight=%d,Start=%d,Processor=%d];",
+			String nodeEntry = String.format("\t%s\t [Weight=%d,Start=%d,Processor=%d];",
 			node.getName(), node.getWeight(), node.getStart(), node.getProcessor());
 			outputLines.add(nodeEntry);
 		} 
 
 		//  get all the edges and format appropriately
 		for (Edge edge : graph.getAllEdges()){
-			String edgeEntry = String.format("\t%s -> %s\t[Weight=%d];",
+			String edgeEntry = String.format("\t%s -> %s\t [Weight=%d];",
 			edge.getParent().getName(), edge.getChild().getName(), edge.getWeight());
 			outputLines.add(edgeEntry);
 			
