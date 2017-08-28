@@ -4,9 +4,14 @@ package scheduler.visualisation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import scheduler.Scheduler;
 import scheduler.structures.Edge;
 import scheduler.structures.Graph;
 import scheduler.structures.Node;
@@ -43,7 +49,6 @@ public class Window extends Application {
 	private Text _sceneTitle;
 	private Label _procText;
 	private Label _outputText;
-	private Label _treeNodeText;
 	private Text _numOfProc;
 	private Text _outputFile;
 	private Text _currentNumOfTreeNodes;
@@ -54,10 +59,14 @@ public class Window extends Application {
 	private VBox _paneToMove;
 	private ProgressBar _progressBar;
 	
-	private int _numProc = 0;
+	private int _numThreads = 0;
 	private String _outputName = "null";
 	private int _treeNodeNum = 0;
 	private int _totalNodes = 0;
+	private TreeNode _currentTreeNode;
+	private int _numOfProcessors;
+	
+	private Scheduler _s;
 	
 	
 	/**
@@ -69,15 +78,41 @@ public class Window extends Application {
 	public void init() {
 		/*
 		 * Initialise values for:
-		 * 	- 	_numProc
+		 * 	- 	_numThreads
 		 * 	-	_outputName
 		 *  -	total num of nodes
 		 * 
 		 * 	by calling new public methods in related classes
 		 */
+		
+		_s = Scheduler.getInstance();
+		
+		_numThreads = _s.getNumThreads();
+		_outputName = _s.getOuputName();
+		_totalNodes = _s.getNumOfNodes();
+		_numOfProcessors = _s.getNumProc();
+		_pb = new ProgressBar(0);
+		
 		Timer t = new Timer();
-		WindowTimer w = new WindowTimer(this);
-		//t.schedule(w, 0, 500);
+		t.scheduleAtFixedRate(new TimerTask( ) {
+			public void run() {
+				
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+						LocalDateTime now = LocalDateTime.now();
+						//System.out.println(dtf.format(now)); 
+						
+						setTreeNode(_s.getNextTN());
+						setProgressBar();
+					}
+				});
+			}
+		}, 0, 10);
+		
+		//WindowTimer w = new WindowTimer(this);
+		//t.schedule(w, 0, 30);
 	}
 	
 	@Override
@@ -95,8 +130,12 @@ public class Window extends Application {
 		_grid.setPadding(new Insets(25,25,25,25));
 		
 		initialiseElements();
-		_visualTreeNode = drawSchedule(t7);
-		_progressBar = new ProgressBar((double) drawProgressBar(t7) / _totalNodes);
+		_visualTreeNode = new GridPane();
+		_visualTreeNode.setAlignment(Pos.CENTER);
+		_visualTreeNode.setHgap(10);
+		_visualTreeNode.setVgap(10);
+		_visualTreeNode.setPadding(new Insets(20, 20 ,20 ,20));
+		_visualTreeNode = drawDefaultSchedule();
 		
 		setElementIds();
 		
@@ -139,14 +178,12 @@ public class Window extends Application {
 	private void initialiseElements() {
 
 		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
-		_procText = new Label("Num of Processors:");
+		_procText = new Label("Num of Threads running:");
 		_outputText = new Label("Output Filename:");
-		_treeNodeText = new Label("Schedules considered:");
 		_progressBarText = new Label("Progress Bar:");
-		_pb = new ProgressBar(0.6);
-		_numOfProc = new Text(_numProc + "");
+		_pb = new ProgressBar(0);
+		_numOfProc = new Text(_numThreads + "");
 		_outputFile = new Text(_outputName);
-		_currentNumOfTreeNodes = new Text(_treeNodeNum + "");
 		_settings = new ToggleButton("Settings");		
 		_infoPane = new GridPane();		
 		_paneToMove = new VBox(_infoPane);
@@ -157,15 +194,15 @@ public class Window extends Application {
 		_sceneTitle.setId("title");
 		_procText.setId("proc-text");
 		_outputText.setId("output-text");
-		_treeNodeText.setId("tree-node-text");
 		_progressBarText.setId("progress-bar-text");
 		_pb.setId("pb");
 		_numOfProc.setId("num-of-proc");
 		_outputFile.setId("output-file");
-		_currentNumOfTreeNodes.setId("current-num-of-tree-nodes");
 	}
 	
 	private void addElementsToGrid() {
+		
+		_grid.getChildren().clear();
 		
 		_grid.add(_sceneTitle, 0, 0, 3, 1);
 		_grid.add(_pb, 0, 6, 3, 1);
@@ -177,34 +214,45 @@ public class Window extends Application {
 		_grid.add(_numOfProc, 2, 1);
 		_grid.add(_outputText, 1, 2);
 		_grid.add(_outputFile, 2, 2);
-		_grid.add(_treeNodeText, 1, 3);
-		_grid.add(_currentNumOfTreeNodes, 2, 3);
 	}
 
-	private int drawProgressBar(TreeNode schedule) {
+	private int numOfNodesDone(TreeNode schedule) {
 		TreeNode partialSched = schedule;
 		int count = 0;
-		while (partialSched.getParent() != null) {
+		while (partialSched != null && partialSched.getParent() != null) {
 			count++;
 			partialSched = partialSched.getParent();
 		}
 		return count;
 	}
 	
-	private GridPane drawSchedule(TreeNode schedule) {
-		TreeNode partialSched = schedule;
-		int numProc = 0;
-		
+	private GridPane drawDefaultSchedule() {
 		GridPane grid = new GridPane();
+		
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 20 ,20 ,20));
 		
-		while (partialSched.getParent() != null) {
-			if (partialSched.getProcessor() > numProc) {
-				numProc = partialSched.getProcessor();
-			}
+		for (int i = 0; i <= _numOfProcessors; i++) {
+			
+			Label x = new Label("p"+i);
+			x.setMaxWidth(100);
+			x.setId("tree-node-title");
+			grid.add(x, i, 0);
+		}
+		
+		grid.setMinHeight(300);
+		
+		return grid;
+		
+	}
+	
+	private GridPane drawSchedule(TreeNode schedule) {
+		TreeNode partialSched = schedule;
+		_visualTreeNode.getChildren().clear();
+		
+		while (partialSched != null && partialSched.getNode() != null) {
 			
 			Node node = partialSched.getNode();
 			
@@ -214,20 +262,20 @@ public class Window extends Application {
 			
 			task.setId("task");
 			
-			grid.add(task, partialSched.getProcessor(), partialSched.getStartTime() + 1 , 1, node.getWeight());
+			_visualTreeNode.add(task, partialSched.getProcessor(), partialSched.getStartTime() + 1 , 1, node.getWeight());
 			
 			partialSched = partialSched.getParent();
 		}
 		
-		for (int i = 0; i <= numProc; i++) {
+		for (int i = 0; i < _numOfProcessors; i++) {
 			
-			Label x = new Label(i+"");
+			Label x = new Label("p"+i);
 			x.setId("tree-node-title");
-			grid.add(x, i, 0);
+			_visualTreeNode.add(x, i, 0);
 		}
 		
-		//grid.setGridLinesVisible(true);
-		return grid;
+		//_visualTreeNode.set_visualTreeNodeLinesVisible(true);
+		return _visualTreeNode;
 		
 	}
 	
@@ -249,10 +297,28 @@ public class Window extends Application {
 	}
 
 	public void setTreeNode(TreeNode node) {
-		_visualTreeNode = drawSchedule(node);
+		_currentTreeNode = node;
+		//_visualTreeNode = drawSchedule(_currentTreeNode);
+		drawSchedule(_currentTreeNode);
+		//_grid.add(_visualTreeNode, 0,1,1,4);
+		
+		addElementsToGrid();
+		
+//		_primaryStage.setScene(_scene);
+//		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
+//		_primaryStage.show(); 
+		
+		
+		
+		
+		
 	}
 	
 	public void setNumOfTreeNodes(int num) {
 		_treeNodeNum = num;
+	}
+	
+	public void setProgressBar() {
+		_pb.setProgress((double) numOfNodesDone(_currentTreeNode) / _totalNodes);
 	}
 }

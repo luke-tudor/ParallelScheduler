@@ -13,6 +13,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
@@ -81,6 +82,7 @@ public class Scheduler {
 	}
 	
 	public TreeNode getNextTN() {
+		System.out.println(q.size());
 		return q.peek();
 	}
 
@@ -164,6 +166,7 @@ public class Scheduler {
 			tail.getNode().setStart(tail.getStartTime());
 			tail = tail.getParent();
 		}
+		System.err.println("I FINISHED!");
 		return graph;
 	}
 
@@ -255,7 +258,12 @@ public class Scheduler {
 		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
 		
 		if (isVisual) {
-			Application.launch(Window.class, args);
+			Thread t = new Thread() {
+				public void run() {
+					Application.launch(Window.class, args);
+				}
+			};
+			t.start();
 		}
 		
 		Graph outputGraph = s.computeSchedule();
