@@ -203,7 +203,7 @@ public class Scheduler {
 	}
 
 	public static void main(String[] args) {
-		/*String inputFileName = args[0];
+		String inputFileName = args[0];
 		int processorNumber = Integer.parseInt(args[1]);
 		
 		// Regular expression to construct the output file name from the input file name
@@ -242,7 +242,7 @@ public class Scheduler {
 
 		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
-		of.writeGraph(outputFileName);*/
+		of.writeGraph(outputFileName);
 		
 		Application.launch(Window.class, args);
 	}

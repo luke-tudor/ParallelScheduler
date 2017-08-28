@@ -28,6 +28,7 @@ public class WindowTimer extends TimerTask {
 		
 		// _window.setTreeNode(call method from scheduler);
 		// _window.setNumOfTreeNodes(call method from scheduler);
+		// _window.setnumof nodes done
 	}
 
 }
