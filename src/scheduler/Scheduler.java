@@ -103,12 +103,6 @@ public class Scheduler {
 								// If current equals goal or complete solution, we have the optimal solution
 								// Uses height to determine whether a schedule is complete
 
-								// Pruning TreeNodes
-								//Set<TreeNode> hash = new HashSet<TreeNode>(q);
-								//while (hash.contains(current)) {
-								//q.remove(current);
-								//}
-
 								// Find neighbouring nodes
 								Set<Node> neighbours = graph.getNeighbours(current);
 								if (neighbours.isEmpty()) {
@@ -255,18 +249,17 @@ public class Scheduler {
 
 		// Finds the optimum schedule by computing the heuristics and schedule
 		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
+		instance = s;
 		Graph outputGraph = s.computeSchedule();
 		outputGraph.setGraphName("output");
 		
 		if (isVisual) {
-			//Application.launch();
+			Application.launch(Window.class, args);
 		}
 
 		// Writes the optimum schedule to the output file
 		OutputFormatter of = new OutputFormatter(outputGraph);
 		of.writeGraph(outputFileName);
-		
-		Application.launch(Window.class, args);
 	}
 
 }
