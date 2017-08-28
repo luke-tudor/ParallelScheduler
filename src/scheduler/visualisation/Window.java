@@ -122,9 +122,10 @@ public class Window extends Application {
 		
 		_primaryStage = primaryStage;
 		_primaryStage.setTitle("Parallel Scheduler");
+		_primaryStage.setMinWidth(700);
 		
 		_grid = new GridPane();
-		_grid.setAlignment(Pos.CENTER);
+		_grid.setAlignment(Pos.TOP_LEFT);
 		_grid.setHgap(10);
 		_grid.setVgap(10);
 		_grid.setPadding(new Insets(25,25,25,25));
@@ -192,6 +193,8 @@ public class Window extends Application {
 		_settings = new ToggleButton("Settings");		
 		_infoPane = new GridPane();		
 		_paneToMove = new VBox(_infoPane);
+		
+		_pb.prefWidthProperty().bind(_grid.widthProperty().subtract(50));
 	}
 
 	private void setElementIds() {
@@ -213,12 +216,11 @@ public class Window extends Application {
 		_grid.add(_pb, 0, 6, 3, 1);
 		_grid.add(_progressBarText, 0, 5, 3, 1);
 		_grid.add(_visualTreeNode, 0,1,1,4);
-		_grid.add(_settings, 0, 7);
 
 		_grid.add(_procText, 1, 1);
-		_grid.add(_numOfProc, 2, 1);
-		_grid.add(_outputText, 1, 2);
-		_grid.add(_outputFile, 2, 2);
+		_grid.add(_numOfProc, 1, 2);
+		_grid.add(_outputText, 1, 3);
+		_grid.add(_outputFile, 1, 4);
 	}
 
 	private int numOfNodesDone(TreeNode schedule) {
@@ -262,8 +264,8 @@ public class Window extends Application {
 			Node node = partialSched.getNode();
 			
 			Label task = new Label(node.getName());
-			task.setMinHeight(50*node.getWeight());
-			task.setMinWidth(100);
+			task.setMinHeight(5*node.getWeight());
+			task.setMinWidth(50);
 			
 			task.setId("task");
 			
@@ -279,7 +281,7 @@ public class Window extends Application {
 			_visualTreeNode.add(x, i, 0);
 		}
 		
-		//_visualTreeNode.set_visualTreeNodeLinesVisible(true);
+		_visualTreeNode.setGridLinesVisible(true);
 		return _visualTreeNode;
 		
 	}
@@ -303,19 +305,9 @@ public class Window extends Application {
 
 	public void setTreeNode(TreeNode node) {
 		_currentTreeNode = node;
-		//_visualTreeNode = drawSchedule(_currentTreeNode);
 		drawSchedule(_currentTreeNode);
-		//_grid.add(_visualTreeNode, 0,1,1,4);
 		
 		addElementsToGrid();
-		
-//		_primaryStage.setScene(_scene);
-//		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
-//		_primaryStage.show(); 
-		
-		
-		
-		
 		
 	}
 	
