@@ -68,7 +68,7 @@ public class Window extends Application {
 	
 	private Scheduler _s;
 	
-	
+	private Timer t;
 	/**
 	 *  This method is run first when application.launch() is
 	 *  called, and will initialise the fields of the application.
@@ -93,7 +93,7 @@ public class Window extends Application {
 		_numOfProcessors = _s.getNumProc();
 		_pb = new ProgressBar(0);
 		
-		Timer t = new Timer();
+		t = new Timer();
 		t.scheduleAtFixedRate(new TimerTask( ) {
 			public void run() {
 				
@@ -145,6 +145,11 @@ public class Window extends Application {
 		
 		_primaryStage.setScene(_scene);
 		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
+		_primaryStage.setOnCloseRequest(e -> {
+			t.cancel();
+			t.purge();
+			Platform.exit();
+		});
 		_primaryStage.show();
 	}
 
