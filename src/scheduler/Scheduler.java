@@ -13,7 +13,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import scheduler.io.InputParser;
 import scheduler.io.OutputFormatter;
 import scheduler.structures.Graph;
@@ -52,6 +51,10 @@ public class Scheduler {
 
 	private int total;
 	
+	private boolean isFinished;
+	
+	private static Thread appThread;
+	
 	private ConcurrentHashMap<String, Object> uniqueNodes = new ConcurrentHashMap<String, Object>();
 	private Object placeholder = new Object();
 
@@ -61,6 +64,7 @@ public class Scheduler {
 		numProcessors = numProc;
 		exe = Executors.newFixedThreadPool(numThreads);
 		this.numThreads = numThreads;
+		isFinished = false;
 		computeHeuristics();
 		instance = this;
 	}
@@ -82,8 +86,14 @@ public class Scheduler {
 	}
 	
 	public TreeNode getNextTN() {
-		System.out.println(q.size());
+		if (isFinished) {
+			return schedule;
+		}
 		return q.peek();
+	}
+	
+	public Thread getAppThread() {
+		return appThread;
 	}
 
 	/**
@@ -167,6 +177,7 @@ public class Scheduler {
 			tail = tail.getParent();
 		}
 		System.err.println("I FINISHED!");
+		isFinished = true;
 		return graph;
 	}
 
@@ -258,12 +269,12 @@ public class Scheduler {
 		Scheduler s = new Scheduler(inputGraph, processorNumber, numThreads);
 		
 		if (isVisual) {
-			Thread t = new Thread() {
+			appThread = new Thread() {
 				public void run() {
 					Application.launch(Window.class, args);
 				}
 			};
-			t.start();
+			appThread.start();
 		}
 		
 		Graph outputGraph = s.computeSchedule();
