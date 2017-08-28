@@ -140,13 +140,19 @@ public class Scheduler {
 
 								List<TreeNode> newSchedules = new ArrayList<>();
 								
+								// For all possible nodes that can be scheduled
 								for (Node n : neighbours) {
 									Set<TreeNode> processorSchedules = new HashSet<>();
+									// For all processors they can be scheduled on
 									for (int i = 0; i < numProcessors; i++) {
+										// Get the best possible schedule
 										TreeNode candidate = new TreeNode(current, n, i);
+										// Get the string representation of the schedule
 										String candidateString = candidate.getString();
+										// If we have already seen it, try the next schedule
 										if (uniqueNodes.get(candidateString) != null) {
 											continue;
+										// Otherwise, store the string representation and add the schedule to the queue
 										} else {
 											uniqueNodes.put(candidateString, placeholder);
 										}
