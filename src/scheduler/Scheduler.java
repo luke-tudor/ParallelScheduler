@@ -128,7 +128,8 @@ public class Scheduler {
 									 * Gracefully terminate all tasks.
 									 */
 									synchronized (exe) {
-										if (schedule == null || current.getStartTime() + current.getNode().getWeight() < schedule.getStartTime() + schedule.getNode().getWeight()) {
+										if (schedule == null || current.getHeuristic() < schedule.getHeuristic()) {
+											//System.out.println(current.getHeuristic());
 											schedule = current;
 										}
 										exe.shutdown();
@@ -178,7 +179,7 @@ public class Scheduler {
 			tail.getNode().setStart(tail.getStartTime());
 			tail = tail.getParent();
 		}
-		System.err.println("I FINISHED!");
+		System.out.println("I FINISHED!");
 		isFinished = true;
 		return graph;
 	}

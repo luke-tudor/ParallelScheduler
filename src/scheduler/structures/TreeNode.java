@@ -145,6 +145,10 @@ public class TreeNode implements Comparable<TreeNode> {
 		return recentStartTime;
 	}
 	
+	public int getHeuristic() {
+		return heuristic;
+	}
+	
 	public String getString() {
 		List<TreeNode> treeNodes = new ArrayList<>();
 		TreeNode current = this;

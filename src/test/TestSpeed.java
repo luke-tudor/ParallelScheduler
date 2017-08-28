@@ -21,7 +21,7 @@ public class TestSpeed {
 		Graph g = in.parse();
 		
 		long start = System.currentTimeMillis();
-		Scheduler sch = new Scheduler (g, 2, 1);
+		Scheduler sch = new Scheduler (g, 4, 1);
 		Graph singleG = sch.computeSchedule();
 		long end = System.currentTimeMillis();
 		singleG.setGraphName("Single Core");
