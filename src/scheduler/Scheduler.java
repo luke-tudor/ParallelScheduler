@@ -75,6 +75,10 @@ public class Scheduler {
 		return numThreads;
 	}
 	
+	public int getNumOfNodes() {
+		return graph.getAllNodes().size();
+	}
+	
 	public TreeNode getNextTN() {
 		return q.peek();
 	}
