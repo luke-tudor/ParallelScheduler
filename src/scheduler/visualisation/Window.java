@@ -66,7 +66,7 @@ public class Window extends Application {
 		
 		_s = Scheduler.getInstance();
 
-		// Commented out these due to error
+		// Commented out these due to error.
 		// initialise required fields to avoid null pointers
 		//_numThreads = _s.getNumThreads();
 		//_outputName = _s.getOuputName();
