@@ -1,30 +1,20 @@
 package scheduler.visualisation;
 
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import scheduler.Scheduler;
 import scheduler.structures.Edge;
 import scheduler.structures.Graph;
@@ -45,24 +35,17 @@ public class Window extends Application {
 	private Scene _scene;
 	private GridPane _grid;
 	private GridPane _visualTreeNode;
-	private GridPane _infoPane;
 	private Text _sceneTitle;
 	private Label _procText;
 	private Label _outputText;
 	private Text _numOfProc;
 	private Text _outputFile;
-	private Text _currentNumOfTreeNodes;
 	private ProgressBar _pb;
 	private Label _progressBarText;
-	private ToggleButton _settings;
-	private SplitPane _splitPane;
-	private VBox _paneToMove;
-	private ProgressBar _progressBar;
 	
-	private int _numThreads = 0;
-	private String _outputName = "null";
-	private int _treeNodeNum = 0;
-	private int _totalNodes = 0;
+	private int _numThreads;
+	private String _outputName;
+	private int _totalNodes;
 	private TreeNode _currentTreeNode;
 	private int _numOfProcessors;
 	
@@ -72,27 +55,25 @@ public class Window extends Application {
 	/**
 	 *  This method is run first when application.launch() is
 	 *  called, and will initialise the fields of the application.
+	 *  
+	 *  also initialises the timer object, which controls when 
+	 *  the window is updated.
 	 * 
 	 */
 	@Override
 	public void init() {
-		/*
-		 * Initialise values for:
-		 * 	- 	_numThreads
-		 * 	-	_outputName
-		 *  -	total num of nodes
-		 * 
-		 * 	by calling new public methods in related classes
-		 */
+		
 		
 		_s = Scheduler.getInstance();
 		
+		// initialise required fields to avoid null pointers
 		_numThreads = _s.getNumThreads();
 		_outputName = _s.getOuputName();
 		_totalNodes = _s.getNumOfNodes();
 		_numOfProcessors = _s.getNumProc();
 		_pb = new ProgressBar(0);
 		
+		// timer runs the run() method every 20ms
 		t = new Timer();
 		t.scheduleAtFixedRate(new TimerTask( ) {
 			public void run() {
@@ -100,30 +81,28 @@ public class Window extends Application {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-						LocalDateTime now = LocalDateTime.now();
-						//System.out.println(dtf.format(now)); 
-						
+						// set the state of the visual tree node and progress bar
 						setTreeNode(_s.getNextTN());
 						setProgressBar();
 					}
 				});
 			}
-		}, 0, 10);
-		
-		//WindowTimer w = new WindowTimer(this);
-		//t.schedule(w, 0, 30);
+		}, 0, 20);
+
 	}
-	
+
+	/**
+	 *  This method is called automatically after the init() method,
+	 *  its purpose is to build the stage.
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 
-		TreeNode t7 = createTestTreeNode();
-		
 		_primaryStage = primaryStage;
 		_primaryStage.setTitle("Parallel Scheduler");
 		_primaryStage.setMinWidth(700);
 		
+		// initialise root of scene
 		_grid = new GridPane();
 		_grid.setAlignment(Pos.TOP_LEFT);
 		_grid.setHgap(10);
@@ -146,6 +125,8 @@ public class Window extends Application {
 		
 		_primaryStage.setScene(_scene);
 		_scene.getStylesheets().add(Window.class.getResource("windowStyle.css").toExternalForm());
+		
+		// on exit of the stage, the scheduler algorithm is ended
 		_primaryStage.setOnCloseRequest(e -> {
 			t.cancel();
 			t.purge();
@@ -154,6 +135,7 @@ public class Window extends Application {
 		_primaryStage.show();
 	}
 
+	// to remove
 	private TreeNode createTestTreeNode() {
 		
 		Node nodeA = new Node("A", 2);
@@ -181,6 +163,13 @@ public class Window extends Application {
 		return t7;
 	}
 	
+	/**
+	 * This method initialises the objects being placed on the 
+	 * root GridPane
+	 * 
+	 * Also binds the width of the progress bar to the width of the
+	 * window
+	 */
 	private void initialiseElements() {
 
 		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
@@ -189,14 +178,15 @@ public class Window extends Application {
 		_progressBarText = new Label("Progress Bar:");
 		_pb = new ProgressBar(0);
 		_numOfProc = new Text(_numThreads + "");
-		_outputFile = new Text(_outputName);
-		_settings = new ToggleButton("Settings");		
-		_infoPane = new GridPane();		
-		_paneToMove = new VBox(_infoPane);
+		_outputFile = new Text(_outputName);		
 		
 		_pb.prefWidthProperty().bind(_grid.widthProperty().subtract(50));
 	}
 
+	/**
+	 * This method sets IDs for the objects in the root pane, for the
+	 * purposes of css styling of the window.
+	 */
 	private void setElementIds() {
 		_visualTreeNode.setId("Tree-node");
 		_sceneTitle.setId("title");
@@ -208,6 +198,11 @@ public class Window extends Application {
 		_outputFile.setId("output-file");
 	}
 	
+	/**
+	 * This method clears the root pane and adds the various objects
+	 * to the pane. this is called every time the scene refreshes, 
+	 * and places updated versions of the objects on the pane.
+	 */
 	private void addElementsToGrid() {
 		
 		_grid.getChildren().clear();
@@ -223,6 +218,12 @@ public class Window extends Application {
 		_grid.add(_outputFile, 1, 4);
 	}
 
+	/**
+	 * This method returns the number of tasks found in a schedule.
+	 * It is used for determining the level of the progres bar.
+	 * @param schedule
+	 * @return number of tasks in schedule
+	 */
 	private int numOfNodesDone(TreeNode schedule) {
 		TreeNode partialSched = schedule;
 		int count = 0;
@@ -233,6 +234,12 @@ public class Window extends Application {
 		return count;
 	}
 	
+	/**
+	 * This method returns a gridpane which represents an empty schedule,
+	 * and is used for initialising the _visualTreeNode field.
+	 * 
+	 * @return schedule
+	 */
 	private GridPane drawDefaultSchedule() {
 		GridPane grid = new GridPane();
 		
@@ -255,6 +262,13 @@ public class Window extends Application {
 		
 	}
 	
+	/**
+	 * This method takes a schedule and creates a visual representation
+	 * of that schedule. 
+	 * 
+	 * @param schedule
+	 * @return visualisation of the schedule
+	 */
 	private GridPane drawSchedule(TreeNode schedule) {
 		TreeNode partialSched = schedule;
 		_visualTreeNode.getChildren().clear();
@@ -286,22 +300,6 @@ public class Window extends Application {
 		
 	}
 	
-	/**
-	 * For the gridPane we don't want to override already existing contents of a cell. 
-	 * 
-	 * @param grid The gridPane to check
-	 * @param col the column of the cell we want to check
-	 * @param row the row of the cell we want to check
-	 * @return true if the cell is empty, false otherwise
-	 */
-	private Boolean checkGridPaneCellIsEmpty(GridPane grid, int col, int row) {
-		for (javafx.scene.Node n : grid.getChildren()) {
-			if (GridPane.getColumnIndex(n) == col && GridPane.getRowIndex(n) == row) {
-				return false;
-			}
-		}
-		return true;
-	}
 
 	public void setTreeNode(TreeNode node) {
 		_currentTreeNode = node;
@@ -310,11 +308,7 @@ public class Window extends Application {
 		addElementsToGrid();
 		
 	}
-	
-	public void setNumOfTreeNodes(int num) {
-		_treeNodeNum = num;
-	}
-	
+
 	public void setProgressBar() {
 		_pb.setProgress((double) numOfNodesDone(_currentTreeNode) / _totalNodes);
 	}
