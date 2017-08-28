@@ -1,6 +1,6 @@
 
 .root {
-	-fx-background-color: #d6c5c2;
+	-fx-background-color: #dfe3ee;
 }
 
 #tree-node {
@@ -9,8 +9,11 @@
 }
 
 #title {
-	-fx-font-size: 20px;
+	-fx-font-size: 30px;
 	-fx-font-weight: bold;
+	-fx-font-family: 'Bookman Old Style';
+	-fx-fill: #3b5998;
+	-fx-stroke: #8b9dc3;
 	
 	-f-text-alignment: center;
 }
@@ -19,6 +22,7 @@
 	-fx-font-size: 15px;
 	-fx-font-weight: bold;
 	-fx-font-style: italic;
+	-fx-font-family: 'Bookman Old Style';
 	
 	-fx-text-alignment: center;
 }
@@ -27,6 +31,7 @@
 	-fx-font-size: 15px;
 	-fx-font-weight: bold;
 	-fx-font-style: italic;
+	-fx-font-family: 'Bookman Old Style';
 	
 	-fx-text-alignment: center;
 }
@@ -35,6 +40,7 @@
 	-fx-font-size: 15px;
 	-fx-font-weight: bold;
 	-fx-font-style: italic;
+	-fx-font-family: 'Bookman Old Style';
 	
 	-fx-text-alignment: center;
 }
@@ -44,9 +50,13 @@
 }
 
 #num-of-proc {
+	-fx-font-family: 'Bookman Old Style';
+	-fx-font-size: 15px;
 	-fx-text-alignment: center;
 }
 
 #output-file {
+	-fx-font-family: 'Bookman Old Style';
+	-fx-font-size: 15px;
 	-fx-text-alignment: center;
 }

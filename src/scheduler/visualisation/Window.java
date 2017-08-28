@@ -67,10 +67,10 @@ public class Window extends Application {
 		_s = Scheduler.getInstance();
 		
 		// initialise required fields to avoid null pointers
-		_numThreads = _s.getNumThreads();
-		_outputName = _s.getOuputName();
-		_totalNodes = _s.getNumOfNodes();
-		_numOfProcessors = _s.getNumProc();
+		//_numThreads = _s.getNumThreads();
+		//_outputName = _s.getOuputName();
+		//_totalNodes = _s.getNumOfNodes();
+		//_numOfProcessors = _s.getNumProc();
 		_pb = new ProgressBar(0);
 		
 		// timer runs the run() method every 20ms
@@ -101,6 +101,7 @@ public class Window extends Application {
 		_primaryStage = primaryStage;
 		_primaryStage.setTitle("Parallel Scheduler");
 		_primaryStage.setMinWidth(700);
+		_primaryStage.setMinHeight(500);
 		
 		// initialise root of scene
 		_grid = new GridPane();
@@ -172,13 +173,13 @@ public class Window extends Application {
 	 */
 	private void initialiseElements() {
 
-		_sceneTitle = new Text("Running Parallel Scheduler Algorithm..");
-		_procText = new Label("Num of Threads running:");
-		_outputText = new Label("Output Filename:");
-		_progressBarText = new Label("Progress Bar:");
+		_sceneTitle = new Text("Parallel Scheduler");
+		_procText = new Label("Number of Threads Running: ");
+		_outputText = new Label("Output Filename: ");
+		_progressBarText = new Label("Progress");
 		_pb = new ProgressBar(0);
 		_numOfProc = new Text(_numThreads + "");
-		_outputFile = new Text(_outputName);		
+		_outputFile = new Text(_outputName);
 		
 		_pb.prefWidthProperty().bind(_grid.widthProperty().subtract(50));
 	}
