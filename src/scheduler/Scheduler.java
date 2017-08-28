@@ -278,6 +278,11 @@ public class Scheduler {
 				}
 			};
 			appThread.start();
+			try {
+				Thread.sleep(100L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		Graph outputGraph = s.computeSchedule();
