@@ -173,6 +173,7 @@ public class Scheduler {
 		} catch (InterruptedException e) {
 			// We aren't interrupting this thread so an exception will never be thrown
 		}
+		// Set the values of the nodes to be equal to the values found by the optimal schedule
 		TreeNode tail = schedule;
 		while (tail.getNode() != null) {
 			tail.getNode().setProcessor(tail.getProcessor() + 1);
@@ -195,6 +196,9 @@ public class Scheduler {
 		setPerfectBalance();
 	}
 
+	/**
+	 * Computes initial theoretical perfect load balancing, for use in heuristic calculation.
+	 */
 	private void setPerfectBalance() {
 		int total = 0;
 		Collection<Node> nodes = graph.getAllNodes();
