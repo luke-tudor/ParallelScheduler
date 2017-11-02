@@ -1,7 +1,7 @@
 # ParallelScheduler
 
 ## How To Run
-Download .jar file from releases, open a terminal window in that directory, type "java -jar scheduler.jar $name-of-input-graph$ $number-of-processors$ $other-arguments$". The other arguments can be any order of "-v" for visualisation, "-o $output-file-name$", and "-N $number-of-threads-to-use$".
+Download .jar file from releases, open a terminal window in that directory, type "java -jar scheduler.jar $name-of-input-graph$ $number-of-processors$ $other-arguments$". The other arguments can be any combination of "-v" for visualisation, "-o $output-file-name$", and "-N $number-of-threads-to-use$".
 
 ## Collaborators
 Name           | UPI      | ID         | GitHub Username
